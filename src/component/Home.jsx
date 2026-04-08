@@ -6,6 +6,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
+import { Link, useParams } from "react-router-dom";
 function Home() {
   let [isMobile, setIsMobile] = useState(window.innerWidth < 640);
   useEffect(() => {
@@ -15,6 +16,12 @@ function Home() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
+
+
+
+
+
   const homeCarouselImages = [
     {
       id: 1,
@@ -203,7 +210,8 @@ function Home() {
             className="mt-12"
           >
             {ayurvedicMedicines.map((product) => (
-              <Card sx={{ maxWidth: 280, margin: "0 10px" }} key={product.id}>
+              <Card sx={{ maxWidth: 280, margin: "0 10px" }} key={product.id} >
+                <Link to={`/ProductList/${product.id}`}>
                 <CardMedia
                   sx={{ height: 240 }}
                   image={product.img}
@@ -218,6 +226,7 @@ function Home() {
                   </Typography>
                   <Typography variant="body1">{product.price}</Typography>
                 </CardContent>
+              </Link>
               </Card>
             ))}
           </Carousel>

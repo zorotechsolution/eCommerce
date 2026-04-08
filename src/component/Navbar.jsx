@@ -27,12 +27,12 @@ const Navbar = () => {
                   </Link>
                 </li>
                 <li>
-                  <Link>
+                  <Link to={"/Login"}>
                     <RiLoginBoxLine className="inline" /> Login 
                   </Link>
                 </li>
                 <li>
-                  <Link>
+                  <Link to={"/Signup"}>
                     <FaPen className="inline" /> Create An Account
                   </Link>
                 </li>
@@ -51,7 +51,7 @@ const Navbar = () => {
           <div className="">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 md:px-30 text-sm md:text-lg  pt-1">
               <div className="flex items-center justify-center">
-                <Link>
+                <Link to={"/"}>
                   <img src={Icon} alt="" className="" />
                 </Link>
               </div>
@@ -98,12 +98,12 @@ const Navbar = () => {
           </div>
         </div>
       </nav>
-      <nav className="py-4 hidden md:block bg-[rgb(7,81,89)] sticky w-full top-0 font-bold text-white">
+      <nav className="py-4 hidden md:block bg-[rgb(7,81,89)] sticky w-full top-0 font-bold text-white  z-30">
         <div className="px-30">
           <ul className="flex justify-between">
             <li className="relative group">
               <Link className="" >ABOUT US</Link>
-              <ul className="absolute hidden text-black group-hover:block  ">
+              <ul className="absolute hidden text-black group-hover:block ">
                 <li className="bg-gray-500 py-1 px-5 hover:bg-gray-600 transition-all duration-300   hover:scale-125  ">profile</li>
                 <li className="bg-gray-500 py-1 px-5 hover:bg-gray-600 transition-all duration-300  hover:scale-125">Reviews</li>
                 
@@ -136,8 +136,8 @@ const Navbar = () => {
       <nav className="bg-[rgb(7,81,89)] md:hidden">
         <div className="px-10">
           <ul className="flex justify-between items-center">
-          <li ><Sidebar/></li>
-          <li className="text-white "><FaUser className="text-2xl" style={{color:"white"}}/></li>
+          <li ><Sidebar/> </li>
+          <li className="text-white "><Link to={"/Login"}><FaUser className="text-2xl" style={{color:"white"}}/></Link></li>
           <li className="text-white "><FaCartShopping className="text-2xl" style={{color:"white"}} /></li>
         </ul>
         </div>

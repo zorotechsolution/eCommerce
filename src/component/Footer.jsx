@@ -1,9 +1,95 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
-  return (
-    <div className=''>Footer</div>
-  )
-}
 
-export default Footer
+  function AccordionBtn(){
+
+  }
+
+
+
+  return (
+    <div>
+      <footer className="bg-black text-white py-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 px-5 md:px-20 ">
+          <div className=" ">
+            <h2 className="text-xs uppercase font-bold text-orange-300 ">
+              Informations
+            </h2>
+
+            <ul className="text-xs flex flex-col gap-1 pt-3">
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="">
+            <h2 className="text-xs uppercase font-bold text-orange-300">
+              CUSTOMER SERVICES
+            </h2>
+              <ul className="text-xs flex flex-col gap-1 pt-3">
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+            </ul>
+
+          </div>
+          <div className="">
+            <h2 className="text-xs uppercase font-bold text-orange-300">
+              Quick Shop
+            </h2>
+              <ul className="text-xs flex flex-col gap-1 pt-3">
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+              <li className="">
+                <Link to={"/"}>Link</Link>
+              </li>
+            </ul>
+          </div>
+          <div className="">
+            <div className="">Contact Us</div>
+            <div className="">Stay Connected</div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+};
+
+export default Footer;
+
