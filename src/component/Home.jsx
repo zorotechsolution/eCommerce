@@ -124,6 +124,38 @@ function Home() {
       price: `Rs${199}.00`,
     },
   ];
+
+  const products = [
+    {
+      name: "Saraswatarishtam",
+      category: "ARISHTAM",
+      price: 940,
+      image:
+        "https://images.pexels.com/photos/34705969/pexels-photo-34705969.jpeg",
+    },
+    {
+      name: "Dasamularishtam",
+      category: "ARISHTAM",
+      price: 130,
+      image:
+        "https://images.pexels.com/photos/4871239/pexels-photo-4871239.jpeg",
+    },
+    {
+      name: "Some Bhasmam",
+      category: "BHASMAM",
+      price: 200,
+      image:
+        "https://images.pexels.com/photos/8329969/pexels-photo-8329969.jpeg",
+    },
+  ];
+
+  const categories = ["ALL", "ARISHTAM", "BHASMAM", "CHURNAM"];
+  let [activeCategory, setActiveCategory] = useState("ALL");
+  let filteredProducts =
+    activeCategory === "ALL"
+      ? products
+      : products.filter((product) => product.category === activeCategory);
+  console.log(filteredProducts);
   return (
     <>
       {/* Hero Section*/}
@@ -246,7 +278,7 @@ function Home() {
           <h4 className="text-center text-xl font-semibold leading-snug mt-2">
             Natural healthcare with Ayurveda
           </h4>
-          <p className="text-center leading-loose">
+          <p className="text-center leading-snug">
             Ayurveda, an ancient tradition of medicines in India, is focused on
             the idea that 'Prevention is better than cure.' Ayurveda suggests
             alterations in the diet and lifestyle to achieve a healthy balance.
@@ -256,6 +288,40 @@ function Home() {
             maintaining health. Check out these Ayurvedic medicines online for
             general ailments.
           </p>
+        </div>
+      </div>
+      {/* Product list by categories */}
+      <div className="p-5 flex flex-col justify-center items-center">
+        <div className="flex gap-3 mb-6 flex-wrap">
+          {categories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveCategory(cat)}
+              className={`px-4 py-2 border rounded 
+              ${
+                activeCategory === cat
+                  ? "bg-green-600 text-white"
+                  : "bg-white text-gray-700"
+              }
+            `}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+        {/* Products */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
+          {filteredProducts.map((item, index) => (
+            <div key={index} className="text-center">
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-28 mx-auto mb-2"
+              />
+              <h4 className="font-medium">{item.name}</h4>
+              <p className="text-sm text-gray-500">Rs. {item.price}</p>
+            </div>
+          ))}
         </div>
       </div>
     </>
