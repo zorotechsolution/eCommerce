@@ -3,13 +3,12 @@ import { FaPen } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
-import Icon from "../../src/assets/react.svg";
+import Icon from "../../src/assets/image.png";
 import { IoMdCall } from "react-icons/io";
 import { CiDeliveryTruck } from "react-icons/ci";
 import { FaSearch } from "react-icons/fa";
 import Sidebar from "./Sidebar";
 import { FaUser } from "react-icons/fa";
-
 
 const Navbar = () => {
 
