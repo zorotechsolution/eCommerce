@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useReducer } from "react";
 import { useParams } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import { ayurvedicMedicines } from "../db/data";
@@ -10,20 +10,36 @@ import { FaHeart } from "react-icons/fa";
 const ProductList = () => {
   let dataValue = ayurvedicMedicines;
 
-  let [count, setCount] = useState(1);
-
   let { id } = useParams();
 
   let productItem = dataValue.find((product) => product.id === Number(id));
 
-  let increment = () => {
-    setCount((count += 1));
+  let COUNTER_ACTION = {
+    INCREMENT: "increment",
+    DECREMENT: "decrement",
   };
-  let decrement = () => {
-    if (!(count === 1)) {
-      setCount((count -= 1));
+
+  let reducer = (state, counterAction) => {
+    switch (counterAction.type) {
+      case COUNTER_ACTION.INCREMENT:
+        return { ...state, count: state.count + 1 };
+      case COUNTER_ACTION.DECREMENT:
+        return { ...state, count: state.count - 1 };
+      default:
+        return state;
     }
   };
+
+  let [state, dispatch] = useReducer(reducer, { count: 1 });
+
+
+let DECREMENT = ()=>{
+  if(state.count>1){
+  return dispatch({ type: COUNTER_ACTION.DECREMENT })
+}
+}
+  
+
 
   return (
     <div>
@@ -97,19 +113,25 @@ const ProductList = () => {
             </div>
             <div className="flex flex-col md:flex-row my-2 gap-2">
               <div className=" flex">
-                <button className="bg-gray-200 px-4 py-2 " onClick={decrement}>
+                <button
+                  className="bg-gray-200 px-4 py-2 "
+                  onClick={DECREMENT}
+                >
                   -
                 </button>
                 <input
                   className="bg-gray-100 px-4 py-2 w-13"
-                  value={count}
+                  value={state.count}
                   disabled
                   type="text"
                   name=""
                   id=""
                 />
-                {/* <button >{}</button> */}
-                <button className="bg-gray-200 px-4 py-2 " onClick={increment}>
+
+                <button
+                  className="bg-gray-200 px-4 py-2 "
+                  onClick={()=>dispatch({ type: COUNTER_ACTION.INCREMENT })}
+                >
                   +
                 </button>
               </div>
@@ -163,63 +185,117 @@ const ProductList = () => {
           <div className="">
             <h3 className="font-semibold text-lg">Key Benefits:</h3>
             <ul className="ps-4">
-              <li><span className="font-extrabold text-orange-500">✓ </span>Controls hair fall and strengthens hair roots</li>
-              <li><span className="font-extrabold text-orange-500">✓ </span>Prevents dandruff, scalp dryness, and itchiness</li>
-              <li><span className="font-extrabold text-orange-500">✓ </span>Promotes hair growth and improves hair texture</li>
-              <li><span className="font-extrabold text-orange-500">✓ </span>Helps delay premature greying</li>
-              <li><span className="font-extrabold text-orange-500">✓ </span>100% herbal, free from mineral oils and harsh chemicals</li>
-
-            </ul>
-          </div>
-                  
-                  <div className=" border-t border-gray-300"></div>
-
-          <div className="">
-            <h3 className="font-semibold text-lg">Usage Instructions:</h3>
-            <ul className="ps-4">
-              <li><span>→ </span> Warm the oil slightly and apply to the scalp.</li>
-              <li><span>→ </span> Warm the oil slightly and apply to the scalp.</li>
-              <li><span>→ </span> Warm the oil slightly and apply to the scalp.</li>
-              <li><span>→ </span> Warm the oil slightly and apply to the scalp.</li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Prevents dandruff, scalp dryness, and itchiness
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Promotes hair growth and improves hair texture
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>Helps
+                delay premature greying
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>100%
+                herbal, free from mineral oils and harsh chemicals
+              </li>
             </ul>
           </div>
 
           <div className=" border-t border-gray-300"></div>
 
           <div className="">
-            <h3 className="font-semibold text-lg">Indication of {productItem.productName} :</h3>
+            <h3 className="font-semibold text-lg">Usage Instructions:</h3>
             <ul className="ps-4">
-                <li><span className="font-extrabold text-orange-500 ">✓ </span>Controls hair fall and strengthens hair roots</li>
-                <li><span className="font-extrabold text-orange-500">✓ </span>Controls hair fall and strengthens hair roots</li>
-                <li><span className="font-extrabold text-orange-500">✓ </span>Controls hair fall and strengthens hair roots</li>
-                <li><span className="font-extrabold text-orange-500">✓ </span>Controls hair fall and strengthens hair roots</li>
-                <li><span className="font-extrabold text-orange-500">✓ </span>Controls hair fall and strengthens hair roots</li>
-
+              <li>
+                <span>→ </span> Warm the oil slightly and apply to the scalp.
+              </li>
+              <li>
+                <span>→ </span> Warm the oil slightly and apply to the scalp.
+              </li>
+              <li>
+                <span>→ </span> Warm the oil slightly and apply to the scalp.
+              </li>
+              <li>
+                <span>→ </span> Warm the oil slightly and apply to the scalp.
+              </li>
             </ul>
           </div>
 
-            <div className=" border-t border-gray-300"></div>
+          <div className=" border-t border-gray-300"></div>
 
-          <div >
+          <div className="">
+            <h3 className="font-semibold text-lg">
+              Indication of {productItem.productName} :
+            </h3>
+            <ul className="ps-4">
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500">✓ </span>
+                Controls hair fall and strengthens hair roots
+              </li>
+            </ul>
+          </div>
+
+          <div className=" border-t border-gray-300"></div>
+
+          <div>
             <h3 className="font-semibold text-lg">Product Details:</h3>
             <ul>
-              <li><span className="font-extrabold text-orange-500 ">✓ </span><b>Brand:</b> Kottakkal Arya Vaidya Sala</li>
-              <li><span className="font-extrabold text-orange-500 ">✓ </span><b>Quantity:</b> 200 ML</li>
-              <li><span className="font-extrabold text-orange-500 ">✓ </span><b>Base Oil:</b> Pure Coconut Oil</li>
-              <li><span className="font-extrabold text-orange-500 ">✓ </span><b>Form:</b> Medicated Ayurvedic Oil</li>
-              <li><span className="font-extrabold text-orange-500 ">✓ </span><b>For External Use Only</b></li>
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                <b>Brand:</b> Kottakkal Arya Vaidya Sala
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                <b>Quantity:</b> 200 ML
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                <b>Base Oil:</b> Pure Coconut Oil
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                <b>Form:</b> Medicated Ayurvedic Oil
+              </li>
+              <li>
+                <span className="font-extrabold text-orange-500 ">✓ </span>
+                <b>For External Use Only</b>
+              </li>
             </ul>
           </div>
 
-            <div className=" border-t border-gray-300"></div>
+          <div className=" border-t border-gray-300"></div>
 
-        <div className="">
-          <h3 className="font-semibold text-lg">Disclaimer:</h3>
-          <p className="mt-2">For external use only. Store in a cool, dry place. Use under the guidance of an Ayurvedic physician if you have scalp conditions or allergies.</p>
-        </div>
-
-
-
+          <div className="">
+            <h3 className="font-semibold text-lg">Disclaimer:</h3>
+            <p className="mt-2">
+              For external use only. Store in a cool, dry place. Use under the
+              guidance of an Ayurvedic physician if you have scalp conditions or
+              allergies.
+            </p>
+          </div>
         </div>
       </section>
     </div>
