@@ -49,8 +49,8 @@ const Payment = () => {
       key: "rzp_test_1Dp5sZrvbkbX1y", // Use a generic testing key or leave blank to see error/demo
       amount: grandTotal * 100, // paise
       currency: "INR",
-      name: "Ayurvedic Store",
-      description: "Test Transaction for E-Commerce",
+      name: "Vel Siddhar Arakkattalai",
+      description: "Ayurvedic & Siddha Medicine Purchase",
       image: "https://example.com/your_logo.png", // Optional
       handler: function (response) {
         // Successful payment callback

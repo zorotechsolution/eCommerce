@@ -46,7 +46,7 @@ const Siddhar = () => {
     <section className="min-h-screen bg-gray-50">
       {/* Hero */}
       <div className="bg-gradient-to-r from-[rgb(7,81,89)] to-[rgb(12,103,104)] py-16 px-6 text-center text-white">
-        <div className="text-5xl mb-4">🕉️</div>
+        <div className="text-5xl mb-4"></div>
         <h1 className="text-3xl md:text-5xl font-extrabold mb-4 tracking-wide">
           {t('siddhar')}
         </h1>
