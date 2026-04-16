@@ -46,7 +46,7 @@ const Payment = () => {
     }
 
     const options = {
-      key: "rzp_test_1Dp5sZrvbkbX1y", // Use a generic testing key or leave blank to see error/demo
+      key: import.meta.env.VITE_RAZORPAY_TEST_KEY || "rzp_test_1Dp5sZrvbkbX1y", // Use a generic testing key or leave blank to see error/demo
       amount: grandTotal * 100, // paise
       currency: "INR",
       name: "Vel Siddhar Arakkattalai",

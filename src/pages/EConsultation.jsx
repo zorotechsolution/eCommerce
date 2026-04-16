@@ -3,7 +3,7 @@ import { FaCalendarAlt, FaUserMd, FaVideo, FaWhatsapp, FaCheckCircle } from 'rea
 import { useLang } from '../context/LangContext';
 
 // ─── Your WhatsApp business number (include country code, no +, no spaces) ──
-const WHATSAPP_NUMBER = "919629297111";
+const WHATSAPP_NUMBER = import.meta.env.VITE_WHATSAPP_NUMBER || "919629297111";
 
 const TIME_SLOTS = [
   { value: "morning",   label: "Morning (10 AM – 12 PM)" },
@@ -275,12 +275,11 @@ Please confirm availability.`;
         {/* Info cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
           {[
-            { icon: "⏱️", title: "Quick Response",   desc: "Our team responds within 30 minutes during working hours." },
-            { icon: "👨‍⚕️", title: "Expert Doctors",   desc: "Consult certified Siddha & Ayurvedic physicians." },
-            { icon: "🔒", title: "100% Private",      desc: "Your health data is kept completely confidential." },
+            {title: "Quick Response",   desc: "Our team responds within 30 minutes during working hours." },
+            {title: "Expert Doctors",   desc: "Consult certified Siddha & Ayurvedic physicians." },
+            {title: "100% Private",      desc: "Your health data is kept completely confidential." },
           ].map((c, i) => (
             <div key={i} className="bg-white rounded-2xl border border-slate-100 p-5 shadow-sm text-center">
-              <div className="text-3xl mb-2">{c.icon}</div>
               <h3 className="font-bold text-slate-800 mb-1 text-sm">{c.title}</h3>
               <p className="text-xs text-slate-500 leading-relaxed">{c.desc}</p>
             </div>

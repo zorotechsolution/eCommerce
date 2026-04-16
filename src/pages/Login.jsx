@@ -29,10 +29,12 @@ const Login = () => {
           password: formData.password,
         });
         const receivedToken = response.data.token;
+        const isAdmin = formData.username.toLowerCase() === 'admin' || formData.username.toLowerCase() === 'admin@velsiddhar.com';
         dispatch(login({ 
           username: formData.username, 
           email: `${formData.username.toLowerCase()}@example.com`,
-          token: receivedToken
+          token: receivedToken,
+          role: isAdmin ? 'admin' : 'user'
         }));
         navigate("/profile");
       } catch (err) {

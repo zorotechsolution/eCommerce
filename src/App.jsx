@@ -23,6 +23,7 @@ import CompanyProfile from "./pages/CompanyProfile";
 import PersonalCare from "./pages/PersonalCare";
 import PersonalCareCategory from "./pages/PersonalCareCategory";
 import ShippingDelivery from "./pages/ShippingDelivery";
+import AdminAddProduct from "./pages/AdminAddProduct";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
           <Route path="/personal-care" element={<PersonalCare/>} />
           <Route path="/personal-care/:slug" element={<PersonalCareCategory/>} />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/admin/add-product" element={<AdminAddProduct/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/terms" element={<Terms/>} />
           <Route path="/refund-policy" element={<RefundPolicy/>} />
