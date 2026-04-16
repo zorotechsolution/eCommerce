@@ -1,287 +1,303 @@
-import React, { useReducer } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import React, { useReducer, useState } from "react";
+import { useParams, useNavigate, Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import { ayurvedicMedicines } from "../db/data";
-import { useState } from "react";
-import { FaHeart } from "react-icons/fa";
+import { FaHeart, FaShoppingCart, FaArrowLeft, FaShieldAlt, FaTruck, FaLeaf } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { addToWishlist } from "../store/wishlistSlice";
+import { useLang } from "../context/LangContext";
+
+const COUNTER_ACTION = {
+  INCREMENT: "increment",
+  DECREMENT: "decrement",
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case COUNTER_ACTION.INCREMENT:
+      return { ...state, count: state.count + 1 };
+    case COUNTER_ACTION.DECREMENT:
+      return { ...state, count: Math.max(1, state.count - 1) };
+    default:
+      return state;
+  }
+}
 
 const ProductList = () => {
-  let dataValue = ayurvedicMedicines;
-  let { id } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useLang();
 
-  let productItem = dataValue.find((product) => product.id === Number(id));
+  const productItem = ayurvedicMedicines.find((p) => p.id === Number(id));
+  const wishlistItems = useSelector((state) => state.wishlist.items);
+  const cartItems = useSelector((state) => state.cart.items);
 
-  let COUNTER_ACTION = {
-    INCREMENT: "increment",
-    DECREMENT: "decrement",
-  };
-
-  let reducer = (state, counterAction) => {
-    switch (counterAction.type) {
-      case COUNTER_ACTION.INCREMENT:
-        return { ...state, count: state.count + 1 };
-      case COUNTER_ACTION.DECREMENT:
-        return { ...state, count: state.count - 1 };
-      default:
-        return state;
-    }
-  };
-
-  let [state, dispatchCount] = useReducer(reducer, { count: 1 });
+  const [state, dispatchCount] = useReducer(reducer, { count: 1 });
   const [isAdded, setIsAdded] = useState(false);
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  let DECREMENT = () => {
-    if (state.count > 1) {
-      return dispatchCount({ type: COUNTER_ACTION.DECREMENT });
-    }
-  };
+  const alreadyInWishlist = wishlistItems.some((i) => i.id === productItem?.id);
+  const alreadyInCart = cartItems.some((i) => i.id === productItem?.id);
 
   const handleAddToCart = () => {
-    if(productItem) {
+    if (productItem) {
       dispatch(addItem({ ...productItem, quantity: state.count }));
       setIsAdded(true);
-      setTimeout(() => setIsAdded(false), 2000);
+      setTimeout(() => setIsAdded(false), 2500);
     }
   };
 
   const handleAddToWishlist = () => {
-     if(productItem) {
+    if (productItem) {
       dispatch(addToWishlist(productItem));
       setIsWishlisted(true);
-      setTimeout(() => setIsWishlisted(false), 2000);
-     }
+      setTimeout(() => setIsWishlisted(false), 2500);
+    }
   };
 
-  if(!productItem) {
-    return <div className="text-center py-20 text-xl font-bold">Product not found</div>;
+  if (!productItem) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-5 text-center">
+        <h2 className="text-2xl font-black text-slate-800 mb-4">{t('pageNotFound')}</h2>
+        <p className="text-slate-500 mb-6">{t('pageNotFoundSub')}</p>
+        <Link to="/collections" className="bg-[rgb(7,81,89)] text-white px-6 py-3 rounded-full font-bold hover:-translate-y-0.5 transition-transform">
+          {t('browseAllCollections')}
+        </Link>
+      </div>
+    );
   }
 
+  // Related products from same category
+  const relatedProducts = ayurvedicMedicines
+    .filter((p) => p.category === productItem.category && p.id !== productItem.id)
+    .slice(0, 4);
+
   return (
-    <div>
-      <section>
-        <div className="md:flex gap-10 py-10 px-5 md:px-20 lg:px-50">
-          <div className=" border border-gray-200">
-            <img src={productItem.img} alt="" />
-          </div>
+    <div className="min-h-screen bg-slate-50 font-sans">
+      {/* Breadcrumb */}
+      <div className="bg-white border-b border-slate-100 px-5 md:px-10 lg:px-20 py-3">
+        <div className="max-w-7xl mx-auto flex items-center gap-2 text-sm text-slate-500">
+          <Link to="/" className="hover:text-[rgb(7,81,89)] font-medium transition-colors">Home</Link>
+          <span>/</span>
+          <Link to="/collections" className="hover:text-[rgb(7,81,89)] font-medium transition-colors">Collections</Link>
+          <span>/</span>
+          <Link to={`/collections/${productItem.category}`} className="hover:text-[rgb(7,81,89)] font-medium transition-colors">{productItem.category}</Link>
+          <span>/</span>
+          <span className="text-slate-800 font-bold line-clamp-1">{productItem.productName}</span>
+        </div>
+      </div>
 
-          <div className="flex flex-col gap-1">
-            <h1 className="text-xl uppercase font-bold">
-              {productItem.productName}
-            </h1>
-            <div>
-              <span>
-                <StarIcon className="text-amber-300" />
-                <StarIcon className="text-amber-300" />
-                <StarIcon className="text-amber-300" />
-                <StarIcon className="text-amber-300" />
-              </span>
-              <span className="align-middle"> 91 reviews</span>
+      <section className="max-w-7xl mx-auto px-5 md:px-10 lg:px-20 py-10">
+        <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-500 hover:text-[rgb(7,81,89)] font-bold mb-8 transition-colors">
+          <FaArrowLeft /> {t('back')}
+        </button>
+
+        <div className="bg-white rounded-3xl shadow-sm border border-slate-100 overflow-hidden">
+          <div className="flex flex-col md:flex-row gap-0">
+            {/* Product Image */}
+            <div className="md:w-1/2 bg-slate-50 p-10 flex items-center justify-center min-h-[350px] relative">
+              <img
+                src={productItem.img}
+                alt={productItem.productName}
+                className="max-h-80 w-full object-contain"
+              />
+              {/* Wishlist fab */}
+              <button
+                onClick={handleAddToWishlist}
+                disabled={alreadyInWishlist}
+                className={`absolute top-5 right-5 w-11 h-11 rounded-full flex items-center justify-center shadow-md transition-all ${
+                  alreadyInWishlist || isWishlisted
+                    ? "bg-rose-500 text-white"
+                    : "bg-white text-slate-400 hover:bg-rose-500 hover:text-white"
+                }`}
+                title={alreadyInWishlist ? "In Wishlist" : "Add to Wishlist"}
+              >
+                <FaHeart />
+              </button>
             </div>
-            <h2 className="text-2xl font-semibold ">Rs. {productItem.price}</h2>
 
-            <ul className="flex flex-col gap-2 text-xs mt-2 mb-2">
-              <li>Availability: Available</li>
-              <li>Product Type: {productItem.category || 'Ayurvedic Medicine'}</li>
-              <li>Product Vendor: Kottakkal Arya Vaidya Sala</li>
-            </ul>
+            {/* Product Info */}
+            <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-between">
+              <div>
+                <span className="inline-block bg-orange-100 text-orange-600 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-widest mb-4">
+                  {productItem.category}
+                </span>
 
-            <div className="flex flex-col md:flex-row my-2 gap-4">
-              <div className=" flex">
-                <button
-                  className="bg-gray-200 px-4 py-2 font-bold text-lg hover:bg-gray-300"
-                  onClick={DECREMENT}
-                >
-                  -
-                </button>
-                <input
-                  className="bg-gray-100 px-4 py-2 w-16 text-center font-bold"
-                  value={state.count}
-                  disabled
-                  type="text"
-                />
+                <h1 className="text-2xl md:text-3xl font-black text-slate-800 mb-3 leading-snug">
+                  {productItem.productName}
+                </h1>
 
-                <button
-                  className="bg-gray-200 px-4 py-2 font-bold text-lg hover:bg-gray-300"
-                  onClick={() => dispatchCount({ type: COUNTER_ACTION.INCREMENT })}
-                >
-                  +
-                </button>
-              </div>
+                {/* Stars */}
+                <div className="flex items-center gap-2 mb-4">
+                  <div className="flex text-amber-400">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <StarIcon key={i} sx={{ fontSize: 18 }} />
+                    ))}
+                  </div>
+                  <span className="text-sm font-medium text-slate-500">91 {t('reviews')}</span>
+                </div>
 
-              <div className=" flex gap-2 w-full md:w-auto">
-                <button 
-                  onClick={handleAddToCart}
-                  className={`${isAdded ? 'bg-green-500 hover:bg-green-600' : 'bg-orange-500 hover:bg-orange-600'} px-6 py-2 font-bold text-white transition-colors w-full md:w-auto flex justify-center items-center`}
-                  disabled={isAdded}
-                >
-                  {isAdded ? '✓ ADDED' : 'ADD TO CART'}
-                </button>
+                {/* Price */}
+                <div className="mb-5">
+                  <span className="text-3xl font-black text-[rgb(7,81,89)]">
+                    ₹{productItem.price}
+                  </span>
+                  <span className="text-sm text-slate-400 font-medium ml-2">{t('inclusiveTaxes')}</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-slate-600 text-sm leading-relaxed mb-6">
+                  {productItem.productDescription}
+                </p>
+
+                {/* Info Tags */}
+                <ul className="flex flex-wrap gap-2 mb-6">
+                  <li className="flex items-center gap-1.5 bg-green-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-full">
+                    <FaLeaf className="text-xs" /> {t('inStock')}
+                  </li>
+                  <li className="flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs font-bold px-3 py-1.5 rounded-full">
+                    <FaShieldAlt className="text-xs" /> {t('gmpCertified')}
+                  </li>
+                  <li className="flex items-center gap-1.5 bg-orange-50 text-orange-700 text-xs font-bold px-3 py-1.5 rounded-full">
+                    <FaTruck className="text-xs" /> {t('freeShippingAbove')}
+                  </li>
+                </ul>
+
+                {/* Quantity + Actions */}
+                <div className="flex flex-col sm:flex-row gap-4">
+                  {/* Quantity Selector */}
+                  <div className="flex items-center border-2 border-slate-200 rounded-xl overflow-hidden w-max">
+                    <button
+                      className="px-4 py-3 bg-slate-50 hover:bg-slate-100 font-bold text-lg text-slate-600 transition-colors"
+                      onClick={() => dispatchCount({ type: COUNTER_ACTION.DECREMENT })}
+                    >
+                      −
+                    </button>
+                    <input
+                      className="w-14 text-center font-bold text-slate-800 bg-white outline-none py-3"
+                      value={state.count}
+                      disabled
+                      readOnly
+                      type="text"
+                    />
+                    <button
+                      className="px-4 py-3 bg-slate-50 hover:bg-slate-100 font-bold text-lg text-slate-600 transition-colors"
+                      onClick={() => dispatchCount({ type: COUNTER_ACTION.INCREMENT })}
+                    >
+                      +
+                    </button>
+                  </div>
+
+                  {/* Add to Cart */}
+                  <button
+                    onClick={handleAddToCart}
+                    disabled={isAdded}
+                    className={`flex-1 flex items-center justify-center gap-2 font-bold py-3 px-6 rounded-xl uppercase tracking-wider transition-all text-sm ${
+                      isAdded
+                        ? "bg-green-500 text-white cursor-default"
+                        : "bg-orange-500 hover:bg-orange-600 text-white hover:-translate-y-0.5 shadow-lg shadow-orange-500/20"
+                    }`}
+                  >
+                    <FaShoppingCart />
+                    {isAdded ? `✓ ${t('addedToCart')}` : t('addToCart')}
+                  </button>
+                </div>
+
+                {/* Wishlist Button */}
                 <button
                   onClick={handleAddToWishlist}
-                  disabled={isWishlisted}
-                  className={`${isWishlisted ? 'bg-rose-500' : 'bg-[rgb(7,81,89)] hover:bg-[rgb(6,65,71)]'} px-4 flex items-center justify-center transition-colors cursor-pointer w-full md:w-auto`}
+                  disabled={alreadyInWishlist}
+                  className={`mt-3 w-full flex items-center justify-center gap-2 font-bold py-3 px-6 rounded-xl uppercase tracking-wider transition-all text-sm border-2 ${
+                    alreadyInWishlist || isWishlisted
+                      ? "bg-rose-50 text-rose-500 border-rose-200 cursor-default"
+                      : "bg-white text-slate-600 border-slate-200 hover:border-rose-300 hover:text-rose-500 hover:bg-rose-50"
+                  }`}
                 >
-                  <FaHeart className={`${isWishlisted ? 'text-white scale-110' : 'text-white'} text-2xl transition-transform`} />
+                  <FaHeart />
+                  {alreadyInWishlist || isWishlisted ? `❤ ${t('inWishlist')}` : t('addToWishlist')}
                 </button>
               </div>
             </div>
-            <div className="px-5 mt-4">
-              <ul className="list-disc text-sm text-slate-600">
-                <li>Ayurvedic Medicine securely packaged.</li>
-                <li>Exchange or Return within 7 days of a delivery.</li>
-                <li>
-                  For Shipping other than India Please Contact: +91 96292 97111
-                </li>
+          </div>
+        </div>
+
+        {/* Product Details Tabs */}
+        <div className="mt-8 bg-white rounded-3xl shadow-sm border border-slate-100 p-8 md:p-10">
+          <h2 className="text-xl font-black text-slate-800 uppercase tracking-widest mb-6 pb-4 border-b-2 border-slate-100">
+            {t('productDetails')}
+          </h2>
+
+          <div className="flex flex-col gap-6">
+            <div>
+              <h3 className="font-bold text-[rgb(7,81,89)] uppercase tracking-widest text-sm mb-3">{t('aboutSection')} {productItem.productName}</h3>
+              <p className="text-slate-600 text-sm leading-relaxed">{productItem.productDescription}</p>
+            </div>
+
+            <div className="border-t border-slate-100 pt-6">
+              <h3 className="font-bold text-[rgb(7,81,89)] uppercase tracking-widest text-sm mb-3">{t('keyBenefits')}</h3>
+              <ul className="flex flex-col gap-2">
+                {[
+                  t('benefitNatural'),
+                  t('benefitClassical'),
+                  t('benefitGMP'),
+                  t('benefitSafe'),
+                  t('benefitHolistic'),
+                ].map((benefit, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm text-slate-700">
+                    <span className="font-bold text-orange-500 shrink-0">✓</span>
+                    {benefit}
+                  </li>
+                ))}
               </ul>
+            </div>
+
+            <div className="border-t border-slate-100 pt-6">
+              <h3 className="font-bold text-[rgb(7,81,89)] uppercase tracking-widest text-sm mb-3">{t('policies')}</h3>
+              <ul className="flex flex-col gap-2">
+                <li className="flex items-start gap-3 text-sm text-slate-700"><span>→</span> {t('exchangeReturn')}</li>
+                <li className="flex items-start gap-3 text-sm text-slate-700"><span>→</span> {t('freeShippingPolicy')}</li>
+                <li className="flex items-start gap-3 text-sm text-slate-700"><span>→</span> {t('internationalCall')}</li>
+              </ul>
+            </div>
+
+            <div className="border-t border-slate-100 pt-6">
+              <h3 className="font-bold text-[rgb(7,81,89)] uppercase tracking-widest text-sm mb-3">{t('disclaimer')}</h3>
+              <p className="text-slate-500 text-sm leading-relaxed">{t('disclaimerText')}</p>
             </div>
           </div>
         </div>
-      </section>
 
-      <section className="Product Details py-2 md:py-10">
-        <div className="px-5 md:px-50 flex flex-col gap-5">
-          <div className="">
-            <h2 className="text-xl font-semibold uppercase">
-              {productItem.productName}
-            </h2>
-            <p className="mt-2">
-              Nilibhringadi Kera (Coconut Oil) Tailam by Kottakkal Arya Vaidya
-              Sala is a classical Ayurvedic hair oil prepared using pure coconut
-              oil as a base and infused with potent herbs like Nili (Indigo),
-              Bhringraj, Amla, and Yashtimadhu. This nourishing oil is known to
-              prevent hair fall, dandruff, and premature greying, while
-              promoting natural hair growth.
-            </p>
-            <p className="mt-2">
-              Regular scalp massage with Nilibhringadi oil improves circulation,
-              strengthens hair follicles, and soothes the scalp, leaving your
-              hair healthy, shiny, and thick. Suitable for all hair types and
-              ideal for daily or weekly application.
-            </p>
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-8">
+            <h2 className="text-2xl font-black text-slate-800 mb-6">{t('relatedProducts')}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {relatedProducts.map((product) => (
+                <Link
+                  key={product.id}
+                  to={`/ProductList/${product.id}`}
+                  className="bg-white rounded-2xl border border-slate-100 overflow-hidden hover:shadow-lg hover:-translate-y-1 transition-all duration-300 group"
+                >
+                  <div className="aspect-square overflow-hidden p-4 bg-slate-50">
+                    <img
+                      src={product.img}
+                      alt={product.productName}
+                      className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-bold text-slate-800 text-sm line-clamp-2 group-hover:text-[rgb(7,81,89)] transition-colors mb-2">
+                      {product.productName}
+                    </h3>
+                    <p className="text-base font-black text-[rgb(7,81,89)]">₹{product.price}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-          <div className=" border-t border-gray-300"></div>
-
-          <div className="">
-            <h3 className="font-semibold text-lg">Key Benefits:</h3>
-            <ul className="ps-4">
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Prevents dandruff, scalp dryness, and itchiness
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Promotes hair growth and improves hair texture
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>Helps
-                delay premature greying
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>100%
-                herbal, free from mineral oils and harsh chemicals
-              </li>
-            </ul>
-          </div>
-
-          <div className=" border-t border-gray-300"></div>
-
-          <div className="">
-            <h3 className="font-semibold text-lg">Usage Instructions:</h3>
-            <ul className="ps-4">
-              <li>
-                <span>→ </span> Warm the oil slightly and apply to the scalp.
-              </li>
-              <li>
-                <span>→ </span> Warm the oil slightly and apply to the scalp.
-              </li>
-              <li>
-                <span>→ </span> Warm the oil slightly and apply to the scalp.
-              </li>
-              <li>
-                <span>→ </span> Warm the oil slightly and apply to the scalp.
-              </li>
-            </ul>
-          </div>
-
-          <div className=" border-t border-gray-300"></div>
-
-          <div className="">
-            <h3 className="font-semibold text-lg">
-              Indication of {productItem.productName} :
-            </h3>
-            <ul className="ps-4">
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500">✓ </span>
-                Controls hair fall and strengthens hair roots
-              </li>
-            </ul>
-          </div>
-
-          <div className=" border-t border-gray-300"></div>
-
-          <div>
-            <h3 className="font-semibold text-lg">Product Details:</h3>
-            <ul>
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                <b>Brand:</b> Kottakkal Arya Vaidya Sala
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                <b>Quantity:</b> 200 ML
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                <b>Base Oil:</b> Pure Coconut Oil
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                <b>Form:</b> Medicated Ayurvedic Oil
-              </li>
-              <li>
-                <span className="font-extrabold text-orange-500 ">✓ </span>
-                <b>For External Use Only</b>
-              </li>
-            </ul>
-          </div>
-
-          <div className=" border-t border-gray-300"></div>
-
-          <div className="">
-            <h3 className="font-semibold text-lg">Disclaimer:</h3>
-            <p className="mt-2">
-              For external use only. Store in a cool, dry place. Use under the
-              guidance of an Ayurvedic physician if you have scalp conditions or
-              allergies.
-            </p>
-          </div>
-        </div>
+        )}
       </section>
     </div>
   );

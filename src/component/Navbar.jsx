@@ -1,4 +1,4 @@
-import { FaHeart, FaPen, FaUser, FaSearch } from "react-icons/fa";
+import { FaHeart, FaPen, FaUser, FaSearch, FaGlobe } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
@@ -7,11 +7,13 @@ import { IoMdCall } from "react-icons/io";
 import { CiDeliveryTruck } from "react-icons/ci";
 import Sidebar from "./Sidebar";
 import { useSelector } from "react-redux";
+import { useLang } from "../context/LangContext";
 
 const Navbar = () => {
   const cartItems = useSelector((state) => state.cart.items);
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const auth = useSelector((state) => state.auth);
+  const { lang, toggleLang, t } = useLang();
   
   const cartCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
   const wishlistCount = wishlistItems.length;
@@ -25,7 +27,7 @@ const Navbar = () => {
               <ul className="flex items-center gap-6 pt-2">
                 <li className="">
                   <Link to="/wishlist">
-                    <FaHeart className="inline-block " /> Wishlist ({wishlistCount})
+                    <FaHeart className="inline-block " /> {t('wishlist')} ({wishlistCount})
                   </Link>
                 </li>
                 {auth.isAuthenticated ? (
@@ -39,28 +41,38 @@ const Navbar = () => {
                   <>
                     <li>
                       <Link to={"/Login"}>
-                        <RiLoginBoxLine className="inline" /> Login
+                        <RiLoginBoxLine className="inline" /> {t('login')}
                       </Link>
                     </li>
                     <li>
                       <Link to={"/Signup"}>
-                        <FaPen className="inline" /> Create An Account
+                        <FaPen className="inline" /> {t('createAccount')}
                       </Link>
                     </li>
                   </>
                 )}
               </ul>
 
-              <Link to={"/addcart"}>
-                <div className="bg-[rgb(7,81,89)] py-2 px-4 flex items-center justify-center">
-                  <div className="text-white flex items-center font-bold">
-                    <FaCartShopping className="inline text-lg" />
-                    <span className="ps-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
-                      {cartCount}
-                    </span>
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={toggleLang}
+                  className="flex items-center gap-1.5 bg-[rgb(7,81,89)] text-white text-xs font-black px-3 py-1.5 rounded-full hover:bg-orange-500 transition-colors"
+                  title="Switch Language"
+                >
+                  <FaGlobe className="text-xs" />
+                  {t('switchLang')}
+                </button>
+                <Link to={"/addcart"}>
+                  <div className="bg-[rgb(7,81,89)] py-2 px-4 flex items-center justify-center">
+                    <div className="text-white flex items-center font-bold">
+                      <FaCartShopping className="inline text-lg" />
+                      <span className="ps-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
+                        {cartCount}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              </Link>
+                </Link>
+              </div>
             </div>
           </div>
           <div className="">
@@ -93,11 +105,11 @@ const Navbar = () => {
                   <CiDeliveryTruck className="text-4xl hidden md:inline " />
                 </div>
                 <div className="flex flex-col items-center w-full">
-                  <div className="">FREE Shipping</div>
-                  <div className="">ON ORDER ABOVE ₹900**</div>
+                  <div className="">{t('freeShipping')}</div>
+                  <div className="">{t('onOrderAbove')}</div>
                   <div className="hidden md:inline text-sm ">
                     {" "}
-                    (Only On Selected Items)
+                    {t('onlySelected')}
                   </div>
                 </div>
               </div>
@@ -105,7 +117,7 @@ const Navbar = () => {
                 <div className="flex justify-between    ">
                   <input
                     type="search"
-                    placeholder="Search"
+                    placeholder={t('searchPlaceholder')}
                     className="outline-0 w-full md:w-60 border  px-3 text-sm"
                   />
                   <button className="bg-amber-500 p-2 ">
@@ -137,8 +149,77 @@ const Navbar = () => {
             <li>
               <Link to="/collections" className="hover:text-amber-400 transition-colors">Collections</Link>
             </li>
-            <li>
-              <Link to="/collections/Personal Care" className="hover:text-amber-400 transition-colors">Personal Care</Link>
+            <li className="relative group py-2">
+              <Link to="/personal-care" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+                Personal Care <span className="text-[10px] opacity-70">▼</span>
+              </Link>
+              {/* Mega Dropdown */}
+              <div className="absolute hidden group-hover:flex top-full left-1/2 -translate-x-1/2 w-[680px] bg-white shadow-2xl border-t-4 border-orange-500 z-50 text-black rounded-b-xl overflow-hidden">
+                <div className="grid grid-cols-3 w-full divide-x divide-gray-100">
+                  {/* Column 1 */}
+                  <div className="p-6">
+                    <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
+                      Ayurvedic Medicine For
+                    </h4>
+                    <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
+                      {[
+                        { label: "Cough and Cold", slug: "cough-and-cold" },
+                        { label: "Fever", slug: "fever" },
+                        { label: "Migraine", slug: "migraine" },
+                        { label: "Sinus", slug: "sinus" },
+                      ].map(item => (
+                        <li key={item.slug}>
+                          <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {/* Column 2 */}
+                  <div className="p-6">
+                    <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
+                      Ayurvedic Products For
+                    </h4>
+                    <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
+                      {[
+                        { label: "Body Care", slug: "body-care" },
+                        { label: "Face Care", slug: "face-care" },
+                        { label: "Ayurvedic Hair Oil", slug: "hair-oil" },
+                        { label: "Skin & Beauty Care", slug: "skin-beauty" },
+                      ].map(item => (
+                        <li key={item.slug}>
+                          <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {/* Column 3 */}
+                  <div className="p-6">
+                    <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
+                      Digestive & Metabolic Care
+                    </h4>
+                    <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
+                      {[
+                        { label: "Constipation", slug: "constipation" },
+                        { label: "Diabetes / Sugar Control", slug: "diabetes" },
+                        { label: "Digestion", slug: "digestion" },
+                        { label: "Gastro Health & Acidity", slug: "gastro" },
+                        { label: "Obesity", slug: "obesity" },
+                        { label: "Piles & Hemorrhoid", slug: "piles" },
+                      ].map(item => (
+                        <li key={item.slug}>
+                          <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
+                            {item.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </li>
             <li>
               <Link to="/collections/Brands" className="hover:text-amber-400 transition-colors">Brands</Link>

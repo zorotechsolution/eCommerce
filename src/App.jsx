@@ -20,6 +20,9 @@ import RefundPolicy from "./pages/RefundPolicy";
 import Profile from "./pages/Profile";
 import Siddhar from "./pages/Siddhar";
 import CompanyProfile from "./pages/CompanyProfile";
+import PersonalCare from "./pages/PersonalCare";
+import PersonalCareCategory from "./pages/PersonalCareCategory";
+import ShippingDelivery from "./pages/ShippingDelivery";
 
 function App() {
   return (
@@ -41,10 +44,13 @@ function App() {
           <Route path="/siddhar" element={<Siddhar />} />
           <Route path="/company-profile" element={<CompanyProfile />} />
           <Route path="/e-consultation" element={<EConsultation/>} />
+          <Route path="/personal-care" element={<PersonalCare/>} />
+          <Route path="/personal-care/:slug" element={<PersonalCareCategory/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/terms" element={<Terms/>} />
           <Route path="/refund-policy" element={<RefundPolicy/>} />
+          <Route path="/shipping-delivery" element={<ShippingDelivery/>} />
           <Route path="*" element={<NotFount404/>}/>
         </Routes>
         <Footer/>

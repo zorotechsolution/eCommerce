@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { GrPrevious, GrNext } from "react-icons/gr";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Typography from "@mui/material/Typography";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { ayurvedicMedicines } from "../db/data";
+import { useDispatch } from "react-redux";
+import { addItem } from "../store/cartSlice";
+import { FaCartPlus, FaLeaf, FaTruck, FaShieldAlt, FaCertificate } from "react-icons/fa";
+import { useLang } from "../context/LangContext";
+
 function Home() {
   let [isMobile, setIsMobile] = useState(window.innerWidth < 640);
+  const dispatch = useDispatch();
+  const { t } = useLang();
+
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 640);
@@ -17,163 +22,64 @@ function Home() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-
-
-
-
-
   const homeCarouselImages = [
     {
       id: 1,
-      imgLink:
-        "https://images.pexels.com/photos/7615621/pexels-photo-7615621.jpeg",
-      alt: "home Image1",
+      imgLink: "https://images.pexels.com/photos/7615621/pexels-photo-7615621.jpeg",
+      alt: "Ayurvedic herbs and spices",
+      headline: "Ancient Wisdom,\nModern Wellness",
+      sub: "Authentic Siddha & Ayurvedic medicines delivered to your door",
     },
     {
       id: 2,
-      imgLink:
-        "https://images.pexels.com/photos/4174743/pexels-photo-4174743.jpeg",
-      alt: "home Image2",
+      imgLink: "https://images.pexels.com/photos/4174743/pexels-photo-4174743.jpeg",
+      alt: "Natural healthcare",
+      headline: "Pure. Natural.\nAuthentic.",
+      sub: "Shop India's finest Ayurvedic products from trusted brands",
     },
     {
       id: 3,
-      imgLink:
-        "https://images.pexels.com/photos/6978215/pexels-photo-6978215.jpeg",
-      alt: "home Image3",
-    },
-  ];
-  let ayurvedicMedicines = [
-    {
-      id: 1,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs ${199}.00`,
-    },
-    {
-      id: 2,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs ${199}.00`,
-    },
-    {
-      id: 3,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `R ${199}.00`,
-    },
-    {
-      id: 4,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs ${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
-    },
-    {
-      id: 5,
-      img: "https://www.ayurkart.com/cdn/shop/products/radhey-ghee_600x.jpg?v=1715887222",
-      productName: "Radhey Ghee",
-      productDescription:
-        "Shree Radhey Ghee is 100% pure & natural ghee made from Indian Native Gir cow’s milk. The product is free from artificial colours, preservatives, flavours, sweeteners and chemicals.",
-      price: `Rs${199}.00`,
+      imgLink: "https://images.pexels.com/photos/6978215/pexels-photo-6978215.jpeg",
+      alt: "Herbal wellness",
+      headline: "Heal Naturally,\nLive Fully",
+      sub: "Certified Ayurvedic medicines for every need",
     },
   ];
 
-  const products = [
-    {
-      name: "Saraswatarishtam",
-      category: "ARISHTAM",
-      price: 940,
-      image:
-        "https://images.pexels.com/photos/34705969/pexels-photo-34705969.jpeg",
-    },
-    {
-      name: "Dasamularishtam",
-      category: "ARISHTAM",
-      price: 130,
-      image:
-        "https://images.pexels.com/photos/4871239/pexels-photo-4871239.jpeg",
-    },
-    {
-      name: "Some Bhasmam",
-      category: "BHASMAM",
-      price: 200,
-      image:
-        "https://images.pexels.com/photos/8329969/pexels-photo-8329969.jpeg",
-    },
+  const categories = [
+    { name: "Siddhar", path: "/collections/Siddhar", icon: "🌿" },
+    { name: "Classical Medicines", path: "/collections/Classical Medicines", icon: "⚗️" },
+    { name: "Personal Care", path: "/collections/Personal Care", icon: "✨" },
+    { name: "Brands", path: "/collections/Brands", icon: "🏷️" },
+    { name: "Health & Nutrition", path: "/collections/Health & Nutrition", icon: "💊" },
+    { name: "General", path: "/collections/General", icon: "🌱" },
   ];
 
-  const categories = ["ALL", "ARISHTAM", "BHASMAM", "CHURNAM"];
-  let [activeCategory, setActiveCategory] = useState("ALL");
-  let filteredProducts =
-    activeCategory === "ALL"
-      ? products
-      : products.filter((product) => product.category === activeCategory);
-  console.log(filteredProducts);
+  const features = [
+    { icon: <FaLeaf className="text-3xl" />, titleKey: "hundredNaturalFeat", descKey: "hundredNaturalDesc" },
+    { icon: <FaTruck className="text-3xl" />, titleKey: "fastDelivery", descKey: "fastDeliveryDesc" },
+    { icon: <FaShieldAlt className="text-3xl" />, titleKey: "trustedQuality", descKey: "trustedQualityDesc" },
+    { icon: <FaCertificate className="text-3xl" />, titleKey: "certifiedProducts", descKey: "certifiedProductsDesc" },
+  ];
+
   return (
     <>
-      {/* Hero Section*/}
-      <div className="w-full h-[70vh]">
+      {/* Hero Carousel */}
+      <div className="w-full h-[60vh] md:h-[70vh] relative">
         <Carousel
           autoPlay
           infiniteLoop
-          interval={3000}
+          interval={4000}
           showThumbs={false}
           showStatus={false}
-          showIndicators={false}
+          showIndicators={true}
           renderArrowPrev={(onClickHandler, hasPrev) =>
             hasPrev && (
               <button
                 onClick={onClickHandler}
-                className="absolute left-3 top-1/2 -translate-y-1/2 z-10 bg-white/70 p-2 rounded-full"
+                className="absolute left-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2.5 rounded-full shadow-lg transition-all hover:scale-110"
               >
-                <GrPrevious />
+                <GrPrevious className="text-[rgb(7,81,89)]" />
               </button>
             )
           }
@@ -181,55 +87,78 @@ function Home() {
             hasNext && (
               <button
                 onClick={onClickHandler}
-                className="absolute right-3 top-1/2 -translate-y-1/2 z-10 bg-white/70 p-2 rounded-full"
+                className="absolute right-4 top-1/2 -translate-y-1/2 z-10 bg-white/80 hover:bg-white p-2.5 rounded-full shadow-lg transition-all hover:scale-110"
               >
-                <GrNext />
+                <GrNext className="text-[rgb(7,81,89)]" />
               </button>
             )
           }
         >
           {homeCarouselImages.map((item) => (
-            <div key={item.id} className="h-[70vh]">
+            <div key={item.id} className="h-[60vh] md:h-[70vh] relative">
               <img
                 src={item.imgLink}
                 alt={item.alt}
-                className="w-full h-full object-cover block"
+                className="w-full h-full object-cover block brightness-50"
               />
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-5 z-10">
+                <h1 className="text-3xl md:text-6xl font-black tracking-tight leading-tight mb-4 whitespace-pre-line">
+                  {item.headline}
+                </h1>
+                <p className="text-base md:text-xl text-white/80 font-medium max-w-xl mb-8">
+                  {item.sub}
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Link to="/collections" className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg">
+                    {t('shopNow')}
+                  </Link>
+                  <Link to="/e-consultation" className="bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-bold px-8 py-3 rounded-full uppercase tracking-wider transition-all border border-white/40">
+                    {t('bookConsultation')}
+                  </Link>
+                </div>
+              </div>
             </div>
           ))}
         </Carousel>
       </div>
 
-      {/* Content Section */}
-      <div className="w-full min-h-[300px] md:min-h-[200px] bg-[#0c6768] px-6 flex flex-col items-center justify-center gap-4 md:gap-3">
-        <h3 className="text-white text-xl sm:text-2xl md:text-3xl font-semibold text-center leading-snug">
-          Buy Ayurvedic Medicine Online from India's Largest Ayurvedic Shopping
-          Store
-        </h3>
-        <p className="text-white text-center leading-snug">
-          Vel Siddhar Arakkattalai, the online ayurvedic store sells all kinds of ayurvedic
-          medicine and ayurvedic products online from India's top most ayurvedic
-          brands like Kottakkal Arya Vaidya Sala, Vaidyaratnam, AVP, Kerala
-          Ayurveda, Himalaya, Dabur, Zandu Ayurveda & Alarsin etc.,
+      {/* Brand Banner */}
+      <div className="w-full bg-[rgb(7,81,89)] px-6 py-10 flex flex-col items-center justify-center gap-4 text-center">
+        <h2 className="text-white text-2xl md:text-3xl font-bold leading-snug max-w-3xl">
+          {t('buyAyurvedic')}
+        </h2>
+        <p className="text-white/70 text-sm md:text-base leading-relaxed max-w-2xl">
+          {t('buyAyurvedicSub')}
         </p>
-        <p className="text-white text-center leading-snug">
-          Our aims to bring the world of authentic ayurvedic herbs and ayurvedic
-          medicines to your doorstep within the shortest delivery time possible.
-        </p>
+        <Link to="/collections" className="mt-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5">
+          {t('exploreAllProducts')}
+        </Link>
       </div>
-      {/* Product Section */}
-      <div>
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <hr className="inline-block w-32 h-0.5 bg-black ml-2 mt-5" />
-          <h3 className="text-sm md:text-2xl font-semibold leading-loose text-center mt-4">
-            Top Selling Ayurvedic Medicines
-          </h3>
-          <hr className="inline-block w-32 h-0.5 bg-black mr-2 mt-5" />
+
+      {/* Features Section */}
+      <div className="py-14 px-5 bg-slate-50">
+        <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6">
+          {features.map((f, i) => (
+            <div key={i} className="flex flex-col items-center text-center gap-3 p-6 bg-white rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-shadow">
+              <div className="text-[rgb(7,81,89)]">{f.icon}</div>
+              <h3 className="font-bold text-slate-800 text-sm md:text-base">{t(f.titleKey)}</h3>
+              <p className="text-xs text-slate-500 leading-relaxed">{t(f.descKey)}</p>
+            </div>
+          ))}
         </div>
-        <div className="text-center font-semibold">
-          <p>Explore our best rated Online Ayurvedic Medicines Ayurvedic</p>
-        </div>
-        <div>
+      </div>
+
+      {/* Top Selling Products */}
+      <div className="py-14 px-5 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-4xl font-black text-slate-800 tracking-tight mb-3">
+              {t('topSelling')}
+            </h2>
+            <p className="text-slate-500 font-medium">{t('exploreMore')}</p>
+            <div className="w-16 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+
           <Carousel
             autoPlay={true}
             infiniteLoop={true}
@@ -239,89 +168,91 @@ function Home() {
             showStatus={false}
             centerMode={true}
             centerSlidePercentage={isMobile ? 100 : 25}
-            className="mt-12"
           >
             {ayurvedicMedicines.map((product) => (
-              <Card sx={{ maxWidth: 280, margin: "0 10px" }} key={product.id} >
-                <Link to={`/ProductList/${product.id}`}>
-                <CardMedia
-                  sx={{ height: 240 }}
-                  image={product.img}
-                  title="green iguana"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    {product.productName}
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                    {product.productDescription}
-                  </Typography>
-                  <Typography variant="body1">{product.price}</Typography>
-                </CardContent>
-              </Link>
-              </Card>
+              <div key={product.id} className="px-3 pb-4">
+                <div className="bg-white border border-slate-200 rounded-3xl overflow-hidden hover:shadow-xl transition-all duration-300 group">
+                  <Link to={`/ProductList/${product.id}`}>
+                    <div className="aspect-square overflow-hidden p-4 bg-slate-50">
+                      <img
+                        src={product.img}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 rounded-xl"
+                        alt={product.productName}
+                      />
+                    </div>
+                    <div className="p-4 text-left">
+                      <p className="text-xs font-bold text-orange-500 uppercase tracking-widest mb-1">{product.category}</p>
+                      <h3 className="font-bold text-slate-800 line-clamp-2 text-sm leading-snug group-hover:text-[rgb(7,81,89)] transition-colors mb-2">
+                        {product.productName}
+                      </h3>
+                      <div className="flex items-center justify-between">
+                        <span className="text-lg font-black text-[rgb(7,81,89)]">₹{product.price}</span>
+                      </div>
+                    </div>
+                  </Link>
+                  <div className="px-4 pb-4">
+                    <button
+                      onClick={() => dispatch(addItem({ ...product, quantity: 1 }))}
+                      className="w-full flex items-center justify-center gap-2 bg-[rgb(7,81,89)] hover:bg-orange-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors"
+                    >
+                      <FaCartPlus /> {t('addToCartBtn')}
+                    </button>
+                  </div>
+                </div>
+              </div>
             ))}
           </Carousel>
         </div>
       </div>
-      {/* COntent Section */}
-      <div className="mt-12">
-        <div className="flex justify-center items-center mt-4 gap-4">
-          <hr className="inline-block w-32 h-0.5 bg-black ml-2 mt-5" />
-          <h2 className="text-black text-xl sm:text-2xl md:text-3xl font-semibold text-center leading-snug">
-            {" "}
-            Ayurvedic Products & Medicines to General Ailments
-          </h2>
-          <hr className="inline-block w-32 h-0.5 bg-black ml-2 mt-5" />
-        </div>
-        <div>
-          <h4 className="text-center text-xl font-semibold leading-snug mt-2">
-            Natural healthcare with Ayurveda
-          </h4>
-          <p className="text-center leading-snug">
-            Ayurveda, an ancient tradition of medicines in India, is focused on
-            the idea that 'Prevention is better than cure.' Ayurveda suggests
-            alterations in the diet and lifestyle to achieve a healthy balance.
-            Ayurveda medicines not only concentrates on healing but also
-            emphasizes general wellness. The traditional system of ayurvedic
-            medicine introduced several potent herbal combinations that aid in
-            maintaining health. Check out these Ayurvedic medicines online for
-            general ailments.
-          </p>
+
+      {/* Shop by Category */}
+      <div className="py-14 px-5 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-4xl font-black text-slate-800 tracking-tight mb-3">
+              {t('shopByCategory')}
+            </h2>
+            <p className="text-slate-500 font-medium">{t('shopByCategorySub')}</p>
+            <div className="w-16 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categories.map((cat) => (
+              <Link
+                key={cat.name}
+                to={cat.path}
+                className="flex flex-col items-center gap-3 p-6 bg-white rounded-2xl border border-slate-100 hover:border-[rgb(7,81,89)] hover:shadow-lg transition-all duration-300 group hover:-translate-y-1"
+              >
+                <span className="text-3xl">{cat.icon}</span>
+                <span className="text-xs md:text-sm font-bold text-slate-700 text-center group-hover:text-[rgb(7,81,89)] transition-colors leading-tight">
+                  {cat.name}
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
-      {/* Product list by categories */}
-      <div className="p-5 flex flex-col justify-center items-center">
-        <div className="flex gap-3 mb-6 flex-wrap">
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setActiveCategory(cat)}
-              className={`px-4 py-2 border rounded 
-              ${
-                activeCategory === cat
-                  ? "bg-green-600 text-white"
-                  : "bg-white text-gray-700"
-              }
-            `}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-        {/* Products */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-12">
-          {filteredProducts.map((item, index) => (
-            <div key={index} className="text-center">
-              <img
-                src={item.image}
-                alt={item.name}
-                className="w-28 mx-auto mb-2"
-              />
-              <h4 className="font-medium">{item.name}</h4>
-              <p className="text-sm text-gray-500">Rs. {item.price}</p>
-            </div>
-          ))}
+
+      {/* About Ayurveda Section */}
+      <div className="py-14 px-5 bg-[rgb(7,81,89)] text-white">
+        <div className="max-w-5xl mx-auto text-center">
+          <h2 className="text-2xl md:text-4xl font-black mb-4 tracking-tight">
+            {t('naturalHealthcare')}
+          </h2>
+          <div className="w-16 h-1 bg-orange-500 mx-auto mb-6 rounded-full"></div>
+          <p className="text-white/80 leading-relaxed text-sm md:text-base max-w-3xl mx-auto mb-4">
+            {t('naturalHealthcareSub')}
+          </p>
+          <p className="text-white/70 leading-relaxed text-sm md:text-base max-w-3xl mx-auto">
+            {t('naturalHealthcareSub2')}
+          </p>
+          <div className="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
+            <Link to="/siddhar" className="bg-white text-[rgb(7,81,89)] font-bold px-8 py-3 rounded-full uppercase tracking-wider hover:-translate-y-0.5 transition-all shadow-lg">
+              {t('learnAboutSiddhar')}
+            </Link>
+            <Link to="/collections" className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3 rounded-full uppercase tracking-wider hover:-translate-y-0.5 transition-all shadow-lg">
+              {t('browseProducts')}
+            </Link>
+          </div>
         </div>
       </div>
     </>

@@ -1,8 +1,10 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { FaFacebookF, FaTwitter, FaPinterestP, FaInstagram, FaTumblr, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaCcPaypal, FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover } from "react-icons/fa";
+import { useLang } from "../context/LangContext";
 
 const Footer = () => {
+  const { t } = useLang();
   return (
     <footer className="bg-[#021319] text-gray-300 pt-16 pb-6 font-sans">
       <div className="max-w-[85rem] mx-auto px-5 md:px-10 lg:px-16">
@@ -21,49 +23,49 @@ const Footer = () => {
           {/* INFORMATIONS */}
           <div>
             <h3 className="text-orange-500 text-sm font-bold uppercase mb-6 tracking-wide">
-              Informations
+              {t('informations')}
             </h3>
             <ul className="text-sm flex flex-col gap-3">
-              <li><Link to="/about" className="hover:text-white transition-colors">About Us</Link></li>
-              <li><Link to="/siddhar" className="hover:text-white transition-colors">What Is Siddhar ?</Link></li>
-              <li><Link to="/siddhar" className="hover:text-white transition-colors">Siddhar Wellness</Link></li>
-              <li><Link to="/collections" className="hover:text-white transition-colors">Search</Link></li>
-              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
-              <li><Link to="/terms" className="hover:text-white transition-colors">Terms & Conditions</Link></li>
-              <li><Link to="/" className="hover:text-white transition-colors">Sitemap</Link></li>
+              <li><Link to="/about" className="hover:text-white transition-colors">{t('aboutUs')}</Link></li>
+              <li><Link to="/siddhar" className="hover:text-white transition-colors">{t('whatIsSiddhar')}</Link></li>
+              <li><Link to="/siddhar" className="hover:text-white transition-colors">{t('siddharWellness')}</Link></li>
+              <li><Link to="/collections" className="hover:text-white transition-colors">{t('search')}</Link></li>
+              <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('privacyPolicy')}</Link></li>
+              <li><Link to="/terms" className="hover:text-white transition-colors">{t('termsConditions')}</Link></li>
+              <li><Link to="/" className="hover:text-white transition-colors">{t('sitemap')}</Link></li>
             </ul>
           </div>
 
           {/* CUSTOMER SERVICES */}
           <div>
             <h3 className="text-orange-500 text-sm font-bold uppercase mb-6 tracking-wide">
-              Customer Services
+              {t('customerServices')}
             </h3>
             <ul className="text-sm flex flex-col gap-3">
-              <li><Link to="/" className="hover:text-white transition-colors">Contact Us</Link></li>
-              <li><Link to="/" className="hover:text-white transition-colors">International Shipping</Link></li>
-              <li><Link to="/refund-policy" className="hover:text-white transition-colors">Returns & Refunds</Link></li>
-              <li><Link to="/" className="hover:text-white transition-colors">Shipping & Delivery</Link></li>
+              <li><Link to="/" className="hover:text-white transition-colors">{t('contactUs')}</Link></li>
+              <li><Link to="/" className="hover:text-white transition-colors">{t('internationalShipping')}</Link></li>
+              <li><Link to="/refund-policy" className="hover:text-white transition-colors">{t('returnsRefunds')}</Link></li>
+              <li><Link to="/shipping-delivery" className="hover:text-white transition-colors">{t('shippingDelivery')}</Link></li>
             </ul>
           </div>
 
           {/* QUICK SHOP */}
           <div>
             <h3 className="text-orange-500 text-sm font-bold uppercase mb-6 tracking-wide">
-              Quick Shop
+              {t('quickShop')}
             </h3>
             <ul className="text-sm flex flex-col gap-3">
-              <li><Link to="/Login" className="hover:text-white transition-colors">Sign In</Link></li>
-              <li><Link to="/Signup" className="hover:text-white transition-colors">Create an Account</Link></li>
-              <li><Link to="/profile" className="hover:text-white transition-colors">My Account</Link></li>
-              <li><Link to="/wishlist" className="hover:text-white transition-colors">Wishlist</Link></li>
+              <li><Link to="/Login" className="hover:text-white transition-colors">{t('signIn')}</Link></li>
+              <li><Link to="/Signup" className="hover:text-white transition-colors">{t('createAnAccount')}</Link></li>
+              <li><Link to="/profile" className="hover:text-white transition-colors">{t('myAccount')}</Link></li>
+              <li><Link to="/wishlist" className="hover:text-white transition-colors">{t('wishlist')}</Link></li>
             </ul>
           </div>
 
           {/* CONTACT US */}
           <div>
             <h3 className="text-orange-500 text-sm font-bold uppercase mb-6 tracking-wide">
-              Contact Us
+              {t('contactUs')}
             </h3>
             <ul className="text-[13px] flex flex-col gap-4 mb-8">
               <li className="flex items-start gap-3">
@@ -81,7 +83,7 @@ const Footer = () => {
             </ul>
 
             <h3 className="text-orange-500 text-sm font-bold uppercase mb-4 tracking-wide">
-              Stay Connected
+              {t('stayConnected')}
             </h3>
             <div className="flex gap-2">
               <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
@@ -110,11 +112,11 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-[#11232b] pt-6 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-400">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-            <p className="text-gray-300">© {new Date().getFullYear()} Vel Siddhar Arakkattalai. All Rights Reserved.</p>
+            <p className="text-gray-300">© {new Date().getFullYear()} Vel Siddhar Arakkattalai. {t('allRightsReserved')}</p>
             <div className="flex gap-4 font-medium">
-              <Link to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</Link>
-              <Link to="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
-              <Link to="/refund-policy" className="hover:text-white transition-colors">Refund Policy</Link>
+              <Link to="/privacy-policy" className="hover:text-white transition-colors">{t('privacyPolicy')}</Link>
+              <Link to="/terms" className="hover:text-white transition-colors">{t('termsOfService')}</Link>
+              <Link to="/refund-policy" className="hover:text-white transition-colors">{t('refundPolicy')}</Link>
             </div>
           </div>
           <div className="flex items-center gap-2 text-2xl text-white bg-white p-1 rounded mt-2 md:mt-0">
