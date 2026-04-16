@@ -207,7 +207,7 @@ function Home() {
           Store
         </h3>
         <p className="text-white text-center leading-snug">
-          Ayurkart, the online ayurvedic store sells all kinds of ayurvedic
+          Vel Siddhar Arakkattalai, the online ayurvedic store sells all kinds of ayurvedic
           medicine and ayurvedic products online from India's top most ayurvedic
           brands like Kottakkal Arya Vaidya Sala, Vaidyaratnam, AVP, Kerala
           Ayurveda, Himalaya, Dabur, Zandu Ayurveda & Alarsin etc.,

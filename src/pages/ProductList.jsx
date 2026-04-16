@@ -1,16 +1,18 @@
 import React, { useReducer } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
 import { ayurvedicMedicines } from "../db/data";
-import Button from "@mui/material/Button";
-import ButtonGroup from "@mui/material/ButtonGroup";
 import { useState } from "react";
 import { FaHeart } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
+import { addItem } from "../store/cartSlice";
+import { addToWishlist } from "../store/wishlistSlice";
 
 const ProductList = () => {
   let dataValue = ayurvedicMedicines;
-
   let { id } = useParams();
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   let productItem = dataValue.find((product) => product.id === Number(id));
 
@@ -30,16 +32,35 @@ const ProductList = () => {
     }
   };
 
-  let [state, dispatch] = useReducer(reducer, { count: 1 });
+  let [state, dispatchCount] = useReducer(reducer, { count: 1 });
+  const [isAdded, setIsAdded] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
+  let DECREMENT = () => {
+    if (state.count > 1) {
+      return dispatchCount({ type: COUNTER_ACTION.DECREMENT });
+    }
+  };
 
-let DECREMENT = ()=>{
-  if(state.count>1){
-  return dispatch({ type: COUNTER_ACTION.DECREMENT })
-}
-}
-  
+  const handleAddToCart = () => {
+    if(productItem) {
+      dispatch(addItem({ ...productItem, quantity: state.count }));
+      setIsAdded(true);
+      setTimeout(() => setIsAdded(false), 2000);
+    }
+  };
 
+  const handleAddToWishlist = () => {
+     if(productItem) {
+      dispatch(addToWishlist(productItem));
+      setIsWishlisted(true);
+      setTimeout(() => setIsWishlisted(false), 2000);
+     }
+  };
+
+  if(!productItem) {
+    return <div className="text-center py-20 text-xl font-bold">Product not found</div>;
+  }
 
   return (
     <div>
@@ -64,93 +85,56 @@ let DECREMENT = ()=>{
             </div>
             <h2 className="text-2xl font-semibold ">Rs. {productItem.price}</h2>
 
-            <ul className="flex flex-col gap-2 text-xs">
-              <li>Availability:Available</li>
-              <li>Product Type:Ayurvedic Oil / Thailam / Kuzhampu</li>
-              <li>Product Vendor:Kottakkal Arya Vaidya Sala</li>
-              <li>Product SKU:AK-A404A</li>
+            <ul className="flex flex-col gap-2 text-xs mt-2 mb-2">
+              <li>Availability: Available</li>
+              <li>Product Type: {productItem.category || 'Ayurvedic Medicine'}</li>
+              <li>Product Vendor: Kottakkal Arya Vaidya Sala</li>
             </ul>
-            <div className="">
-              <h6 className="text-sm font-semibold my-2">Bundle</h6>
-              <div className="flex gap-3 my-2">
-                <div className="border border-gray-300 ">
-                  <label htmlFor="200" className="cursor-pointer">
-                    <input
-                      type="radio"
-                      id="200"
-                      className="hidden peer"
-                      name="ml"
-                      value={"200ml"}
-                    />
-                    <span
-                      className=" peer-checked:bg-orange-500 p-0.5
-                 peer-checked:text-white 
-                 peer-checked:border-black"
-                    >
-                      200ml
-                    </span>
-                  </label>
-                </div>
-                <div className="border border-gray-300 ">
-                  <label htmlFor="600" className="cursor-pointer">
-                    <input
-                      type="radio"
-                      id="600"
-                      className="hidden peer"
-                      name="ml"
-                      value={"600ml"}
-                    />
-                    <span
-                      className=" peer-checked:bg-orange-500 p-0.5
-                 peer-checked:text-white 
-                 peer-checked:border-orange-500"
-                    >
-                      600 ml (3x200ml)
-                    </span>
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="flex flex-col md:flex-row my-2 gap-2">
+
+            <div className="flex flex-col md:flex-row my-2 gap-4">
               <div className=" flex">
                 <button
-                  className="bg-gray-200 px-4 py-2 "
+                  className="bg-gray-200 px-4 py-2 font-bold text-lg hover:bg-gray-300"
                   onClick={DECREMENT}
                 >
                   -
                 </button>
                 <input
-                  className="bg-gray-100 px-4 py-2 w-13"
+                  className="bg-gray-100 px-4 py-2 w-16 text-center font-bold"
                   value={state.count}
                   disabled
                   type="text"
-                  name=""
-                  id=""
                 />
 
                 <button
-                  className="bg-gray-200 px-4 py-2 "
-                  onClick={()=>dispatch({ type: COUNTER_ACTION.INCREMENT })}
+                  className="bg-gray-200 px-4 py-2 font-bold text-lg hover:bg-gray-300"
+                  onClick={() => dispatchCount({ type: COUNTER_ACTION.INCREMENT })}
                 >
                   +
                 </button>
               </div>
 
-              <div className=" flex gap-2">
-                <button className="bg-orange-400 p-2 font-bold text-white">
-                  ADD TO CART
+              <div className=" flex gap-2 w-full md:w-auto">
+                <button 
+                  onClick={handleAddToCart}
+                  className={`${isAdded ? 'bg-green-500 hover:bg-green-600' : 'bg-orange-500 hover:bg-orange-600'} px-6 py-2 font-bold text-white transition-colors w-full md:w-auto flex justify-center items-center`}
+                  disabled={isAdded}
+                >
+                  {isAdded ? '✓ ADDED' : 'ADD TO CART'}
                 </button>
-                <div className="bg-[rgb(7,81,89)] px-2">
-                  <button>
-                    <FaHeart className="text-white text-2xl mt-2 " />
-                  </button>
-                </div>
+                <button
+                  onClick={handleAddToWishlist}
+                  disabled={isWishlisted}
+                  className={`${isWishlisted ? 'bg-rose-500' : 'bg-[rgb(7,81,89)] hover:bg-[rgb(6,65,71)]'} px-4 flex items-center justify-center transition-colors cursor-pointer w-full md:w-auto`}
+                >
+                  <FaHeart className={`${isWishlisted ? 'text-white scale-110' : 'text-white'} text-2xl transition-transform`} />
+                </button>
               </div>
             </div>
-            <div className="px-5">
-              <ul className="list-disc">
-                <li>Ayurvedic Medicine</li>
-                <li>Exchange or Return within 7 days of a delivery</li>
+            <div className="px-5 mt-4">
+              <ul className="list-disc text-sm text-slate-600">
+                <li>Ayurvedic Medicine securely packaged.</li>
+                <li>Exchange or Return within 7 days of a delivery.</li>
                 <li>
                   For Shipping other than India Please Contact: +91 96292 97111
                 </li>
@@ -159,6 +143,7 @@ let DECREMENT = ()=>{
           </div>
         </div>
       </section>
+
       <section className="Product Details py-2 md:py-10">
         <div className="px-5 md:px-50 flex flex-col gap-5">
           <div className="">
