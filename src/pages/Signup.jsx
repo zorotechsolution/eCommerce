@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
-import axios from "axios";
+import API from "../utils/axiosConfig";
 import { useLang } from "../context/LangContext";
 
 const Signup = () => {
@@ -30,17 +30,16 @@ const Signup = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await axios.post("https://fakestoreapi.com/users", {
-          email: formData.email, username: formData.username, password: formData.password,
-          phone: formData.phone,
-          name: { firstname: formData.username, lastname: "User" },
-          address: { city: "Chennai", street: "Example St", number: 1, zipcode: "600000" }
+        const response = await API.post("/auth/register", {
+          email: formData.email, 
+          name: formData.username, 
+          password: formData.password
         });
-        const autoGenToken = `mock_reg_token_${response.data.id || Math.floor(Math.random() * 100)}`;
+        const autoGenToken = response.data.token;
         dispatch(login({ username: formData.username, email: formData.email, token: autoGenToken }));
         navigate("/profile");
       } catch (err) {
-        setError(err.response?.data?.message || err.response?.data || "Failed to register account.");
+        setError(err.response?.data?.error || "Failed to register account.");
       } finally {
         setLoading(false);
       }

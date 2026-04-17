@@ -1,358 +1,339 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { ayurvedicMedicines } from "../db/data";
+import API from "../utils/axiosConfig";
 import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { useLang } from "../context/LangContext";
-import StarIcon from "@mui/icons-material/Star";
-import {
-  FaLeaf, FaCartPlus, FaSearch, FaChevronRight, FaStar,
-  FaRecycle, FaShieldAlt, FaCertificate, FaTint,
-  FaSmile, FaCut, FaBath, FaSoap,
-  FaSun, FaMoon, FaSeedling,
+import { 
+  FaLeaf, FaCartPlus, FaChevronRight, FaStar, 
+  FaMagic, FaClock, FaCheckCircle, FaQuoteLeft,
+  FaSpa, FaTint, FaSun, FaWind, FaGem, FaArrowRight
 } from "react-icons/fa";
+import HeroImage from "../assets/siddha_personal_care_hero.png";
 
 const PersonalCare = () => {
   const dispatch = useDispatch();
   const { t } = useLang();
-  const [search, setSearch] = useState("");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [activeStep, setActiveStep] = useState(0);
 
-  const personalCareProducts = ayurvedicMedicines.filter(
-    (p) => p.category === "Personal Care"
-  );
-  const filteredProducts = search
-    ? personalCareProducts.filter((p) =>
-        p.productName.toLowerCase().includes(search.toLowerCase())
-      )
-    : personalCareProducts;
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await API.get('/products?limit=50');
+        const formatted = res.data.data
+          .filter(p => p.category?.name === "Personal Care")
+          .map(p => {
+            const rawImg = p.images?.[0]?.url || "";
+            return {
+              ...p,
+              id: p._id,
+              productName: p.name,
+              productDescription: p.description,
+              img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+              price: p.price
+            };
+          });
+        setProducts(formatted);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const categories = [
-    { nameKey: "faceCareCat", descKey: "faceCareDesc", icon: <FaSmile className="text-3xl" />, circleBg: "bg-pink-100", iconColor: "text-pink-500", border: "border-pink-200", accent: "bg-pink-500", link: "/personal-care/face-care" },
-    { nameKey: "hairCareCat", descKey: "hairCareDesc", icon: <FaCut className="text-3xl" />, circleBg: "bg-teal-100", iconColor: "text-teal-500", border: "border-teal-200", accent: "bg-teal-500", link: "/personal-care/hair-oil" },
-    { nameKey: "bodyCareCat", descKey: "bodyCareDesc", icon: <FaBath className="text-3xl" />, circleBg: "bg-blue-100", iconColor: "text-blue-500", border: "border-blue-200", accent: "bg-blue-500", link: "/personal-care/body-care" },
-    { nameKey: "herbalOilsCat", descKey: "herbalOilsDesc", icon: <FaTint className="text-3xl" />, circleBg: "bg-orange-100", iconColor: "text-orange-500", border: "border-orange-200", accent: "bg-orange-500", link: "/personal-care/skin-beauty" },
+  const regimens = [
+    { title: "Cleanse", subtitle: "Remove Toxins", icon: <FaTint />, desc: "Ancient blends to purify skin without stripping natural oils." },
+    { title: "Nourish", subtitle: "Deep Hydration", icon: <FaSpa />, desc: "Sacred oils and herb-infused serums for cell-level restoration." },
+    { title: "Heal", subtitle: "Targeted Care", icon: <FaLeaf />, desc: "Specific formulations for acne, pigmentation, and hair health." },
+    { title: "Protect", subtitle: "Daily Shield", icon: <FaGem />, desc: "Lightweight barriers that shield from pollution and oxidation." }
   ];
 
-  const benefits = [
-    {
-      icon: <FaSeedling className="text-3xl text-green-500" />,
-      titleEn: "100% Natural Ingredients",
-      titleTa: "100% இயற்கை பொருட்கள்",
-      descEn: "All our personal care products are crafted from herbs, botanical extracts, and natural oils — free from parabens, sulphates, and harmful chemicals.",
-      descTa: "எங்கள் அனைத்து தனிப்பட்ட பராமரிப்பு பொருட்களும் மூலிகைகள், தாவர சாறுகள் மற்றும் இயற்கை எண்ணெய்களால் தயாரிக்கப்படுகின்றன — தீங்கான இரசாயனங்கள் இல்லாதவை.",
-    },
-    {
-      icon: <FaLeaf className="text-3xl text-teal-500" />,
-      titleEn: "Gentle on Skin",
-      titleTa: "சருமத்திற்கு மென்மையானது",
-      descEn: "Formulated using ancient Siddha and Ayurvedic recipes that have been used for centuries to nourish, protect, and heal skin and hair naturally.",
-      descTa: "பழங்கால சித்த மற்றும் ஆயுர்வேத செய்முறைகளை பயன்படுத்தி தயாரிக்கப்பட்டது — சருமம் மற்றும் முடியை இயற்கையாக ஊட்டி, பாதுகாத்து, குணப்படுத்துகிறது.",
-    },
-    {
-      icon: <FaRecycle className="text-3xl text-lime-500" />,
-      titleEn: "Sustainably Sourced",
-      titleTa: "நிலையான மூலங்களிலிருந்து",
-      descEn: "We work directly with certified organic farms and sustainable suppliers across Tamil Nadu and Kerala to bring you the freshest ingredients.",
-      descTa: "தமிழ்நாடு மற்றும் கேரளா முழுவதும் சான்றளிக்கப்பட்ட கரிம பண்ணைகள் மற்றும் நிலையான சப்ளையர்களுடன் நேரடியாக பணியாற்றுகிறோம்.",
-    },
-    {
-      icon: <FaCertificate className="text-3xl text-purple-500" />,
-      titleEn: "Dermatologically Tested",
-      titleTa: "சரும நிபுணர்களால் சோதிக்கப்பட்டது",
-      descEn: "Every product undergoes rigorous quality testing to ensure it is safe, effective, and suitable for all skin and hair types.",
-      descTa: "ஒவ்வொரு பொருளும் கடுமையான தர சோதனைக்கு உட்படுத்தப்படுகிறது — அனைத்து வகை சரும மற்றும் முடி வகைகளுக்கும் பாதுகாப்பானது.",
-    },
+  const pillars = [
+    { icon: <FaSun />, name: "Pitham", focus: "Brightness & Heat", desc: "Balancing Pitta addresses inflammation, sensitivity, and redness." },
+    { icon: <FaWind />, name: "Vadham", focus: "Moisture & Flow", desc: "Vata care prevents dryness, thin hair, and premature aging." },
+    { icon: <FaTint />, name: "Kabam", focus: "Firmness & Oil", desc: "Kapha balancing controls excess oil and maintains skin elasticity." }
   ];
-
-  const tips = [
-    {
-      icon: <FaSun className="text-2xl text-pink-400" />,
-      titleEn: "Morning Skincare Ritual",
-      titleTa: "காலை சரும பராமரிப்பு",
-      contentEn: "Start your day with a gentle cleanse using neem-based face wash, follow up with kumkumadi oil drops on damp skin, and finish with a light herbal moisturiser to lock in hydration.",
-      contentTa: "வேப்ப சரும சுத்தப்படுத்தியால் மென்மையான சுத்தமாக தொடங்கி, ஈர சருமத்தில் குமகுமடி எண்ணெய் தொட்டு, நீரேற்றத்தை பூட்ட இலகுவான மூலிகை ஈரப்பதமூட்டியுடன் முடிக்கவும்.",
-      tagEn: "FACE CARE",
-      tagTa: "சரும பராமரிப்பு",
-      tagColor: "bg-pink-100 text-pink-600",
-    },
-    {
-      icon: <FaCut className="text-2xl text-teal-400" />,
-      titleEn: "Weekly Hair Nourishment",
-      titleTa: "வாராந்திர முடி ஊட்டம்",
-      contentEn: "Warm Nilibhringadi or Brahmi oil and gently massage into scalp and hair. Leave for 30–60 minutes or overnight, then wash with herbal shampoo for best results.",
-      contentTa: "நீலிபிரிங்காடி அல்லது பிரம்மி எண்ணெயை சூடாக்கி, தலை மற்றும் முடியில் மெதுவாக தேய்க்கவும். 30–60 நிமிடங்கள் அல்லது இரவு முழுவதும் வைத்திருந்து, மூலிகை ஷாம்பூவால் கழுவுங்கள்.",
-      tagEn: "HAIR CARE",
-      tagTa: "முடி பராமரிப்பு",
-      tagColor: "bg-teal-100 text-teal-600",
-    },
-    {
-      icon: <FaMoon className="text-2xl text-orange-400" />,
-      titleEn: "Pre-Bath Body Ritual",
-      titleTa: "குளிக்கும் முன் உடல் பராமரிப்பு",
-      contentEn: "Use a natural herbal scrub 2–3 times a week on damp skin before bathing. Follow with sesame or coconut oil massage for deep nourishment and smooth, glowing skin.",
-      contentTa: "வாரம் 2–3 முறை குளிக்கும் முன் ஈரமான சருமத்தில் இயற்கை மூலிகை ஸ்க்ரப் பயன்படுத்துங்கள். ஆழமான ஊட்டத்திற்கு எள்ளெண்ணெய் அல்லது தேங்காய் எண்ணெய் மசாஜ் செய்யுங்கள்.",
-      tagEn: "BODY CARE",
-      tagTa: "உடல் பராமரிப்பு",
-      tagColor: "bg-orange-100 text-orange-600",
-    },
-  ];
-
-  const testimonials = [
-    { name: "Priya S.", location: "Chennai", rating: 5, review: "The Kumkumadi oil transformed my skin in just 2 weeks! Completely natural and effective. Will never go back to chemical products." },
-    { name: "Rajeshwari K.", location: "Coimbatore", rating: 5, review: "The herbal face wash is so gentle. My sensitive skin finally found its perfect match. Love the brand and the quality." },
-    { name: "Anandhi M.", location: "Madurai", rating: 5, review: "Nilibhringadi oil stopped my hair fall within a month! Unbelievable results. Pure, natural, and worth every rupee." },
-  ];
-
-  const stats = [
-    { statKey: "fivePlusProd" },
-    { statKey: "hundredNatural" },
-    { statKey: "happyCustomers" },
-    { statKey: "yearsHeritage" },
-  ];
-  const statValues = ["50+", "100%", "2500+", "30+"];
 
   return (
-    <div className="min-h-screen font-sans bg-slate-50">
-      {/* Hero Banner */}
-      <section className="relative bg-[rgb(7,81,89)] text-white overflow-hidden">
-        <div className="absolute inset-0 pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-teal-400 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
-          <div className="absolute bottom-0 left-10 w-72 h-72 bg-orange-400 rounded-full mix-blend-multiply blur-3xl opacity-20"></div>
+    <div className="min-h-screen bg-white text-slate-900 font-sans overflow-x-hidden">
+      
+      {/* Cinematic Hero */}
+      <section className="relative h-[100vh] w-full flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <img 
+            src={HeroImage} 
+            alt="Siddha Personal Care" 
+            className="w-full h-full object-cover scale-105 animate-[slow-zoom_20s_infinite_alternate]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-white"></div>
         </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-5 md:px-10 lg:px-20 py-16 md:py-24">
-          <div className="flex flex-col md:flex-row items-center gap-10">
-            <div className="flex-1">
-              <span className="inline-flex items-center gap-2 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full uppercase tracking-widest mb-5">
-                <FaLeaf className="text-xs" /> {t("naturalAndAuthentic")}
-              </span>
-              <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-tight mb-5">
-                {t("personalCare")}<br />
-                <span className="text-orange-400">{t("theSiddhaWay")}</span>
-              </h1>
-              <p className="text-white/70 text-base md:text-lg leading-relaxed max-w-xl mb-8">
-                {t("notSureConsult")}
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Link to="/collections/Personal Care" className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-8 py-3.5 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg inline-flex items-center gap-2">
-                  {t("shopPersonalCare")} <FaChevronRight className="text-xs" />
-                </Link>
-                <Link to="/e-consultation" className="bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white font-bold px-8 py-3.5 rounded-full uppercase tracking-wider transition-all border border-white/30 inline-flex items-center gap-2">
-                  {t("freeSkinConsultation")}
-                </Link>
-              </div>
-            </div>
-            <div className="flex-1 grid grid-cols-2 gap-4 max-w-md">
-              {stats.map((s, i) => (
-                <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6 text-center">
-                  <p className="text-3xl font-black text-orange-400">{statValues[i]}</p>
-                  <p className="text-xs text-white/70 font-medium mt-1 leading-snug">{t(s.statKey)}</p>
-                </div>
-              ))}
-            </div>
+        
+        <div className="relative z-10 text-center px-5 max-w-5xl">
+          <div className="flex justify-center items-center gap-2 mb-6 animate-fade-in-down">
+            <span className="w-12 h-[1px] bg-amber-400"></span>
+            <span className="text-amber-400 font-black uppercase tracking-[0.3em] text-xs">Vel Siddhar Arakkattalai</span>
+            <span className="w-12 h-[1px] bg-amber-400"></span>
           </div>
-        </div>
-      </section>
-
-      {/* Category Grid */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-white">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl md:text-4xl font-black text-slate-800 mb-3">{t("browseByCategory")}</h2>
-            <p className="text-slate-500">{t("findPerfectCare")}</p>
-            <div className="w-14 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {categories.map((cat, i) => (
-              <Link key={i} to={cat.link}
-                className={`relative flex flex-col items-center gap-4 pt-10 pb-7 px-5 rounded-[2rem] border ${cat.border} bg-white hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group overflow-hidden`}
-              >
-                {/* Coloured top accent bar */}
-                <span className={`absolute top-0 left-0 right-0 h-1.5 rounded-t-[2rem] ${cat.accent}`} />
-                {/* Big circular icon */}
-                <div className={`w-20 h-20 rounded-full ${cat.circleBg} flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-sm`}>
-                  <span className={cat.iconColor}>{cat.icon}</span>
-                </div>
-                <div className="text-center">
-                  <h3 className="font-black text-slate-800 group-hover:text-[rgb(7,81,89)] transition-colors text-sm mb-1">{t(cat.nameKey)}</h3>
-                  <p className="text-xs text-slate-400 leading-snug">{t(cat.descKey)}</p>
-                </div>
-                {/* Pill CTA */}
-                <span className={`mt-1 inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full text-white ${cat.accent}`}>
-                  Shop Now <FaChevronRight className="text-[8px]" />
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Products Section */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-10">
-            <div>
-              <h2 className="text-2xl md:text-4xl font-black text-slate-800 mb-2">{t("ourProducts")}</h2>
-              <p className="text-slate-500">{t("authenticProducts")}</p>
-            </div>
-            <div className="relative">
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm" />
-              <input
-                type="text"
-                placeholder={t("searchProducts")}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="border-2 border-slate-200 bg-white rounded-full pl-10 pr-5 py-3 text-sm font-medium outline-none focus:border-[rgb(7,81,89)] transition-colors w-64"
-              />
-            </div>
-          </div>
-
-          {filteredProducts.length === 0 ? (
-            <div className="text-center py-20 bg-white rounded-[2rem] border border-slate-100">
-              <FaSearch className="text-4xl text-slate-300 mx-auto mb-4" />
-              <p className="text-slate-400 font-bold text-lg">No products found for "{search}"</p>
-              <button onClick={() => setSearch("")} className="mt-4 text-[rgb(7,81,89)] font-bold hover:underline">Clear Search</button>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredProducts.map((product) => (
-                <div key={product.id} className="bg-white rounded-[2rem] border border-slate-100 overflow-hidden hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 group flex flex-col shadow-sm">
-                  <Link to={`/ProductList/${product.id}`}>
-                    <div className="aspect-square overflow-hidden p-6 bg-slate-50 rounded-t-[2rem]">
-                      <img src={product.img} alt={product.productName} className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-500" />
-                    </div>
-                  </Link>
-                  <div className="p-6 flex flex-col flex-1">
-                    <Link to={`/ProductList/${product.id}`}>
-                      <h3 className="font-bold text-slate-800 text-base leading-snug group-hover:text-[rgb(7,81,89)] transition-colors mb-2 line-clamp-2">{product.productName}</h3>
-                    </Link>
-                    <p className="text-sm text-slate-500 leading-relaxed mb-4 line-clamp-2">{product.productDescription}</p>
-                    <div className="flex items-center gap-1 mb-4">
-                      {[1,2,3,4,5].map(i => <StarIcon key={i} sx={{ fontSize: 15 }} className="text-amber-400" />)}
-                      <span className="text-xs text-slate-400 ml-1 font-medium">91 {t("reviews")}</span>
-                    </div>
-                    <div className="mt-auto flex items-center justify-between">
-                      <span className="text-2xl font-black text-[rgb(7,81,89)]">₹{product.price}</span>
-                      <button
-                        onClick={() => dispatch(addItem({ ...product, quantity: 1 }))}
-                        className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-5 py-2.5 rounded-full transition-all hover:-translate-y-0.5 text-sm shadow-md shadow-orange-500/20"
-                      >
-                        <FaCartPlus /> {t("addToCartBtn")}
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
-          <div className="text-center mt-10">
-            <Link to="/collections/Personal Care"
-              className="inline-flex items-center gap-2 bg-[rgb(7,81,89)] hover:bg-[rgb(6,65,71)] text-white font-bold px-10 py-4 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg"
-            >
-              {t("viewAllPersonalCare")} <FaChevronRight />
+          <h1 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-8 animate-fade-in-up">
+            TIMELESS <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">SIDDHA BEAUTY</span>
+          </h1>
+          <p className="text-white/80 text-lg md:text-2xl font-light max-w-2xl mx-auto mb-10 leading-relaxed italic animate-fade-in-up-delay">
+            "Your body is a temple; treat it with the sacred wisdom of ancient healers."
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up-delay-2">
+            <a href="#regimen" className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-10 py-4 rounded-full transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
+              BUILD YOUR REGIMEN
+            </a>
+            <Link to="/collections/Personal Care" className="backdrop-blur-md bg-white/10 border border-white/20 text-white font-black px-10 py-3.5 rounded-full hover:bg-white/20 transition-all">
+              EXPLORE ALL
             </Link>
           </div>
         </div>
+
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <div className="w-6 h-10 border-2 border-white/30 rounded-full flex justify-center pt-2">
+                <div className="w-1 h-2 bg-white rounded-full"></div>
+            </div>
+        </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-white">
+      {/* The Wisdom of Siddhars (Pillars) */}
+      <section className="py-24 px-5">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-black text-slate-800 mb-3">{t("whyChoosePersonalCare")}</h2>
-            <p className="text-slate-500">{t("siddhaAdvantage")}</p>
-            <div className="w-14 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
+          <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight">THE THREE <br/>PILLARS OF RADIANCE</h2>
+              <p className="text-slate-500 text-lg">Siddha medicine views personal care as an internal and external harmony of the Three Humors (Mukkutram).</p>
+            </div>
+            <div className="text-right hidden md:block">
+              <span className="text-8xl font-black text-slate-100 italic">01</span>
+            </div>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {benefits.map((b, i) => (
-              <div key={i} className="bg-white rounded-[2rem] p-8 border border-slate-100 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 flex flex-col items-center text-center">
-                <div className="w-20 h-20 rounded-full bg-slate-50 border-2 border-slate-100 flex items-center justify-center mb-5 shadow-sm">
-                  {b.icon}
-                </div>
-                <h3 className="font-black text-slate-800 text-base mb-3">{b.titleEn}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed">{b.descEn}</p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 border border-slate-100 rounded-[3rem] overflow-hidden shadow-2xl">
+            {pillars.map((p, i) => (
+              <div key={i} className="group p-10 md:p-14 hover:bg-[rgb(7,81,89)] transition-colors duration-500 border-b md:border-b-0 md:border-r border-slate-100 last:border-0">
+                <div className="text-5xl text-amber-500 mb-8 transform group-hover:-translate-y-2 transition-transform duration-500">{p.icon}</div>
+                <h3 className="text-2xl font-black mb-2 group-hover:text-white transition-colors">{p.name}</h3>
+                <p className="text-amber-600 font-bold mb-6 group-hover:text-amber-400 transition-colors uppercase text-xs tracking-widest">{p.focus}</p>
+                <p className="text-slate-500 group-hover:text-white/60 transition-colors leading-relaxed">{p.desc}</p>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Tips Section */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-[rgb(7,81,89)]">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-black text-white mb-3">{t("wellnessTips")}</h2>
-            <p className="text-white/60">{t("ancientRoutines")}</p>
-            <div className="w-14 h-1 bg-orange-400 mx-auto mt-4 rounded-full"></div>
+      {/* Ancient Regimens (Interactive Section) */}
+      <section id="regimen" className="py-24 bg-slate-50 relative">
+        <div className="max-w-7xl mx-auto px-5">
+          <div className="text-center mb-16">
+            <span className="text-amber-600 font-bold uppercase tracking-widest mb-4 block">Personalized Care</span>
+            <h2 className="text-4xl md:text-6xl font-black text-slate-800">CRAFT YOUR RITUAL</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {tips.map((tip, i) => (
-              <div key={i} className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-[2rem] p-8 hover:bg-white/20 hover:-translate-y-1 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center shrink-0">
-                    {tip.icon}
-                  </div>
-                  <span className={`inline-block text-xs font-black px-3 py-1 rounded-full uppercase tracking-widest ${tip.tagColor}`}>
-                    {tip.tagEn}
-                  </span>
-                </div>
-                <h3 className="font-black text-white text-xl mb-4">{tip.titleEn}</h3>
-                <p className="text-white/70 text-sm leading-relaxed">{tip.contentEn}</p>
-              </div>
+
+          <div className="flex flex-wrap justify-center gap-4 mb-16">
+            {regimens.map((reg, i) => (
+              <button 
+                key={i} 
+                onClick={() => setActiveStep(i)}
+                className={`flex items-center gap-3 px-8 py-4 rounded-full font-black text-sm transition-all ${activeStep === i ? "bg-[rgb(7,81,89)] text-white shadow-xl scale-110" : "bg-white text-slate-400 hover:text-slate-600 shadow-sm"}`}
+              >
+                <span className="text-lg">{reg.icon}</span>
+                {reg.title}
+              </button>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* Testimonials */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-slate-50">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-12">
-            <h2 className="text-2xl md:text-4xl font-black text-slate-800 mb-3">{t("customersSay")}</h2>
-            <p className="text-slate-500">{t("realResults")}</p>
-            <div className="w-14 h-1 bg-orange-500 mx-auto mt-4 rounded-full"></div>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {testimonials.map((t2, i) => (
-              <div key={i} className="bg-white rounded-[2rem] border border-slate-100 p-8 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300">
-                <div className="flex text-amber-400 mb-4">
-                  {[...Array(t2.rating)].map((_, j) => <FaStar key={j} className="text-sm" />)}
-                </div>
-                <p className="text-slate-600 text-sm leading-relaxed mb-6 italic">"{t2.review}"</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[rgb(7,81,89)] to-teal-400 flex items-center justify-center text-white font-black text-base shadow-md">
-                    {t2.name.charAt(0)}
-                  </div>
-                  <div>
-                    <p className="font-bold text-slate-800 text-sm">{t2.name}</p>
-                    <p className="text-xs text-slate-400">{t2.location}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Banner */}
-      <section className="py-14 px-5 md:px-10 lg:px-20 bg-white">
-        <div className="max-w-5xl mx-auto bg-gradient-to-br from-[rgb(7,81,89)] to-teal-700 rounded-3xl p-10 md:p-14 text-center text-white relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-400 rounded-full mix-blend-multiply blur-3xl opacity-20 pointer-events-none"></div>
-          <div className="relative z-10">
-            <FaLeaf className="text-4xl text-orange-400 mx-auto mb-5" />
-            <h2 className="text-2xl md:text-4xl font-black mb-4">{t("naturalJourney")}</h2>
-            <p className="text-white/70 max-w-xl mx-auto mb-8 leading-relaxed">{t("notSureConsult")}</p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link to="/e-consultation" className="bg-orange-500 hover:bg-orange-600 text-white font-bold px-10 py-4 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg">
-                {t("bookFreeConsultation")}
+          <div className="bg-white rounded-[4rem] p-10 md:p-20 shadow-2xl relative overflow-hidden flex flex-col md:flex-row items-center gap-16">
+            <div className="absolute top-0 right-0 w-80 h-80 bg-[rgb(7,81,89)]/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div className="flex-1 z-10">
+              <span className="text-6xl font-black text-[rgb(7,81,89)] mb-6 block opacity-20">0{activeStep + 1}</span>
+              <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">{regimens[activeStep].title}</h3>
+              <p className="text-slate-500 text-xl leading-relaxed mb-10 max-w-lg">{regimens[activeStep].desc}</p>
+              <Link to={`/collections/Personal Care`} className="inline-flex items-center gap-3 bg-amber-500 text-slate-950 font-black px-8 py-4 rounded-full hover:scale-105 transition-all group">
+                BROWSE {regimens[activeStep].title.toUpperCase()} <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
               </Link>
-              <Link to="/collections/Personal Care" className="bg-white/15 hover:bg-white/25 text-white font-bold px-10 py-4 rounded-full uppercase tracking-wider border border-white/30 transition-all">
-                {t("browseProducts")}
-              </Link>
+            </div>
+            <div className="flex-1 z-10 grid grid-cols-2 gap-4">
+               {products.slice(activeStep * 2, activeStep * 2 + 2).map((prod) => (
+                 <div key={prod.id} className="bg-slate-50 p-4 rounded-3xl group border border-slate-100 hover:border-amber-400 transition-colors">
+                    <img src={prod.img} className="w-full aspect-square object-contain mb-4 transform group-hover:scale-110 transition-transform duration-500" alt={prod.productName} />
+                    <h4 className="font-bold text-xs text-slate-800 mb-2 truncate">{prod.productName}</h4>
+                    <span className="text-amber-600 font-bold text-sm">₹{prod.price}</span>
+                 </div>
+               ))}
             </div>
           </div>
         </div>
       </section>
+
+      {/* Sacred Ingredients Spotlight */}
+      <section className="py-32 px-5 bg-[rgb(7,81,89)] text-white relative">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <div className="order-2 lg:order-1 relative">
+                <div className="aspect-[4/5] bg-slate-800 rounded-[3rem] overflow-hidden shadow-2xl relative group">
+                    <img src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=800" className="w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-[3s]" alt="Ingredients" />
+                    <div className="absolute bottom-10 left-10 p-10 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20">
+                        <h4 className="text-2xl font-black text-amber-400 mb-2">NEEM & TURMERIC</h4>
+                        <p className="text-white/70 text-sm italic">"The Golden Healers of the East"</p>
+                    </div>
+                </div>
+                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-500 rounded-full flex items-center justify-center p-8 text-slate-950 font-black text-center shadow-2xl leading-tight">
+                    ESTD.<br/>1994<br/>HERITAGE
+                </div>
+            </div>
+            <div className="order-1 lg:order-2">
+                <h2 className="text-4xl md:text-6xl font-black mb-10 leading-tight">ONLY FROM <br/>THE EARTH</h2>
+                <div className="space-y-12">
+                    <div className="flex gap-6">
+                        <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaMagic className="text-2xl text-amber-400" /></div>
+                        <div>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Sacred Sourcing</h4>
+                            <p className="text-white/60 leading-relaxed">We pick herbs at the peak of their astrological potency, as prescribed in ancient Siddha manuscripts.</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-6">
+                        <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaClock className="text-2xl text-amber-400" /></div>
+                        <div>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Slow Extraction</h4>
+                            <p className="text-white/60 leading-relaxed">No heat. No chemicals. Only the sun and time are used to extract the healing essence of our botanicals.</p>
+                        </div>
+                    </div>
+                    <div className="flex gap-6">
+                        <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaCheckCircle className="text-2xl text-amber-400" /></div>
+                        <div>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Purity Certified</h4>
+                            <p className="text-white/60 leading-relaxed">Every batch is tested to be 100% free of parabens, sulphates, and synthetic fragrances.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </section>
+
+      {/* Modern Bestsellers */}
+      <section className="py-32 px-5">
+        <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-end mb-16">
+                <div>
+                    <h2 className="text-4xl md:text-6xl font-black text-slate-800 mb-4 tracking-tighter">BELOVED BY <br/>THE MODERN USER</h2>
+                    <p className="text-slate-500 text-lg">Ancient solutions meeting the needs of today's urban lifestyle.</p>
+                </div>
+                <Link to="/collections/Personal Care" className="text-[rgb(7,81,89)] font-black flex items-center gap-2 hover:gap-4 transition-all pb-2 border-b-2 border-slate-100 uppercase tracking-widest text-xs mb-4">
+                    VIEW ALL <FaArrowRight />
+                </Link>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                {products.slice(0, 4).map((product) => (
+                    <div key={product.id} className="group cursor-pointer">
+                        <div className="bg-slate-50 rounded-[3rem] p-10 mb-6 relative overflow-hidden flex items-center justify-center border border-transparent group-hover:border-amber-400 transition-all duration-500 aspect-[3/4]">
+                            <Link to={`/ProductList/${product.id}`} className="absolute inset-0 z-0"></Link>
+                            <img src={product.img} className="w-full h-full object-contain transform group-hover:scale-110 transition-all duration-700 z-10" alt={product.productName} />
+                            <button 
+                              onClick={() => dispatch(addItem({ ...product, quantity: 1 }))}
+                              className="absolute bottom-8 right-8 bg-white hover:bg-amber-500 hover:text-white text-[rgb(7,81,89)] p-4 rounded-full shadow-2xl translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 z-20"
+                            >
+                                <FaCartPlus className="text-xl" />
+                            </button>
+                        </div>
+                        <div className="text-center">
+                            <h3 className="text-lg font-black group-hover:text-[rgb(7,81,89)] transition-colors mb-2 truncate">{product.productName}</h3>
+                            <div className="flex items-center justify-center gap-1 mb-2">
+                                {[1,2,3,4,5].map(i => <FaStar key={i} className="text-amber-400 text-[10px]" />)}
+                            </div>
+                            <span className="text-2xl font-black text-slate-800">₹{product.price}</span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+      </section>
+
+      {/* Aesthetic Testimonials */}
+      <section className="py-32 px-5 bg-slate-50 relative overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+            <div className="text-center mb-20 max-w-3xl mx-auto">
+                <FaQuoteLeft className="text-6xl text-amber-500/20 mx-auto mb-8" />
+                <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">VOICES OF WELLNESS</h2>
+                <p className="text-slate-500">How Siddha wisdom has transformed the lives of our global community.</p>
+            </div>
+
+            <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
+                {[
+                    { name: "Sita R.", loc: "Kerala", txt: "The Kumkumadi Brightening Oil is light as water but nourishes like luxury. My pigmentation faded after only one month of nightly use." },
+                    { name: "Michael V.", loc: "Sydney", txt: "As someone with sensitive skin, finding chemical-free products that actually work is hard. Siddha's Neem face wash is a game changer." },
+                    { name: "Janani K.", loc: "Chennai", txt: "The Nilibhringadi hair oil stopped my postpartum hair fall almost overnight. The scent is calming and my hair has never felt thicker." }
+                ].map((t, i) => (
+                    <div key={i} className="break-inside-avoid bg-white p-10 rounded-[2.5rem] shadow-sm hover:shadow-2xl transition-all duration-500 border border-slate-100 group">
+                        <div className="flex items-center justify-between mb-8">
+                            <div className="flex gap-1">
+                              {[1,2,3,4,5].map(j => <FaStar key={j} className="text-amber-400 text-xs" />)}
+                            </div>
+                            <span className="text-xs font-black text-slate-300 uppercase tracking-widest">{t.loc}</span>
+                        </div>
+                        <p className="text-slate-600 leading-relaxed mb-8 italic text-lg">"{t.txt}"</p>
+                        <div className="flex items-center gap-4">
+                             <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-black text-slate-950">{t.name.charAt(0)}</div>
+                             <div>
+                                 <h4 className="font-black text-slate-800 uppercase tracking-wider text-sm">{t.name}</h4>
+                                 <span className="text-[10px] text-slate-400 font-bold uppercase">Verified Purchase</span>
+                             </div>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+      </section>
+
+      {/* Grand CTA */}
+      <section className="py-40 px-5 text-center relative overflow-hidden">
+        <div className="absolute inset-0 bg-white">
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] bg-[rgb(7,81,89)] rounded-full animate-[pulse-slow_15s_infinite] opacity-10"></div>
+        </div>
+        
+        <div className="relative z-10">
+            <h2 className="text-5xl md:text-8xl font-black text-[rgb(7,81,89)] mb-10 tracking-tighter italic">START YOUR JOURNEY</h2>
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
+                <Link to="/e-consultation" className="bg-amber-500 text-slate-950 font-black px-12 py-5 rounded-full text-lg shadow-2xl hover:scale-105 transition-all uppercase">
+                    BOOK FREE CONSULTATION
+                </Link>
+                <Link to="/collections" className="bg-[#075159] text-white font-black px-12 py-5 rounded-full text-lg hover:bg-[#064147] transition-all uppercase">
+                    BROWSE RITUALS
+                </Link>
+            </div>
+        </div>
+      </section>
+
+      <style dangerouslySetInnerHTML={{ __html: `
+        @keyframes slow-zoom {
+          from { transform: scale(1); }
+          to { transform: scale(1.1); }
+        }
+        @keyframes pulse-slow {
+          0%, 100% { transform: translate(-50%, -50%) scale(1); }
+          50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+        .animate-fade-in-down { animation: fadeInDown 1.2s ease-out forwards; }
+        .animate-fade-in-up { animation: fadeInUp 1.2s ease-out forwards; }
+        .animate-fade-in-up-delay { animation: fadeInUp 1.2s ease-out 0.3s forwards; opacity: 0; }
+        .animate-fade-in-up-delay-2 { animation: fadeInUp 1.2s ease-out 0.6s forwards; opacity: 0; }
+        
+        @keyframes fadeInDown {
+          from { opacity: 0; transform: translateY(-20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}} />
     </div>
   );
 };

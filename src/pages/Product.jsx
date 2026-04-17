@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { ayurvedicMedicines } from "../db/data";
+import React, { useState, useEffect, useMemo } from "react";
+import API from "../utils/axiosConfig";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
@@ -11,6 +11,7 @@ import { FaThLarge, FaList, FaChevronDown, FaChevronUp, FaCartPlus, FaTimes } fr
 // ─── Static filter data ───────────────────────────────────────────────────────
 const TYPES     = ["Capsules", "Churnam", "Leham", "Tailam", "General"];
 const BRANDS    = ["Kottakkal", "AVP Ayurveda", "Kerala Ayurveda", "AVN", "Vaidyaratnam"];
+const CATEGORIES = ["Siddhar", "Classical Medicines", "Personal Care", "Health & Nutrition", "Herbal Oils", "General"];
 const AILMENTS  = ["Cold", "Diabetes", "Sinusitis", "Digestion", "Immunity", "Hair", "Skin", "Stress"];
 const SORT_OPTS = [
   { value: "",           label: "Featured" },
@@ -91,6 +92,37 @@ const Product = () => {
   const dispatch = useDispatch();
   const { t } = useLang();
 
+  const [ayurvedicMedicines, setAyurvedicMedicines] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const { data } = await API.get('/products?limit=50');
+        const formatted = data.data.map(p => {
+          const rawImg = p.images?.[0]?.url || "";
+          return {
+            ...p,
+            id: p._id,
+            productName: p.name,
+            productDescription: p.description,
+            img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+            category: p.category?.name || "General",
+            rating: p.ratings || 4,
+            reviews: p.numOfReviews || 0
+          };
+        });
+        setAyurvedicMedicines(formatted);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
+
   /* view state */
   const [gridView,       setGridView]       = useState(true);
   const [sortOrder,      setSortOrder]      = useState("");
@@ -123,7 +155,12 @@ const Product = () => {
     if (sortOrder === "rating")     list.sort((a,b) => b.rating - a.rating);
 
     return list;
-  }, [category, selectedTypes, selectedBrands, selectedAilments, sortOrder]);
+  }, [category, selectedTypes, selectedBrands, selectedAilments, sortOrder, ayurvedicMedicines]);
+
+  // Automatically clear filters when moving between primary categories
+  useEffect(() => {
+    clearAll();
+  }, [category]);
 
   const popularProducts = [...ayurvedicMedicines]
     .sort((a,b) => b.reviews - a.reviews)
@@ -186,6 +223,7 @@ const Product = () => {
                 selectedBrands={selectedBrands}  setSelectedBrands={setSelectedBrands}
                 selectedAilments={selectedAilments} setSelectedAilments={setSelectedAilments}
                 toggle={toggle} popularProducts={popularProducts}
+                category={category}
               />
             </div>
           </div>
@@ -199,6 +237,7 @@ const Product = () => {
               selectedBrands={selectedBrands}  setSelectedBrands={setSelectedBrands}
               selectedAilments={selectedAilments} setSelectedAilments={setSelectedAilments}
               toggle={toggle} popularProducts={popularProducts}
+              category={category}
             />
           </div>
         </aside>
@@ -227,8 +266,12 @@ const Product = () => {
                 </button>
               </div>
               <span className="text-sm text-gray-500 font-medium">
-                Showing: <span className="font-bold text-gray-800">{filtered.length}</span> of{" "}
-                <span className="font-bold text-gray-800">{ayurvedicMedicines.length}</span>
+                {loading ? "Loading..." : (
+                  <>
+                    Showing: <span className="font-bold text-gray-800">{filtered.length}</span> of{" "}
+                    <span className="font-bold text-gray-800">{ayurvedicMedicines.length}</span>
+                  </>
+                )}
               </span>
               {anyFilter > 0 && (
                 <button onClick={clearAll} className="hidden md:flex items-center gap-1 text-xs text-rose-500 font-bold hover:text-rose-700 transition-colors">
@@ -303,9 +346,29 @@ const SidebarContent = ({
   selectedTypes, setSelectedTypes,
   selectedBrands, setSelectedBrands,
   selectedAilments, setSelectedAilments,
-  toggle, popularProducts,
+  toggle, popularProducts, category
 }) => (
   <div className="flex flex-col gap-0">
+    <AccordionSection title="BROWSE CATEGORIES">
+      <Link
+        to="/collections"
+        className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg transition-colors text-sm font-bold ${!category || category === "All Collections" ? "text-[rgb(7,81,89)] bg-[rgb(7,81,89)]/5" : "text-gray-500 hover:text-[rgb(7,81,89)]"}`}
+      >
+        <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
+        All Products
+      </Link>
+      {CATEGORIES.map(cat => (
+        <Link
+          key={cat}
+          to={`/collections/${cat}`}
+          className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg transition-colors text-sm font-medium ${category === cat ? "text-[rgb(7,81,89)] bg-[rgb(7,81,89)]/5 font-bold" : "text-gray-500 hover:text-[rgb(7,81,89)]"}`}
+        >
+          <span className="w-1 h-1 rounded-full bg-gray-300"></span>
+          {cat}
+        </Link>
+      ))}
+    </AccordionSection>
+
     <AccordionSection title="FILTER BY TYPE">
       {TYPES.map(t => (
         <CheckRow

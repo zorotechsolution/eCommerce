@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaBoxOpen, FaUpload, FaTags, FaDollarSign, FaInfoCircle, FaCheckCircle, FaExclamationCircle } from 'react-icons/fa';
+import API from '../utils/axiosConfig';
 
 const AdminAddProduct = () => {
   const [formData, setFormData] = useState({
@@ -22,9 +23,9 @@ const AdminAddProduct = () => {
 
   useEffect(() => {
     // Restrict access to admin role only
-    // if (!isAuthenticated || user?.role !== 'admin') {
-    //   navigate('/login'); // Redirect to login or home
-    // }
+    if (!isAuthenticated || user?.role !== 'admin') {
+      navigate('/Login'); // Redirect to login or home
+    }
   }, [user, isAuthenticated, navigate]);
 
   const [loading, setLoading] = useState(false);
@@ -69,14 +70,14 @@ const AdminAddProduct = () => {
     try {
       // 1. Create FormData object for file upload + text fields
       const dataToSend = new FormData();
-      dataToSend.append('productName', formData.productName);
+      dataToSend.append('name', formData.productName);
+      dataToSend.append('description', formData.productDescription);
       dataToSend.append('category', formData.category);
       dataToSend.append('brand', formData.brand);
       dataToSend.append('type', formData.type);
-      dataToSend.append('price', formData.price);
-      if (formData.originalPrice) dataToSend.append('originalPrice', formData.originalPrice);
-      dataToSend.append('productDescription', formData.productDescription);
       dataToSend.append('ailments', formData.ailments);
+      dataToSend.append('price', formData.price);
+      dataToSend.append('stock', 100); // Default stock
       
       // Append the actual image File object
       if (formData.img) {
@@ -84,29 +85,20 @@ const AdminAddProduct = () => {
       }
 
       // 2. Perform the actual POST request
-      const response = await fetch('http://localhost:5000/api/admin/products', {
-        method: 'POST',
-        // Note: Do not set Content-Type header when sending FormData!
-        // The browser automatically sets it to multipart/form-data with the correct boundary.
-        body: dataToSend,
+      const response = await API.post('/products', dataToSend, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const result = await response.json();
-      console.log("Success:", result);
+      console.log("Success:", response.data);
       
       setSuccess(true);
       resetForm();
 
     } catch (error) {
-      console.warn("POST failed (This is normal if your backend isn't running yet):", error.message);
-      
-      // Fallback: Simulate success locally for the UI demonstration
-      setSuccess(true);
-      resetForm();
+      console.error("POST failed:", error);
+      alert(error.response?.data?.error || "Failed to add product");
     } finally {
       setLoading(false);
     }

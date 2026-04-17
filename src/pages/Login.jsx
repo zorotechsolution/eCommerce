@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { login } from "../store/authSlice";
-import axios from "axios";
+import API from "../utils/axiosConfig";
 import { useLang } from "../context/LangContext";
 
 const Login = () => {
@@ -24,12 +24,12 @@ const Login = () => {
       setLoading(true);
       setError("");
       try {
-        const response = await axios.post("https://fakestoreapi.com/auth/login", {
-          username: formData.username,
+        const response = await API.post("/auth/login", {
+          email: formData.username,
           password: formData.password,
         });
         const receivedToken = response.data.token;
-        const isAdmin = formData.username.toLowerCase() === 'admin' || formData.username.toLowerCase() === 'admin@velsiddhar.com';
+        const isAdmin = response.data.user.role === 'admin';
         dispatch(login({ 
           username: formData.username, 
           email: `${formData.username.toLowerCase()}@example.com`,
@@ -38,7 +38,7 @@ const Login = () => {
         }));
         navigate("/profile");
       } catch (err) {
-        setError(err.response?.data?.message || err.response?.data || "Invalid username or password.");
+        setError(err.response?.data?.error || "Invalid credentials.");
       } finally {
         setLoading(false);
       }

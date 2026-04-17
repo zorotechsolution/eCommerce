@@ -24,6 +24,9 @@ import PersonalCare from "./pages/PersonalCare";
 import PersonalCareCategory from "./pages/PersonalCareCategory";
 import ShippingDelivery from "./pages/ShippingDelivery";
 import AdminAddProduct from "./pages/AdminAddProduct";
+import OrderDetails from "./pages/OrderDetails";
+
+import { FaWhatsapp } from "react-icons/fa";
 
 function App() {
   return (
@@ -49,6 +52,7 @@ function App() {
           <Route path="/personal-care/:slug" element={<PersonalCareCategory/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/admin/add-product" element={<AdminAddProduct/>} />
+          <Route path="/order/:id" element={<OrderDetails/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/terms" element={<Terms/>} />
           <Route path="/refund-policy" element={<RefundPolicy/>} />
@@ -56,6 +60,17 @@ function App() {
           <Route path="*" element={<NotFount404/>}/>
         </Routes>
         <Footer/>
+        
+        {/* Fixed WhatsApp Button */}
+        <a
+          href="https://wa.me/919876543210" // Replace with actual WhatsApp number
+          target="_blank"
+          rel="noopener noreferrer"
+          className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition-all duration-300 hover:scale-110 z-50 flex justify-center items-center"
+          title="Chat with us on WhatsApp"
+        >
+          <FaWhatsapp className="text-3xl" />
+        </a>
       </Router>
     </>
   );

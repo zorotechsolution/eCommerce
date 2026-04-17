@@ -1,7 +1,7 @@
 import React, { useReducer, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import StarIcon from "@mui/icons-material/Star";
-import { ayurvedicMedicines } from "../db/data";
+import API from "../utils/axiosConfig";
 import { FaHeart, FaShoppingCart, FaArrowLeft, FaShieldAlt, FaTruck, FaLeaf } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { addItem } from "../store/cartSlice";
@@ -30,7 +30,49 @@ const ProductList = () => {
   const dispatch = useDispatch();
   const { t } = useLang();
 
-  const productItem = ayurvedicMedicines.find((p) => p.id === Number(id));
+  const [productItem, setProductItem] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  React.useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      try {
+        const { data } = await API.get(`/products/${id}`);
+        const rawImg = data.data.images?.[0]?.url || "";
+        const formatted = {
+          ...data.data,
+          id: data.data._id,
+          productName: data.data.name,
+          productDescription: data.data.description,
+          img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+          category: data.data.category?.name || "General",
+          rating: data.data.ratings || 4,
+          reviews: data.data.numOfReviews || 0
+        };
+        setProductItem(formatted);
+
+        const res = await API.get('/products?limit=4');
+        setRelatedProducts(res.data.data.map(p => {
+            const relRawImg = p.images?.[0]?.url || "";
+            return {
+              ...p, 
+              id: p._id, 
+              productName: p.name, 
+              img: relRawImg.startsWith('http') ? relRawImg : `http://localhost:5000${relRawImg}`, 
+              category: p.category?.name || "General", 
+              price: p.price
+            }
+        }));
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProduct();
+  }, [id]);
+
   const wishlistItems = useSelector((state) => state.wishlist.items);
   const cartItems = useSelector((state) => state.cart.items);
 
@@ -57,6 +99,10 @@ const ProductList = () => {
     }
   };
 
+  if (loading) {
+    return <div className="min-h-screen flex justify-center items-center"><div className="animate-spin rounded-full h-12 w-12 border-4 border-[rgb(7,81,89)] border-t-transparent"></div></div>;
+  }
+
   if (!productItem) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-slate-50 p-5 text-center">
@@ -68,11 +114,6 @@ const ProductList = () => {
       </div>
     );
   }
-
-  // Related products from same category
-  const relatedProducts = ayurvedicMedicines
-    .filter((p) => p.category === productItem.category && p.id !== productItem.id)
-    .slice(0, 4);
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans">

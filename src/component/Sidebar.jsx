@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaBars, FaHome, FaInfoCircle, FaShoppingBag, FaLeaf, FaUser, FaHeart, FaPhone, FaTimes, FaChevronDown } from "react-icons/fa";
+import { FaBars, FaHome, FaInfoCircle, FaShoppingBag, FaLeaf, FaUser, FaHeart, FaPhone, FaTimes, FaChevronDown, FaPlus } from "react-icons/fa";
 import { useSelector } from "react-redux";
 import { useLang } from "../context/LangContext";
 
@@ -19,6 +19,8 @@ const Sidebar = () => {
     { to: "/personal-care", labelKey: "personalCare", icon: <FaLeaf /> },
     { to: "/e-consultation", label: "E-Consultation", icon: <FaPhone /> },
     { to: auth.isAuthenticated ? "/profile" : "/Login", label: auth.isAuthenticated ? auth.user?.username || t('myProfile') : t('login'), icon: <FaUser /> },
+    ...(auth.isAuthenticated ? [{ to: "/profile", label: "My Orders", icon: <FaShoppingBag /> }] : []),
+    ...(auth.isAuthenticated && auth.user?.role === 'admin' ? [{ to: "/admin/add-product", label: "Add Product", icon: <FaPlus /> }] : []),
     { to: "/wishlist", labelKey: "wishlist", icon: <FaHeart /> },
   ];
 
@@ -27,7 +29,6 @@ const Sidebar = () => {
     { to: "/collections/Siddhar", label: "Siddhar" },
     { to: "/collections/Classical Medicines", label: "Classical Medicines" },
     { to: "/collections/Personal Care", label: "Personal Care" },
-    { to: "/collections/Brands", label: "Brands" },
     { to: "/collections/Health & Nutrition", label: "Health & Nutrition" },
     { to: "/collections/General", label: "General" },
   ];

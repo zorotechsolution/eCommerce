@@ -31,12 +31,21 @@ const Navbar = () => {
                   </Link>
                 </li>
                 {auth.isAuthenticated ? (
-                   <li>
-                     <Link to="/profile" className="font-bold text-[rgb(7,81,89)] flex items-center gap-1">
-                       <FaUser className="border border-[rgb(7,81,89)] rounded-full p-0.5 text-lg bg-[rgb(7,81,89)] text-white" />
-                       {auth.user.username}
-                     </Link>
-                   </li>
+                   <>
+                     <li>
+                       <Link to="/profile" className="font-bold text-[rgb(7,81,89)] flex items-center gap-1">
+                         <FaUser className="border border-[rgb(7,81,89)] rounded-full p-0.5 text-lg bg-[rgb(7,81,89)] text-white" />
+                         {auth.user.username}
+                       </Link>
+                     </li>
+                     {auth.user.role === 'admin' && (
+                       <li>
+                         <Link to="/admin/add-product" className="text-orange-600 font-black hover:text-orange-700 transition-colors">
+                           + ADD PRODUCT
+                         </Link>
+                       </li>
+                     )}
+                   </>
                 ) : (
                   <>
                     <li>
@@ -76,7 +85,7 @@ const Navbar = () => {
             </div>
           </div>
           <div className="">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-2 lg:px-30 text-sm md:text-lg  pt-1 ">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-2 lg:px-30 text-sm md:text-lg  pt-1 ">
               <div className="flex items-center justify-center md:justify-start">
                 <Link to={"/"} className="flex items-center gap-3">
                   <img src={Icon} alt="Vel Siddhar Arakkattalai Logo" className="w-12 h-12 object-contain" />
@@ -86,21 +95,7 @@ const Navbar = () => {
                   </div>
                 </Link>
               </div>
-              <div className="flex gap-4 items-center ">
-                <div className="">
-                  <IoMdCall
-                    className="bg-orange-300 text-4xl p-1 rounded-lg hidden md:inline"
-                    style={{ color: "white" }}
-                  />
-                </div>
-                <div className=" flex md:block">
-                  <div className="">Order Online or Call Us &nbsp;</div>
-                  <div className="font-bold md:font-normal text-[rgb(7,81,89)]">
-                    044 4859888888
-                  </div>
-                </div>
-              </div>
-              <div className=" hidden lg:flex  items-center ">
+              <div className=" hidden lg:flex items-center justify-center">
                 <div className="">
                   <CiDeliveryTruck className="text-4xl hidden md:inline " />
                 </div>
@@ -221,9 +216,7 @@ const Navbar = () => {
                 </div>
               </div>
             </li>
-            <li>
-              <Link to="/collections/Brands" className="hover:text-amber-400 transition-colors">Brands</Link>
-            </li>
+
             <li>
               <Link to="/collections/Health & Nutrition" className="hover:text-amber-400 transition-colors">Health & Nutrition</Link>
             </li>
@@ -235,6 +228,16 @@ const Navbar = () => {
                 E-Consultation (Book Now)
               </Link>
             </li>
+            {auth.isAuthenticated && (
+              <li>
+                <Link to="/profile" className="hover:text-amber-400 transition-colors">My Orders</Link>
+              </li>
+            )}
+            {auth.isAuthenticated && auth.user.role === 'admin' && (
+              <li>
+                <Link to="/admin/add-product" className="bg-white text-[rgb(7,81,89)] px-4 py-1.5 rounded-lg font-black hover:bg-amber-400 transition-colors">ADMIN</Link>
+              </li>
+            )}
           </ul>
         </div>
       </nav>

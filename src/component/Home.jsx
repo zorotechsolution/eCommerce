@@ -3,7 +3,7 @@ import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { Carousel } from "react-responsive-carousel";
 import { GrPrevious, GrNext } from "react-icons/gr";
 import { Link } from "react-router-dom";
-import { ayurvedicMedicines } from "../db/data";
+import API from "../utils/axiosConfig";
 import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
 import { FaCartPlus, FaLeaf, FaTruck, FaShieldAlt, FaCertificate } from "react-icons/fa";
@@ -20,6 +20,30 @@ function Home() {
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const [ayurvedicMedicines, setAyurvedicMedicines] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const { data } = await API.get('/products?limit=10');
+        const formatted = data.data.map(p => {
+          const rawImg = p.images?.[0]?.url || "";
+          return {
+            ...p,
+            id: p._id,
+            productName: p.name,
+            img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+            category: p.category?.name || "General"
+          };
+        });
+        setAyurvedicMedicines(formatted);
+      } catch (error) {
+        console.error("Error fetching products", error);
+      }
+    };
+    fetchProducts();
   }, []);
 
   const homeCarouselImages = [

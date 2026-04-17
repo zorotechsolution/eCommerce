@@ -2,7 +2,7 @@ import React from "react";
 import { useParams, Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addItem } from "../store/cartSlice";
-import { ayurvedicMedicines } from "../db/data";
+import API from "../utils/axiosConfig";
 import { useLang } from "../context/LangContext";
 import StarIcon from "@mui/icons-material/Star";
 import {
@@ -244,7 +244,38 @@ const PersonalCareCategory = () => {
   const dispatch = useDispatch();
   const { lang, t } = useLang();
   const data = categoryData[slug];
-  const products = ayurvedicMedicines.filter((p) => p.category === "Personal Care");
+
+  const [products, setProducts] = React.useState([]);
+  const [loading, setLoading] = React.useState(true);
+
+  React.useEffect(() => {
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const res = await API.get('/products?limit=50');
+        const formatted = res.data.data
+          .filter(p => p.category?.name === "Personal Care")
+          .map(p => {
+            const rawImg = p.images?.[0]?.url || "";
+            return {
+              ...p,
+              id: p._id,
+              productName: p.name,
+              productDescription: p.description,
+              img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+              category: p.category?.name || "General",
+              price: p.price
+            };
+          });
+        setProducts(formatted);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, [slug]);
 
   if (!data) {
     return (

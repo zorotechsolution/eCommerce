@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate, Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { clearCart } from '../store/cartSlice';
+import API from '../utils/axiosConfig';
 import { useLang } from '../context/LangContext';
 import { FaCheckCircle, FaCreditCard, FaTruck, FaShieldAlt } from 'react-icons/fa';
 
@@ -20,6 +21,7 @@ const Payment = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
   const { cartItems = [], grandTotal = 0, subtotal = 0, shipping = 0, shippingInfo = {} } = location.state || {};
 
   const [payMethod, setPayMethod] = useState('razorpay');
@@ -28,9 +30,43 @@ const Payment = () => {
   const [orderId, setOrderId] = useState('');
 
   useEffect(() => {
-    // Generate dummy order ID 
+    // Generate dummy order ID for temporary state before API response 
     setOrderId('ORD' + Date.now().toString().slice(-6));
   }, []);
+
+  const createOrderRecord = async (paymentDetails) => {
+    try {
+      const orderData = {
+        orderItems: cartItems.map(item => ({
+          name: item.productName,
+          quantity: item.quantity,
+          image: item.img,
+          price: item.price,
+          product: item.id
+        })),
+        shippingAddress: {
+          address: shippingInfo.address,
+          city: shippingInfo.city,
+          postalCode: shippingInfo.pincode,
+          country: 'India',
+          phoneNum: shippingInfo.phone
+        },
+        paymentInfo: {
+          id: paymentDetails.id || `cod_${Date.now()}`,
+          status: paymentDetails.status || 'Success',
+          method: payMethod
+        },
+        taxPrice: 0,
+        shippingPrice: shipping,
+        totalPrice: grandTotal
+      };
+      
+      const res = await API.post('/orders', orderData);
+      setOrderId(res.data.data._id); // Update to actual DB ID
+    } catch (error) {
+      console.error('Failed to save order to backend:', error);
+    }
+  };
 
   if (cartItems.length === 0 && !success) {
      return <div className="min-h-screen bg-slate-50 flex items-center justify-center font-bold text-center p-5"><p>No items to pay for. <br/><Link to="/collections" className="text-accent-500 underline">Shop Now</Link></p></div>;
@@ -52,11 +88,14 @@ const Payment = () => {
       name: "Vel Siddhar Arakkattalai",
       description: "Ayurvedic & Siddha Medicine Purchase",
       image: "https://example.com/your_logo.png", // Optional
-      handler: function (response) {
+      handler: async function (response) {
         // Successful payment callback
         setLoading(false);
         setSuccess(true);
         dispatch(clearCart());
+        if (auth?.isAuthenticated) {
+          await createOrderRecord({ id: response.razorpay_payment_id || 'test_rzp', status: 'Success' });
+        }
       },
       prefill: {
         name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
@@ -86,23 +125,30 @@ const Payment = () => {
         testModeMsg.innerHTML = `<p style="font-weight:bold; margin-bottom:10px;">Dev Mode: Razorpay Testing</p><button id="simSuccessBtn" style="background:#22c55e; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">Simulate Success</button>`;
         document.body.appendChild(testModeMsg);
 
-        document.getElementById('simSuccessBtn').onclick = () => {
+        document.getElementById('simSuccessBtn').onclick = async () => {
            setLoading(false);
            setSuccess(true);
            dispatch(clearCart());
            document.body.removeChild(testModeMsg);
            // Try to close razorpay modal
            try { document.querySelector('.razorpay-checkout-frame').remove(); } catch(e){}
+           
+           if (auth?.isAuthenticated) {
+             await createOrderRecord({ id: 'simulated_test', status: 'Success' });
+           }
         };
     }, 2000);
   };
 
   const handleCOD = () => {
     setLoading(true);
-    setTimeout(() => {
+    setTimeout(async () => {
       setLoading(false);
       setSuccess(true);
       dispatch(clearCart());
+      if (auth?.isAuthenticated) {
+        await createOrderRecord({ id: 'cod', status: 'Pending Validation' });
+      }
     }, 2000);
   };
 

@@ -7,6 +7,7 @@ import {
 } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../store/authSlice';
+import API from '../utils/axiosConfig';
 
 const Profile = () => {
   const { t } = useLang();
@@ -20,9 +21,24 @@ const Profile = () => {
     state.cart.items.reduce((acc, i) => acc + i.price * i.quantity, 0)
   );
 
+  const [orders, setOrders] = React.useState([]);
+  const [loadingOrders, setLoadingOrders] = React.useState(true);
+
   useEffect(() => {
     if (!auth.isAuthenticated) {
       navigate('/Login');
+    } else {
+      const fetchOrders = async () => {
+        try {
+          const res = await API.get('/orders/myorders');
+          setOrders(res.data.data);
+        } catch (error) {
+          console.error("Failed to fetch orders", error);
+        } finally {
+          setLoadingOrders(false);
+        }
+      };
+      fetchOrders();
     }
   }, [auth.isAuthenticated, navigate]);
 
@@ -31,11 +47,7 @@ const Profile = () => {
     navigate('/');
   };
 
-  const mockOrders = [
-    { id: 'AYU100234', date: '12 Apr 2026', status: 'Delivered', total: 450, items: 2 },
-    { id: 'AYU099891', date: '05 Apr 2026', status: 'Shipped', total: 780, items: 3 },
-    { id: 'AYU098001', date: '25 Mar 2026', status: 'Delivered', total: 310, items: 1 },
-  ];
+
 
   const statusColor = {
     Delivered: 'bg-green-100 text-green-700',
@@ -150,19 +162,25 @@ const Profile = () => {
           <div className="bg-white rounded-2xl shadow-sm p-6">
             <h3 className="font-bold text-gray-700 uppercase text-xs tracking-widest mb-4">Recent Orders</h3>
             <div className="flex flex-col gap-3">
-              {mockOrders.map(order => (
-                <div key={order.id} className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:shadow-sm transition">
-                  <div>
-                    <p className="font-bold text-sm text-gray-800">#{order.id}</p>
-                    <p className="text-xs text-gray-500 mt-0.5">{order.date} · {order.items} items</p>
-                  </div>
-                  <div className="text-right flex flex-col items-end gap-1">
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusColor[order.status]}`}>
-                      {order.status}
-                    </span>
-                    <span className="text-sm font-bold text-[rgb(7,81,89)]">₹{order.total}</span>
-                  </div>
-                </div>
+              {loadingOrders ? (
+                <div className="text-center py-4 text-gray-500">Loading orders...</div>
+              ) : orders.length === 0 ? (
+                <div className="text-center py-4 text-gray-500">No orders found.</div>
+              ) : (
+                orders.map(order => (
+                  <Link to={`/order/${order._id}`} key={order._id} className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:shadow-md hover:border-[rgb(7,81,89)]/30 transition cursor-pointer group">
+                    <div>
+                      <p className="font-bold text-sm text-gray-800 group-hover:text-[rgb(7,81,89)] transition-colors">#{order._id.slice(-8).toUpperCase()}</p>
+                      <p className="text-xs text-gray-500 mt-0.5">{new Date(order.createdAt).toLocaleDateString()} · {order.orderItems.length} items</p>
+                    </div>
+                    <div className="text-right flex flex-col items-end gap-1">
+                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusColor[order.orderStatus] || 'bg-gray-100'}`}>
+                        {order.orderStatus}
+                      </span>
+                      <span className="text-sm font-bold text-[rgb(7,81,89)]">₹{order.totalPrice}</span>
+                    </div>
+                  </Link>
+                )
               ))}
             </div>
           </div>
