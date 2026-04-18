@@ -75,7 +75,7 @@ const Navbar = () => {
                   <div className="bg-[rgb(7,81,89)] py-2 px-4 flex items-center justify-center">
                     <div className="text-white flex items-center font-bold">
                       <FaCartShopping className="inline text-lg" />
-                      <span className="ps-2 bg-orange-500 text-white text-xs px-2 py-0.5 rounded-full ml-2">
+                      <span className="ps-2 bg-orange-600 text-white text-xs px-2 py-0.5 rounded-full ml-2">
                         {cartCount}
                       </span>
                     </div>
@@ -91,7 +91,7 @@ const Navbar = () => {
                   <img src={Icon} alt="Vel Siddhar Arakkattalai Logo" className="w-12 h-12 object-contain" />
                   <div className="flex flex-col">
                     <span className="font-black text-[rgb(7,81,89)] text-lg md:text-xl leading-none uppercase tracking-widest">Vel Siddhar</span>
-                    <span className="font-bold text-orange-500 text-xs md:text-sm tracking-widest">Arakkattalai</span>
+                    <span className="font-bold text-orange-600 text-xs md:text-sm tracking-widest">Arakkattalai</span>
                   </div>
                 </Link>
               </div>
@@ -224,7 +224,7 @@ const Navbar = () => {
               <Link to="/collections/General" className="hover:text-amber-400 transition-colors">General</Link>
             </li>
             <li>
-              <Link to="/e-consultation" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 inline-block">
+              <Link to="/e-consultation" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 inline-block">
                 E-Consultation (Book Now)
               </Link>
             </li>

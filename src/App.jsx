@@ -24,6 +24,10 @@ import PersonalCare from "./pages/PersonalCare";
 import PersonalCareCategory from "./pages/PersonalCareCategory";
 import ShippingDelivery from "./pages/ShippingDelivery";
 import AdminAddProduct from "./pages/AdminAddProduct";
+import AdminProductList from "./pages/AdminProductList";
+import AdminEditProduct from "./pages/AdminEditProduct";
+import AdminOrderList from "./pages/AdminOrderList";
+import AdminOrderDetails from "./pages/AdminOrderDetails";
 import OrderDetails from "./pages/OrderDetails";
 
 import { FaWhatsapp } from "react-icons/fa";
@@ -52,6 +56,10 @@ function App() {
           <Route path="/personal-care/:slug" element={<PersonalCareCategory/>} />
           <Route path="/profile" element={<Profile/>} />
           <Route path="/admin/add-product" element={<AdminAddProduct/>} />
+          <Route path="/admin/products" element={<AdminProductList/>} />
+          <Route path="/admin/edit-product/:id" element={<AdminEditProduct/>} />
+          <Route path="/admin/orders" element={<AdminOrderList/>} />
+          <Route path="/admin/orders/:id" element={<AdminOrderDetails/>} />
           <Route path="/order/:id" element={<OrderDetails/>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy/>} />
           <Route path="/terms" element={<Terms/>} />

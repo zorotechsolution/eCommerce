@@ -6,7 +6,7 @@ import {
   FaPhone, FaEnvelope, FaEdit, FaShieldAlt, FaSignOutAlt
 } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
-import { logout } from '../store/authSlice';
+import { logout, login } from '../store/authSlice';
 import API from '../utils/axiosConfig';
 
 const Profile = () => {
@@ -23,6 +23,10 @@ const Profile = () => {
 
   const [orders, setOrders] = React.useState([]);
   const [loadingOrders, setLoadingOrders] = React.useState(true);
+  
+  const [isEditing, setIsEditing] = React.useState(false);
+  const [editForm, setEditForm] = React.useState({ name: '', email: '' });
+  const [editLoading, setEditLoading] = React.useState(false);
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -45,6 +49,34 @@ const Profile = () => {
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
+  };
+
+  const openEditModal = () => {
+    setEditForm({ name: auth.user.username || '', email: auth.user.email || '' });
+    setIsEditing(true);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    setEditLoading(true);
+    try {
+      const res = await API.put('/auth/updatedetails', editForm);
+      const updatedUser = res.data.data;
+      
+      dispatch(login({
+        username: updatedUser.name,
+        email: updatedUser.email,
+        token: auth.user.token, // Preserve token
+        role: auth.user.role
+      }));
+      
+      setIsEditing(false);
+    } catch (err) {
+      console.error(err);
+      alert(err.response?.data?.error || "Failed to update profile");
+    } finally {
+      setEditLoading(false);
+    }
   };
 
 
@@ -86,7 +118,7 @@ const Profile = () => {
               <FaShieldAlt className="text-orange-400 text-xs" />
               <span className="text-xs text-orange-500 font-semibold">Verified Customer</span>
             </div>
-            <button className="mt-4 flex items-center gap-2 text-sm text-[rgb(7,81,89)] border border-[rgb(7,81,89)] px-4 py-2 rounded-full hover:bg-[rgb(7,81,89)] hover:text-white transition-colors">
+            <button onClick={openEditModal} className="mt-4 flex items-center gap-2 text-sm text-[rgb(7,81,89)] border border-[rgb(7,81,89)] px-4 py-2 rounded-full hover:bg-[rgb(7,81,89)] hover:text-white transition-colors">
               <FaEdit className="text-xs" /> Edit Profile
             </button>
           </div>
@@ -208,6 +240,33 @@ const Profile = () => {
           </div>
         </div>
       </div>
+
+      {/* Edit Profile Modal */}
+      {isEditing && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
+          <div className="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative animate-fade-in">
+            <h2 className="text-2xl font-bold text-[rgb(7,81,89)] mb-6 text-center">Edit Profile</h2>
+            <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 mb-1 block">Full Name</label>
+                <input required type="text" value={editForm.name} onChange={(e) => setEditForm({...editForm, name: e.target.value})} className="w-full border-2 border-gray-200 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[rgb(7,81,89)] font-medium text-gray-800" />
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 mb-1 block">Email Address</label>
+                <input required type="email" value={editForm.email} onChange={(e) => setEditForm({...editForm, email: e.target.value})} className="w-full border-2 border-gray-200 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[rgb(7,81,89)] font-medium text-gray-800" />
+              </div>
+              <div className="mt-4 flex gap-3">
+                <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-3 rounded-xl font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+                  Cancel
+                </button>
+                <button type="submit" disabled={editLoading} className="flex-1 py-3 rounded-xl font-bold text-white bg-[rgb(7,81,89)] hover:bg-teal-700 transition-colors">
+                  {editLoading ? 'Saving...' : 'Save'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
