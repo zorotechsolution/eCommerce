@@ -90,8 +90,8 @@ const Navbar = () => {
                 <Link to={"/"} className="flex items-center gap-3">
                   <img src={Icon} alt="Vel Siddhar Arakkattalai Logo" className="w-12 h-12 object-contain" />
                   <div className="flex flex-col">
-                    <span className="font-black text-[rgb(7,81,89)] text-lg md:text-xl leading-none uppercase tracking-widest">Vel Siddhar</span>
-                    <span className="font-bold text-orange-600 text-xs md:text-sm tracking-widest">Arakkattalai</span>
+                    <span className="font-black text-[rgb(7,81,89)] text-lg md:text-xl leading-none uppercase tracking-widest">{t('brandVelSiddhar')}</span>
+                    <span className="font-bold text-orange-600 text-xs md:text-sm tracking-widest">{t('brandArakkattalai')}</span>
                   </div>
                 </Link>
               </div>
@@ -128,28 +128,28 @@ const Navbar = () => {
         <div className="px-10 lg:px-30">
           <ul className="flex flex-wrap justify-center md:justify-between items-center gap-4">
              <li>
-              <Link to="/" className="hover:text-amber-400 transition-colors">HOME</Link>
+              <Link to="/" className="hover:text-amber-400 transition-colors">{t('home')}</Link>
             </li>
             <li className="relative group py-2">
-              <Link to="/about" className="hover:text-amber-400 transition-colors">ABOUT US</Link>
+              <Link to="/about" className="hover:text-amber-400 transition-colors">{t('aboutUs')}</Link>
               <ul className="absolute hidden text-black group-hover:block top-full left-0 w-48 shadow-lg bg-white border border-gray-100 rounded-b-lg overflow-hidden">
                 <li className="hover:bg-gray-100 transition-all duration-300 hover:text-[rgb(7,81,89)]">
-                  <Link to="/company-profile" className="block w-full px-5 py-3">Company Profile</Link>
+                  <Link to="/company-profile" className="block w-full px-5 py-3">{t('companyProfileTitle')}</Link>
                 </li>
                 <li className="hover:bg-gray-100 transition-all duration-300 hover:text-[rgb(7,81,89)]">
-                  <Link to="/about" className="block w-full px-5 py-3">Heritage & Reviews</Link>
+                  <Link to="/about" className="block w-full px-5 py-3">{t('heritageAndReviews')}</Link>
                 </li>
               </ul>
             </li>
             <li>
-              <Link to="/siddhar" className="hover:text-amber-400 transition-colors">Siddhar</Link>
+              <Link to="/siddhar" className="hover:text-amber-400 transition-colors">{t('siddhar')}</Link>
             </li>
             <li>
-              <Link to="/collections" className="hover:text-amber-400 transition-colors">Collections</Link>
+              <Link to="/collections" className="hover:text-amber-400 transition-colors">{t('collections')}</Link>
             </li>
             <li className="relative group py-2">
               <Link to="/personal-care" className="hover:text-amber-400 transition-colors flex items-center gap-1">
-                Personal Care <span className="text-[10px] opacity-70">▼</span>
+                {t('personalCare')} <span className="text-[10px] opacity-70">▼</span>
               </Link>
               {/* Mega Dropdown */}
               <div className="absolute hidden group-hover:flex top-full left-1/2 -translate-x-1/2 w-[680px] bg-white shadow-2xl border-t-4 border-orange-500 z-50 text-black rounded-b-xl overflow-hidden">
@@ -157,14 +157,14 @@ const Navbar = () => {
                   {/* Column 1 */}
                   <div className="p-6">
                     <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
-                      Ayurvedic Medicine For
+                      {t('group1')}
                     </h4>
                     <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
                       {[
-                        { label: "Cough and Cold", slug: "cough-and-cold" },
-                        { label: "Fever", slug: "fever" },
-                        { label: "Migraine", slug: "migraine" },
-                        { label: "Sinus", slug: "sinus" },
+                        { label: t('coughAndCold'), slug: "cough-and-cold" },
+                        { label: t('fever'), slug: "fever" },
+                        { label: t('migraine'), slug: "migraine" },
+                        { label: t('sinus'), slug: "sinus" },
                       ].map(item => (
                         <li key={item.slug}>
                           <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
@@ -177,14 +177,14 @@ const Navbar = () => {
                   {/* Column 2 */}
                   <div className="p-6">
                     <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
-                      Ayurvedic Products For
+                      {t('group2')}
                     </h4>
                     <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
                       {[
-                        { label: "Body Care", slug: "body-care" },
-                        { label: "Face Care", slug: "face-care" },
-                        { label: "Ayurvedic Hair Oil", slug: "hair-oil" },
-                        { label: "Skin & Beauty Care", slug: "skin-beauty" },
+                        { label: t('bodyCare'), slug: "body-care" },
+                        { label: t('faceCare'), slug: "face-care" },
+                        { label: t('ayurvedicHairOil'), slug: "hair-oil" },
+                        { label: t('skinBeautyCare'), slug: "skin-beauty" },
                       ].map(item => (
                         <li key={item.slug}>
                           <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
@@ -197,16 +197,16 @@ const Navbar = () => {
                   {/* Column 3 */}
                   <div className="p-6">
                     <h4 className="text-[11px] font-black text-slate-500 uppercase tracking-widest mb-4 pb-2 border-b border-slate-100">
-                      Digestive & Metabolic Care
+                      {t('group3')}
                     </h4>
                     <ul className="flex flex-col gap-2 text-sm font-semibold normal-case">
                       {[
-                        { label: "Constipation", slug: "constipation" },
-                        { label: "Diabetes / Sugar Control", slug: "diabetes" },
-                        { label: "Digestion", slug: "digestion" },
-                        { label: "Gastro Health & Acidity", slug: "gastro" },
-                        { label: "Obesity", slug: "obesity" },
-                        { label: "Piles & Hemorrhoid", slug: "piles" },
+                        { label: t('constipation'), slug: "constipation" },
+                        { label: t('diabetesControl'), slug: "diabetes" },
+                        { label: t('digestion'), slug: "digestion" },
+                        { label: t('gastroHealth'), slug: "gastro" },
+                        { label: t('obesity'), slug: "obesity" },
+                        { label: t('pilesHemorrhoid'), slug: "piles" },
                       ].map(item => (
                         <li key={item.slug}>
                           <Link to={`/personal-care/${item.slug}`} className="block py-1.5 text-slate-700 hover:text-orange-500 transition-colors">
@@ -221,21 +221,21 @@ const Navbar = () => {
             </li>
 
             <li>
-              <Link to="/collections/Health & Nutrition" className="hover:text-amber-400 transition-colors">Health & Nutrition</Link>
+              <Link to="/collections/Health & Nutrition" className="hover:text-amber-400 transition-colors">{t('healthNutrition')}</Link>
             </li>
             <li>
               <Link to="/e-consultation" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 inline-block">
-                E-Consultation (Book Now)
+                {t('eConsultTitle')}
               </Link>
             </li>
             {auth.isAuthenticated && (
               <li>
-                <Link to="/profile" className="hover:text-amber-400 transition-colors">My Orders</Link>
+                <Link to="/profile" className="hover:text-amber-400 transition-colors">{t('myOrders')}</Link>
               </li>
             )}
             {auth.isAuthenticated && auth.user.role === 'admin' && (
               <li>
-                <Link to="/admin/add-product" className="bg-white text-[rgb(7,81,89)] px-4 py-1.5 rounded-lg font-black hover:bg-amber-400 transition-colors">ADMIN</Link>
+                <Link to="/admin/add-product" className="bg-white text-[rgb(7,81,89)] px-4 py-1.5 rounded-lg font-black hover:bg-amber-400 transition-colors">{t('admin')}</Link>
               </li>
             )}
           </ul>

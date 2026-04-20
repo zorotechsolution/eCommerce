@@ -13,7 +13,7 @@ const Footer = () => {
         <div className="mb-6 flex flex-col md:items-start text-center md:text-left">
           <Link to="/" className="inline-block">
             <h2 className="text-sm font-bold text-white tracking-wider uppercase">
-              Vel Siddhar <span className="text-orange-500">Arakkattalai</span>
+              {t('brandVelSiddhar')} <span className="text-orange-500">{t('brandArakkattalai')}</span>
             </h2>
           </Link>
         </div>
@@ -70,15 +70,15 @@ const Footer = () => {
             <ul className="text-[13px] flex flex-col gap-4 mb-8">
               <li className="flex items-start gap-3">
                 <FaMapMarkerAlt className="mt-1 shrink-0 text-gray-400" />
-                <span className="leading-relaxed">New No.19, Old No.61, 27th Street,<br/>L-Block, Anna nagar East,<br/>Chennai - 600 102. India</span>
+                <span className="leading-relaxed whitespace-pre-wrap">{t('address').replace(/, /g, ',\n')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <FaPhoneAlt className="shrink-0 text-gray-400" />
-                <span>(044) 4859 9296</span>
+                <span>{t('phoneNum')}</span>
               </li>
               <li className="flex items-center gap-3">
                 <FaEnvelope className="shrink-0 text-gray-400" />
-                <span>sales@velsiddhararakkattalai.com</span>
+                <span>{t('emailId')}</span>
               </li>
             </ul>
 
@@ -112,7 +112,7 @@ const Footer = () => {
         {/* Bottom Bar */}
         <div className="border-t border-[#11232b] pt-6 flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-gray-400">
           <div className="flex flex-col md:flex-row items-center gap-4 md:gap-6">
-            <p className="text-gray-300">© {new Date().getFullYear()} Vel Siddhar Arakkattalai. {t('allRightsReserved')}</p>
+            <p className="text-gray-300">© {new Date().getFullYear()} {t('brandVelSiddhar')} {t('brandArakkattalai')}. {t('allRightsReserved')}</p>
             <div className="flex gap-4 font-medium">
               <Link to="/privacy-policy" className="hover:text-white transition-colors">{t('privacyPolicy')}</Link>
               <Link to="/terms" className="hover:text-white transition-colors">{t('termsOfService')}</Link>
