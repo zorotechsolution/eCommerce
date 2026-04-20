@@ -127,6 +127,9 @@ const Navbar = () => {
       <nav className="py-4 hidden md:block bg-[rgb(7,81,89)] sticky w-full top-0 font-bold text-white uppercase text-sm z-30 shadow-md">
         <div className="px-10 lg:px-30">
           <ul className="flex flex-wrap justify-center md:justify-between items-center gap-4">
+             <li>
+              <Link to="/" className="hover:text-amber-400 transition-colors">HOME</Link>
+            </li>
             <li className="relative group py-2">
               <Link to="/about" className="hover:text-amber-400 transition-colors">ABOUT US</Link>
               <ul className="absolute hidden text-black group-hover:block top-full left-0 w-48 shadow-lg bg-white border border-gray-100 rounded-b-lg overflow-hidden">
@@ -219,9 +222,6 @@ const Navbar = () => {
 
             <li>
               <Link to="/collections/Health & Nutrition" className="hover:text-amber-400 transition-colors">Health & Nutrition</Link>
-            </li>
-            <li>
-              <Link to="/collections/General" className="hover:text-amber-400 transition-colors">General</Link>
             </li>
             <li>
               <Link to="/e-consultation" className="bg-orange-600 hover:bg-orange-700 text-white px-4 py-2 rounded-full shadow-lg transition-transform hover:-translate-y-0.5 inline-block">

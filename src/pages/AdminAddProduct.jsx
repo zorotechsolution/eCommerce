@@ -17,7 +17,6 @@ const AdminAddProduct = () => {
     imgPreview: '',
     ailments: ''
   });
-
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 

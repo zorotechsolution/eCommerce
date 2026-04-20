@@ -81,63 +81,86 @@ const Payment = () => {
       return;
     }
 
-    const options = {
-      key: import.meta.env.VITE_RAZORPAY_TEST_KEY || "rzp_test_1Dp5sZrvbkbX1y", // Use a generic testing key or leave blank to see error/demo
-      amount: grandTotal * 100, // paise
-      currency: "INR",
-      name: "Vel Siddhar Arakkattalai",
-      description: "Ayurvedic & Siddha Medicine Purchase",
-      image: "https://example.com/your_logo.png", // Optional
-      handler: async function (response) {
-        // Successful payment callback
+    try {
+      // 1. Fetch Razorpay key
+      const keyRes = await API.get('/payment/key');
+      const rzpKey = keyRes.data.key || import.meta.env.VITE_RAZORPAY_TEST_KEY;
+
+      // 2. Create Order on Backend
+      const orderRes = await API.post('/payment/process', {
+        amount: grandTotal * 100,
+        currency: "INR"
+      });
+
+      if (!orderRes.data.success) {
+        alert("Server error. Could not place order with Razorpay.");
         setLoading(false);
-        setSuccess(true);
-        dispatch(clearCart());
-        if (auth?.isAuthenticated) {
-          await createOrderRecord({ id: response.razorpay_payment_id || 'test_rzp', status: 'Success' });
-        }
-      },
-      prefill: {
-        name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
-        email: shippingInfo.email || "test@example.com",
-        contact: shippingInfo.phone || "9999999999",
-      },
-      notes: {
-        address: "Ayurvedic Store Office",
-      },
-      theme: {
-        color: "#075159", // primary-900
-      },
-      modal: {
-        ondismiss: function() {
-           setLoading(false);
-        }
+        return;
       }
-    };
 
-    const paymentObject = new window.Razorpay(options);
-    paymentObject.open();
+      const orderData = orderRes.data.data;
 
-    // Fallback if Razorpay credentials throw error inside modal: we allow user to bypass in dev env
-    setTimeout(() => {
-        const testModeMsg = document.createElement('div');
-        testModeMsg.style = "position:fixed; bottom:20px; right:20px; background:#fff; padding:15px; border-radius:10px; z-index:99999; box-shadow:0 10px 25px rgba(0,0,0,0.2); font-family:sans-serif; text-align:center;";
-        testModeMsg.innerHTML = `<p style="font-weight:bold; margin-bottom:10px;">Dev Mode: Razorpay Testing</p><button id="simSuccessBtn" style="background:#22c55e; color:#fff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; font-weight:bold;">Simulate Success</button>`;
-        document.body.appendChild(testModeMsg);
+      // 3. Setup Razorpay Options
+      const options = {
+        key: rzpKey,
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "Vel Siddhar Arakkattalai",
+        description: "Ayurvedic & Siddha Medicine Purchase",
+        image: "https://example.com/your_logo.png", // Optional
+        order_id: orderData.id,
+        handler: async function (response) {
+          try {
+            // 4. Verify payment signature
+            const verifyRes = await API.post('/payment/verify', {
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+            });
 
-        document.getElementById('simSuccessBtn').onclick = async () => {
-           setLoading(false);
-           setSuccess(true);
-           dispatch(clearCart());
-           document.body.removeChild(testModeMsg);
-           // Try to close razorpay modal
-           try { document.querySelector('.razorpay-checkout-frame').remove(); } catch(e){}
-           
-           if (auth?.isAuthenticated) {
-             await createOrderRecord({ id: 'simulated_test', status: 'Success' });
-           }
-        };
-    }, 2000);
+            if (verifyRes.data.success) {
+              setLoading(false);
+              setSuccess(true);
+              dispatch(clearCart());
+              if (auth?.isAuthenticated) {
+                await createOrderRecord({ id: response.razorpay_payment_id, status: 'Success' });
+              }
+            } else {
+              alert(verifyRes.data.error || "Payment verification failed!");
+              setLoading(false);
+            }
+          } catch(error) {
+             console.error("Verification error:", error);
+             alert("Error during payment verification.");
+             setLoading(false);
+          }
+        },
+        prefill: {
+          name: `${shippingInfo.firstName} ${shippingInfo.lastName}`,
+          email: shippingInfo.email || "test@example.com",
+          contact: shippingInfo.phone || "9999999999",
+        },
+        notes: {
+          address: "Ayurvedic Store Office",
+        },
+        theme: {
+          color: "#075159", // primary-900
+        },
+        modal: {
+          ondismiss: function() {
+             setLoading(false);
+          }
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+
+    } catch (error) {
+      console.error("Razorpay Error:", error);
+      alert("Error communicating with servers for payment.");
+      setLoading(false);
+    }
   };
 
   const handleCOD = () => {

@@ -7,36 +7,36 @@ const siddhars = [
   {
     name: 'Thirumoolar',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/Thirumoolar.jpg/220px-Thirumoolar.jpg',
-    desc: 'One of the eighteen Siddhars who composed the Thirumandiram — a classic work of Tamil literature containing 3000 verses on yoga, tantra, and Shaiva philosophy.',
+    desc: 'Thirumoolar was a great Siddhar whose teachings still feel alive today. Through his Thirumandiram—3000 simple Tamil verses—he shared deep ideas about yoga, tantra, and how to live with peace and balance. Even now, his words continue to guide people looking for a calmer, more meaningful life.',
     speciality: 'Yoga & Tantra',
   },
   {
     name: 'Agathiyar (Agastya)',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6e/Agastya_sculpture.jpg/220px-Agastya_sculpture.jpg',
-    desc: 'The most revered Siddhar, considered the father of Siddha medicine and Tamil language. His contributions to herbal medicine, astrology, and spiritual knowledge are unparalleled.',
+    desc: 'Agathiyar was a great Siddhar who lived very close to nature. He spent his time observing plants, people, and life around him, learning how everything is connected. From that simple way of living, he shared useful knowledge about healing with herbs and living a balanced life. Even today, people remember him with respect for the natural wisdom he passed on.',
     speciality: 'Siddha Medicine & Tamil Grammar',
   },
   {
     name: 'Bogar',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Bogar_Siddhar.jpg/220px-Bogar_Siddhar.jpg',
-    desc: 'A great Siddhar who is believed to have created the famous Murugan idol at Palani using nava pashanam (nine poisonous herbs) with rare medicinal properties.',
+    desc: 'Bogar was a fascinating Siddhar who spent his life exploring the secrets of herbs and nature. People say he understood things far beyond ordinary knowledge. One of the most talked-about stories about him is the Murugan idol at Palani, believed to be made by him using “nava pashanam,” a special mix of nine powerful herbs. Even today, his name brings curiosity and respect, as his life feels like a blend of mystery, wisdom, and ancient healing.',
     speciality: 'Alchemy & Chemistry',
   },
   {
     name: 'Patanjali',
     image: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5d/Patanjali.jpg/220px-Patanjali.jpg',
-    desc: 'The author of Yoga Sutras, Patanjali is celebrated for his systematic exposition of yoga as a path to spiritual liberation and physical health.',
+    desc: 'Patanjali is the sage who made yoga easy to understand. He took deep knowledge and shared it as simple steps called the Yoga Sutras. He showed that yoga is not just exercise, but a way to calm the mind, stay focused, and live a peaceful, happy life.',
     speciality: 'Yoga Philosophy',
   },
 ];
 
 const principles = [
-  { icon: <FaLeaf className="text-green-500 text-3xl" />, title: 'Natural Healing', desc: 'Using herbs, minerals and spiritual practices to achieve complete wellness' },
-  { icon: <FaOm className="text-orange-500 text-3xl" />, title: 'Spiritual Wisdom', desc: 'Integrating meditation, mantra and pranayama for mind-body balance' },
-  { icon: <FaMedkit className="text-teal-600 text-3xl" />, title: 'Siddha Medicine', desc: 'One of the oldest traditional medical systems, dating back over 5000 years' },
-  { icon: <FaYinYang className="text-purple-500 text-3xl" />, title: 'Balance of Elements', desc: 'The five elements — earth, water, fire, air, ether — govern all life' },
-  { icon: <FaBookOpen className="text-blue-500 text-3xl" />, title: 'Ancient Literature', desc: 'Thousands of verses on health, spirituality, and yoga preserved in Tamil' },
-  { icon: <FaStar className="text-yellow-500 text-3xl" />, title: 'Siddhi Powers', desc: 'Extraordinary abilities attained through disciplined spiritual practice' },
+  { icon: <FaLeaf className="text-green-500 text-3xl" />, title: 'Natural Healing', desc: 'A gentle way to take care of your body using herbs, natural minerals, and trusted practices—helping you feel better, stay balanced, and enjoy a healthier life, one day at a time.' },
+  { icon: <FaOm className="text-orange-500 text-3xl" />, title: 'Spiritual Wisdom', desc: 'A gentle way to calm your mind and body through meditation, mantras, and breathing practices—helping you feel peaceful, balanced, and more connected every day.' },
+  { icon: <FaMedkit className="text-teal-600 text-3xl" />, title: 'Siddha Medicine', desc: 'Siddha medicine has been trusted for over 5000 years, passed down from generation to generation. It’s not just about treating illness—it’s about understanding your body and caring for it in a natural, balanced way that lasts over time.' },
+  { icon: <FaYinYang className="text-purple-500 text-3xl" />, title: 'Balance of Elements', desc: 'Life is shaped by five natural elements—earth, water, fire, air, and space. When these stay in balance, your body feels healthy, your mind feels calm, and everything just works the way it should.' },
+  { icon: <FaBookOpen className="text-blue-500 text-3xl" />, title: 'Ancient Literature', desc: 'Long ago, wisdom wasn’t written in books—it was shared through heartfelt Tamil verses, passed from one generation to the next. These words carried deep knowledge about health, yoga, and spiritual living, and even today, they continue to guide those seeking a better, more balanced life.' },
+  { icon: <FaStar className="text-yellow-500 text-3xl" />, title: 'Siddhi Powers', desc: 'With deep meditation, strong focus, and simple living, Siddhars were believed to reach a higher level of awareness and abilities—showing what a calm and peaceful mind can truly achieve.' },
 ];
 
 const Siddhar = () => {
@@ -51,7 +51,7 @@ const Siddhar = () => {
           {t('siddhar')}
         </h1>
         <p className="text-white/80 max-w-2xl mx-auto text-base md:text-lg leading-relaxed">
-          The ancient Tamil tradition of spiritually enlightened sages who attained higher knowledge through meditation, yoga, and disciplined living
+          Ancient Tamil wise people who lived simple lives and gained deep knowledge through meditation and yoga, helping others live a healthy and peaceful life.
         </p>
       </div>
 
@@ -123,7 +123,7 @@ const Siddhar = () => {
         <div className="bg-gradient-to-r from-[rgb(7,81,89)] to-teal-600 rounded-2xl p-8 text-white text-center">
           <h3 className="text-xl md:text-2xl font-bold mb-3">Experience Siddha Healing Today</h3>
           <p className="text-white/80 text-sm mb-6 max-w-xl mx-auto">
-            Explore our range of authentic Siddha medicines and Ayurvedic products sourced from trusted manufacturers following age-old traditions
+            Imagine a way of healing that has been trusted for generations—simple, natural, and rooted in tradition. That’s the world of Siddha and Ayurveda. Explore authentic medicines and herbal products made using age-old methods and trusted care, helping you support your health the natural way, just like it was meant to be.
           </p>
           <Link
             to="/collections"
