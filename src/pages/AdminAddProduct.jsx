@@ -5,6 +5,9 @@ import { FaBoxOpen, FaUpload, FaTags, FaDollarSign, FaInfoCircle, FaCheckCircle,
 import API from '../utils/axiosConfig';
 import { useLang } from '../context/LangContext';
 
+// Exact enum values from Product model
+const PRODUCT_TYPES = ['Capsules', 'Churnam', 'Leham', 'Tailam', 'General'];
+
 const AdminAddProduct = () => {
   const { t } = useLang();
   const [formData, setFormData] = useState({
@@ -19,6 +22,8 @@ const AdminAddProduct = () => {
     imgPreview: '',
     ailments: ''
   });
+
+  const [categories, setCategories] = useState([]);   // fetched from backend
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -27,6 +32,14 @@ const AdminAddProduct = () => {
       navigate('/Login'); 
     }
   }, [user, isAuthenticated, navigate]);
+
+  // Load categories from backend once
+  useEffect(() => {
+    API.get('/categories')
+      .then(res => setCategories(res.data?.data || []))
+      .catch(() => {});
+  }, []);
+
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -173,8 +186,19 @@ const AdminAddProduct = () => {
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('categoryLab')}</label>
-                      <input type="text" name="category" value={formData.category} onChange={handleChange} placeholder="e.g. Personal Care" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('categoryLab')} <span className="text-red-500">*</span></label>
+                      <select
+                        required
+                        name="category"
+                        value={formData.category}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900 bg-white"
+                      >
+                        <option value="">-- Select Category --</option>
+                        {categories.map(cat => (
+                          <option key={cat._id} value={cat.name}>{cat.name}</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">{t('brandLab')}</label>
@@ -184,8 +208,19 @@ const AdminAddProduct = () => {
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('formTypeLab')}</label>
-                      <input type="text" name="type" value={formData.type} onChange={handleChange} placeholder="e.g. Churnam" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('formTypeLab')} <span className="text-red-500">*</span></label>
+                      <select
+                        required
+                        name="type"
+                        value={formData.type}
+                        onChange={handleChange}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900 bg-white"
+                      >
+                        <option value="">-- Select Type --</option>
+                        {PRODUCT_TYPES.map(pt => (
+                          <option key={pt} value={pt}>{pt}</option>
+                        ))}
+                      </select>
                     </div>
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">{t('ailmentsLab')}</label>
