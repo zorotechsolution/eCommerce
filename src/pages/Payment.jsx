@@ -28,6 +28,7 @@ const Payment = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [orderId, setOrderId] = useState('');
+  const [razorpayPaymentId, setRazorpayPaymentId] = useState('');
 
   useEffect(() => {
     // Generate dummy order ID for temporary state before API response 
@@ -119,6 +120,7 @@ const Payment = () => {
             });
 
             if (verifyRes.data.success) {
+              setRazorpayPaymentId(response.razorpay_payment_id); // ← store payment ID
               setLoading(false);
               setSuccess(true);
               dispatch(clearCart());
@@ -236,10 +238,21 @@ const Payment = () => {
 
             <div className="p-8">
 
-              {/* Order ID */}
-              <div className="flex items-center justify-between mb-6 pb-4 border-b border-dashed border-slate-200">
-                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Order ID</span>
-                <span className="font-black text-[rgb(7,81,89)] text-lg">#{orderId}</span>
+              {/* Order ID + Payment ID */}
+              <div className="mb-6 pb-4 border-b border-dashed border-slate-200 space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Order ID</span>
+                  <span className="font-black text-[rgb(7,81,89)] text-base">#{orderId}</span>
+                </div>
+                {isOnlinePayment && razorpayPaymentId && (
+                  <div className="flex items-center justify-between bg-green-50 rounded-lg px-3 py-2 border border-green-100">
+                    <div>
+                      <span className="text-xs font-black text-green-600 uppercase tracking-widest block">Payment ID</span>
+                      <span className="text-xs text-green-500 mt-0.5">Razorpay Transaction</span>
+                    </div>
+                    <span className="font-mono font-bold text-green-700 text-xs text-right break-all max-w-[180px]">{razorpayPaymentId}</span>
+                  </div>
+                )}
               </div>
 
               {/* Order Items */}

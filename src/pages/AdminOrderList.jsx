@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { FaClipboardList, FaBoxOpen, FaList, FaPlus, FaEye } from 'react-icons/fa';
+import { FaClipboardList, FaBoxOpen, FaList, FaPlus, FaEye, FaCreditCard, FaTruck, FaCheckCircle, FaClock } from 'react-icons/fa';
 import API from '../utils/axiosConfig';
 
 const AdminOrderList = () => {
@@ -38,6 +38,14 @@ const AdminOrderList = () => {
       case 'Delivered': return 'bg-green-100 text-green-700';
       case 'Cancelled': return 'bg-red-100 text-red-700';
       default: return 'bg-gray-100 text-gray-700';
+    }
+  };
+
+  const getPaymentBadge = (paymentStatus) => {
+    switch(paymentStatus) {
+      case 'Completed': return 'bg-green-100 text-green-700';
+      case 'Failed':    return 'bg-red-100 text-red-700';
+      default:          return 'bg-orange-100 text-orange-700';
     }
   };
 
@@ -84,43 +92,87 @@ const AdminOrderList = () => {
              <div className="overflow-x-auto">
                <table className="w-full text-left border-collapse">
                  <thead>
-                   <tr className="bg-gray-50/50 border-b border-gray-200">
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Order ID</th>
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total Amount</th>
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                     <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Action</th>
+                    <tr className="bg-gray-50/50 border-b border-gray-200">
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Order ID</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Customer</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Payment</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Order Status</th>
+                      <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Action</th>
                    </tr>
                  </thead>
                  <tbody className="divide-y divide-gray-200">
-                   {orders.map(order => (
-                     <tr key={order._id} className="hover:bg-gray-50 transition-colors group">
-                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                         #{order._id.substring(order._id.length - 8).toUpperCase()}
-                       </td>
-                       <td className="px-6 py-4 whitespace-nowrap">
-                         <p className="text-sm font-medium text-gray-900 leading-tight">{order.user?.name || "Unknown Customer"}</p>
-                         <p className="text-xs text-gray-500">{order.shippingAddress?.city || "No City Provided"}</p>
-                       </td>
-                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                         {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
-                       </td>
-                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                         ₹{order.totalPrice.toLocaleString()}
-                       </td>
-                       <td className="px-6 py-4 whitespace-nowrap">
-                         <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(order.orderStatus)}`}>
-                           {order.orderStatus}
-                         </span>
-                       </td>
-                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                         <Link to={`/admin/orders/${order._id}`} className="text-[rgb(7,81,89)] hover:text-teal-700 flex justify-end items-center gap-1 group-hover:underline">
-                           <FaEye /> View
-                         </Link>
-                       </td>
-                     </tr>
-                   ))}
+                    {orders.map(order => {
+                      const isOnline = order.paymentInfo?.method === 'razorpay';
+                      const paymentId = order.paymentInfo?.id || '';
+
+                      return (
+                      <tr key={order._id} className="hover:bg-gray-50 transition-colors group">
+                        {/* Order ID */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className="text-sm font-mono font-bold text-gray-900">
+                            #{order._id.substring(order._id.length - 8).toUpperCase()}
+                          </span>
+                        </td>
+
+                        {/* Customer */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <p className="text-sm font-medium text-gray-900 leading-tight">{order.user?.name || 'Unknown'}</p>
+                          <p className="text-xs text-gray-500">{order.shippingAddress?.city || '—'}</p>
+                        </td>
+
+                        {/* Payment Info */}
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-1.5 mb-1">
+                            {isOnline
+                              ? <FaCreditCard className="text-green-500 text-xs" />
+                              : <FaTruck className="text-orange-400 text-xs" />
+                            }
+                            <span className={`text-xs font-bold ${isOnline ? 'text-green-600' : 'text-orange-500'}`}>
+                              {isOnline ? 'Online' : 'COD'}
+                            </span>
+                            <span className={`ml-1 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[10px] font-bold ${getPaymentBadge(order.paymentStatus)}`}>
+                              {order.paymentStatus === 'Completed'
+                                ? <><FaCheckCircle className="text-[9px]" /> Paid</>
+                                : <><FaClock className="text-[9px]" /> {order.paymentStatus || 'Pending'}</>
+                              }
+                            </span>
+                          </div>
+                          {/* Payment ID — only for online */}
+                          {isOnline && paymentId && (
+                            <p className="font-mono text-[10px] text-gray-400 truncate max-w-[140px]" title={paymentId}>
+                              {paymentId}
+                            </p>
+                          )}
+                        </td>
+
+                        {/* Date */}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                        </td>
+
+                        {/* Total */}
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">
+                          ₹{order.totalPrice.toLocaleString()}
+                        </td>
+
+                        {/* Order Status */}
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusBadge(order.orderStatus)}`}>
+                            {order.orderStatus}
+                          </span>
+                        </td>
+
+                        {/* Action */}
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <Link to={`/admin/orders/${order._id}`} className="text-[rgb(7,81,89)] hover:text-teal-700 flex justify-end items-center gap-1 group-hover:underline">
+                            <FaEye /> View
+                          </Link>
+                        </td>
+                      </tr>
+                      );
+                    })}
                  </tbody>
                </table>
              </div>
