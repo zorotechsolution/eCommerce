@@ -3,13 +3,15 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { FaBoxOpen, FaUpload, FaTags, FaDollarSign, FaInfoCircle, FaCheckCircle, FaExclamationCircle, FaList, FaPlus, FaClipboardList } from 'react-icons/fa';
 import API from '../utils/axiosConfig';
+import { useLang } from '../context/LangContext';
 
 const AdminAddProduct = () => {
+  const { t } = useLang();
   const [formData, setFormData] = useState({
     productName: '',
-    category: 'Classical Medicines',
-    brand: 'Kottakkal',
-    type: 'General',
+    category: '',
+    brand: '',
+    type: '',
     price: '',
     originalPrice: '',
     productDescription: '',
@@ -28,10 +30,6 @@ const AdminAddProduct = () => {
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
-
-  const CATEGORIES = ['Siddhar', 'Classical Medicines', 'Personal Care', 'Health & Nutrition', 'Herbal Oils'];
-  const BRANDS = ['Kottakkal', 'AVP Ayurveda', 'Kerala Ayurveda', 'Santhigiri', 'Vel Siddhar'];
-  const TYPES = ['General', 'Churnam', 'Tailam', 'Lehyam', 'Arishtam', 'Bhasma'];
 
   const handleChange = (e) => {
     const { name, value, type, files } = e.target;
@@ -54,7 +52,7 @@ const AdminAddProduct = () => {
       if (formData.imgPreview) URL.revokeObjectURL(formData.imgPreview);
       setSuccess(false);
       setFormData({
-        productName: '', category: 'Classical Medicines', brand: 'Kottakkal', type: 'General',
+        productName: '', category: '', brand: '', type: '',
         price: '', originalPrice: '', productDescription: '', img: null, imgPreview: '', ailments: ''
       });
     }, 3000);
@@ -101,18 +99,18 @@ const AdminAddProduct = () => {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Add New Product</h1>
-            <p className="text-sm text-gray-500 mt-1">Admin Dashboard • Inventory Management</p>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('addNewProduct')}</h1>
+            <p className="text-sm text-gray-500 mt-1">{t('adminDashboard')} • {t('inventoryMgmt')}</p>
           </div>
           <div className="flex gap-3 flex-wrap">
              <Link to="/admin/orders" className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors shadow-sm">
-               <FaClipboardList /> Orders
+               <FaClipboardList /> {t('orders')}
              </Link>
              <Link to="/admin/products" className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors shadow-sm">
-               <FaList /> Products
+               <FaList /> {t('products')}
              </Link>
              <Link to="/admin/add-product" className="inline-flex items-center gap-2 bg-[rgb(7,81,89)] text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm">
-               <FaPlus /> Add New
+               <FaPlus /> {t('addNew')}
              </Link>
           </div>
         </div>
@@ -125,7 +123,7 @@ const AdminAddProduct = () => {
           {/* Status Message */}
           {success && (
             <div className="bg-green-50 px-6 py-4 border-b border-green-200 flex items-center gap-2 text-green-700 font-medium">
-              <FaCheckCircle className="text-green-500" /> Product successfully added to the database.
+              <FaCheckCircle className="text-green-500" /> {t('productAddedSuccess')}
             </div>
           )}
 
@@ -137,21 +135,21 @@ const AdminAddProduct = () => {
               <div className="flex flex-col gap-6">
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 border-b border-gray-200 pb-2 mb-4">
-                    <FaInfoCircle className="text-gray-400" /> Basic Details
+                    <FaInfoCircle className="text-gray-400" /> {t('basicDetails')}
                   </h3>
                   
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Name <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productNameLab')} <span className="text-red-500">*</span></label>
                     <input required type="text" name="productName" value={formData.productName} onChange={handleChange} placeholder="e.g. Ashwagandha Root Churnam" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Description <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productDescLab')} <span className="text-red-500">*</span></label>
                     <textarea required name="productDescription" value={formData.productDescription} onChange={handleChange} rows="4" placeholder="Detailed description of the medicine/product..." className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900 resize-none" />
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Product Image <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productImgLab')} <span className="text-red-500">*</span></label>
                     <div className="flex flex-col gap-3">
                       {formData.imgPreview && (
                         <div className="w-full h-40 bg-gray-50 rounded-md border border-gray-300 overflow-hidden flex items-center justify-center">
@@ -170,33 +168,27 @@ const AdminAddProduct = () => {
                 {/* Classification */}
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 border-b border-gray-200 pb-2 mb-4">
-                    <FaTags className="text-gray-400" /> Classification
+                    <FaTags className="text-gray-400" /> {t('classification')}
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                      <select name="category" value={formData.category} onChange={handleChange} className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900">
-                        {CATEGORIES.map(cat => <option key={cat} value={cat}>{cat}</option>)}
-                      </select>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('categoryLab')}</label>
+                      <input type="text" name="category" value={formData.category} onChange={handleChange} placeholder="e.g. Personal Care" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Brand</label>
-                      <select name="brand" value={formData.brand} onChange={handleChange} className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900">
-                        {BRANDS.map(brand => <option key={brand} value={brand}>{brand}</option>)}
-                      </select>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('brandLab')}</label>
+                      <input type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="e.g. Vel Siddhar" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Form / Type</label>
-                      <select name="type" value={formData.type} onChange={handleChange} className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900">
-                        {TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-                      </select>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('formTypeLab')}</label>
+                      <input type="text" name="type" value={formData.type} onChange={handleChange} placeholder="e.g. Churnam" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Ailments / Tags</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('ailmentsLab')}</label>
                       <input type="text" name="ailments" value={formData.ailments} onChange={handleChange} placeholder="Comma separated..." className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                   </div>
@@ -205,16 +197,16 @@ const AdminAddProduct = () => {
                 {/* Pricing */}
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 border-b border-gray-200 pb-2 mb-4">
-                    <FaDollarSign className="text-gray-400" /> Pricing
+                    <FaDollarSign className="text-gray-400" /> {t('pricing')}
                   </h3>
 
                   <div className="grid grid-cols-2 gap-4">
                      <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Current Price (₹) <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('currentPriceLab')} <span className="text-red-500">*</span></label>
                       <input required type="number" min="0" name="price" value={formData.price} onChange={handleChange} placeholder="0.00" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm font-bold text-gray-900" />
                      </div>
                      <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">MRP (₹) <span className="text-gray-400 font-normal ml-1">Optional</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('mrpLab')} <span className="text-gray-400 font-normal ml-1">{t('optional')}</span></label>
                       <input type="number" min="0" name="originalPrice" value={formData.originalPrice} onChange={handleChange} placeholder="0.00" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-500 line-through" />
                      </div>
                   </div>
@@ -226,13 +218,13 @@ const AdminAddProduct = () => {
             {/* Actions */}
             <div className="mt-8 pt-6 border-t border-gray-200 flex items-center justify-end gap-3">
                <button type="button" onClick={() => navigate('/admin/products')} className="px-5 py-2.5 rounded-md text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-colors">
-                 Cancel
+                 {t('cancel')}
                </button>
                <button disabled={loading} type="submit" className={`px-5 py-2.5 rounded-md text-sm font-medium text-white shadow-sm flex items-center gap-2 ${loading ? 'bg-[rgb(7,81,89)]/70 cursor-wait' : 'bg-[rgb(7,81,89)] hover:bg-teal-800 transition-colors'}`}>
                  {loading ? (
-                    <><div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" /> Saving...</>
+                    <><div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" /> {t('saving')}</>
                  ) : (
-                    <><FaPlus className="text-xs" /> Save Product</>
+                    <><FaPlus className="text-xs" /> {t('saveProduct')}</>
                  )}
                </button>
             </div>

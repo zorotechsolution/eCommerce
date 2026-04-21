@@ -125,7 +125,7 @@ const AddCart = () => {
                {t('proceedCheckout')} <FaArrowRight />
             </button>
             <p className="mt-4 text-[10px] text-center uppercase tracking-widest text-emerald-200 font-bold opacity-80 border-t border-white/10 pt-4">
-              Secure Checkout • Fast Delivery
+              {t('secureCheckout')}
             </p>
           </div>
         </div>

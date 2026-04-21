@@ -33,6 +33,8 @@ import OrderDetails from "./pages/OrderDetails";
 import Sitemap from "./pages/Sitemap";
 import ForgotPassword from "./pages/ForgotPassword";
 
+import { LangProvider, useLang } from "./context/LangContext";
+
 import { FaWhatsapp } from "react-icons/fa";
 
 function ScrollToTop() {
@@ -44,6 +46,7 @@ function ScrollToTop() {
 }
 
 function App() {
+  const { t } = useLang();
   return (
     <>
       <Router>
@@ -85,11 +88,11 @@ function App() {
         
         {/* Fixed WhatsApp Button */}
         <a
-          href="https://wa.me/919487187384" // Replace with actual WhatsApp number
+          href="https://wa.me/919487187384"
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition-all duration-300 hover:scale-110 z-50 flex justify-center items-center"
-          title="Chat with us on WhatsApp"
+          title={t('chatOnWhatsappTitle')}
         >
           <FaWhatsapp className="text-3xl" />
         </a>

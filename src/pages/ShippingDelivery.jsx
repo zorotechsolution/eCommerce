@@ -6,6 +6,7 @@ import {
   FaChevronDown, FaChevronUp, FaWhatsapp,
 } from "react-icons/fa";
 import { MdTrackChanges } from "react-icons/md";
+import { useLang } from "../context/LangContext";
 
 // ─── Accordion FAQ ─────────────────────────────────────────────────────────────
 const FAQ = ({ q, a }) => {
@@ -31,51 +32,53 @@ const FAQ = ({ q, a }) => {
 };
 
 
-const STEPS = [
-  { icon: <FaBoxOpen className="text-xl" />, title: "Order Placed", desc: "Your order is confirmed and payment received." },
-  { icon: <FaShieldAlt className="text-xl" />, title: "Quality Check", desc: "Products are verified and carefully packed." },
-  { icon: <FaTruck className="text-xl" />, title: "Dispatched", desc: "Handed over to our logistics partner." },
-  { icon: <MdTrackChanges className="text-xl" />, title: "In Transit", desc: "Tracking updates sent to your email/WhatsApp." },
-  { icon: <FaCheckCircle className="text-xl" />, title: "Delivered", desc: "Package delivered to your doorstep." },
+const STEPS = (t) => [
+  { icon: <FaBoxOpen className="text-xl" />, title: t('orderPlacedStep'), desc: t('orderPlacedDesc') },
+  { icon: <FaShieldAlt className="text-xl" />, title: t('qualityCheckStep'), desc: t('qualityCheckDesc') },
+  { icon: <FaTruck className="text-xl" />, title: t('dispatchedStep'), desc: t('dispatchedDesc') },
+  { icon: <MdTrackChanges className="text-xl" />, title: t('inTransitStep'), desc: t('inTransitDesc') },
+  { icon: <FaCheckCircle className="text-xl" />, title: t('deliveredStep'), desc: t('deliveredDesc') },
 ];
 
-const FAQS = [
+const FAQS = (t) => [
   {
-    q: "How long does delivery take within India?",
-    a: "Standard delivery takes 5–7 business days. Express delivery takes 2–3 business days. Remote/hilly areas may take 1–2 extra days. Orders placed before 2 PM are dispatched the same day (Mon–Sat).",
+    q: t('faqQ1'),
+    a: t('faqA1'),
   },
   {
-    q: "Is there free shipping?",
-    a: "Yes! We offer FREE standard shipping on all orders above ₹900. This applies to selected items and is valid for delivery within India only.",
+    q: t('faqQ2'),
+    a: t('faqA2'),
   },
   {
-    q: "Do you ship internationally?",
-    a: "Yes, we ship to most countries worldwide. International shipping charges are calculated at checkout based on destination country and package weight. Estimated delivery is 10–15 business days after dispatch.",
+    q: t('faqQ3'),
+    a: t('faqA3'),
   },
   {
-    q: "How do I track my order?",
-    a: "Once your order is dispatched, you will receive a tracking number via SMS/WhatsApp and email. You can track your package on the carrier's website or by contacting us directly.",
+    q: t('faqQ4'),
+    a: t('faqA4'),
   },
   {
-    q: "What happens if my package is damaged or lost?",
-    a: "If your order arrives damaged or is lost in transit, please contact us within 48 hours of the expected delivery date. We will either reship the product or issue a full refund after investigation.",
+    q: t('faqQ5'),
+    a: t('faqA5'),
   },
   {
-    q: "Can I change my delivery address after placing the order?",
-    a: "Address changes can only be made within 2 hours of placing the order, before it is dispatched. Please contact us immediately via phone or WhatsApp to request a change.",
+    q: t('faqQ6'),
+    a: t('faqA6'),
   },
   {
-    q: "Are there any items that cannot be shipped?",
-    a: "Some liquid herbal preparations may be restricted by certain couriers or international customs regulations. If any item in your order cannot be shipped to your location, we will notify you and offer a full refund.",
+    q: t('faqQ7'),
+    a: t('faqA7'),
   },
   {
-    q: "How are products packed?",
-    a: "All products are packed in tamper-proof, eco-friendly packaging to ensure they arrive in perfect condition. Fragile items like glass bottles are individually bubble-wrapped.",
+    q: t('faqQ8'),
+    a: t('faqA8'),
   },
 ];
 
 // ─── Main Component ────────────────────────────────────────────────────────────
-const ShippingDelivery = () => (
+const ShippingDelivery = () => {
+  const { t } = useLang();
+  return (
   <div className="min-h-screen bg-[#f7f8f5] font-sans">
 
     {/* ── Hero Banner ──────────────────────────────────────────────────────── */}
@@ -84,19 +87,19 @@ const ShippingDelivery = () => (
       <div className="absolute bottom-0 left-10 w-56 h-56 bg-orange-400 rounded-full mix-blend-multiply blur-3xl opacity-20 pointer-events-none" />
       <div className="relative z-10 max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 rounded-full px-4 py-1.5 text-xs font-bold uppercase tracking-widest mb-5">
-          <FaTruck className="text-orange-400" /> Shipping Information
+          <FaTruck className="text-orange-400" /> {t('shippingInfo')}
         </div>
         <h1 className="text-4xl md:text-6xl font-black mb-4 tracking-tight">
-          Shipping &amp; Delivery
+          {t('shippingDelivery')}
         </h1>
         <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto leading-relaxed">
-          Fast, safe, and reliable delivery of Ayurvedic &amp; Siddha medicines across India and worldwide.
+          {t('shippingHeroTag')}
         </p>
         {/* Breadcrumb */}
         <div className="flex items-center justify-center gap-2 text-white/50 text-xs mt-6 font-medium">
-          <Link to="/" className="hover:text-white transition-colors">Home</Link>
+          <Link to="/" className="hover:text-white transition-colors">{t('home')}</Link>
           <span>/</span>
-          <span className="text-white">Shipping &amp; Delivery</span>
+          <span className="text-white">{t('shippingDelivery')}</span>
         </div>
       </div>
     </div>
@@ -105,10 +108,10 @@ const ShippingDelivery = () => (
     <div className="bg-white border-b border-slate-100 shadow-sm">
       <div className="max-w-6xl mx-auto px-5 md:px-10 py-5 grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { icon: <FaTruck className="text-[rgb(7,81,89)] text-xl" />, label: "Free Shipping", sub: "On orders above ₹900" },
-          { icon: <FaClock className="text-orange-500 text-xl" />, label: "Same Day Dispatch", sub: "Orders before 2 PM" },
-          { icon: <MdTrackChanges className="text-teal-500 text-xl" />, label: "Live Tracking", sub: "Via SMS & WhatsApp" },
-          { icon: <FaShieldAlt className="text-green-500 text-xl" />, label: "Safe Packaging", sub: "Tamper-proof & eco-friendly" },
+          { icon: <FaTruck className="text-[rgb(7,81,89)] text-xl" />, label: t('freeShipping'), sub: t('freeShippingAbove900') },
+          { icon: <FaClock className="text-orange-500 text-xl" />, label: t('sameDayDispatch'), sub: t('ordersBefore2PM') },
+          { icon: <MdTrackChanges className="text-teal-500 text-xl" />, label: t('liveTracking'), sub: t('viaSMSWhatsapp') },
+          { icon: <FaShieldAlt className="text-green-500 text-xl" />, label: t('safePackaging'), sub: t('tamperProofEco') },
         ].map((b, i) => (
           <div key={i} className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-slate-50 flex items-center justify-center shrink-0 border border-slate-100">
@@ -129,15 +132,15 @@ const ShippingDelivery = () => (
       {/* ── Delivery Process Timeline ─────────────────────────────────────────── */}
       <section>
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">How Your Order Travels</h2>
-          <p className="text-slate-500 text-sm">From our warehouse to your doorstep — every step tracked.</p>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">{t('howOrderTravels')}</h2>
+          <p className="text-slate-500 text-sm">{t('orderJourneySub')}</p>
           <div className="w-12 h-1 bg-orange-500 mx-auto mt-3 rounded-full" />
         </div>
         <div className="relative">
           {/* Connector line (desktop) */}
           <div className="hidden md:block absolute top-10 left-[calc(10%+2rem)] right-[calc(10%+2rem)] h-0.5 bg-slate-200 z-0" />
           <div className="grid grid-cols-1 md:grid-cols-5 gap-6 relative z-10">
-            {STEPS.map((s, i) => (
+            {STEPS(t).map((s, i) => (
               <div key={i} className="flex flex-col items-center text-center gap-3">
                 <div className={`w-16 h-16 rounded-full flex items-center justify-center text-white shadow-lg shrink-0 ${
                   i === 4 ? "bg-green-500" : "bg-[rgb(7,81,89)]"
@@ -157,54 +160,54 @@ const ShippingDelivery = () => (
       {/* ── Key Policies Grid ─────────────────────────────────────────────────── */}
       <section>
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">Our Shipping Policies</h2>
-          <p className="text-slate-500 text-sm">Everything you need to know before you order.</p>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">{t('ourShippingPolicies')}</h2>
+          <p className="text-slate-500 text-sm">{t('shippingPoliciesSub')}</p>
           <div className="w-12 h-1 bg-orange-500 mx-auto mt-3 rounded-full" />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {[
             {
               icon: <FaTruck className="text-[rgb(7,81,89)] text-2xl" />,
-              title: "Domestic Shipping (India)",
+              title: t('domesticShippingTitle'),
               points: [
-                "Standard delivery: 5–7 business days across India",
-                "Express delivery: 2–3 business days (metro cities)",
-                "Free shipping on orders above ₹900 (selected items)",
-                "Orders placed before 2 PM are dispatched the same day",
-                "We ship to all 28 states and 8 Union Territories",
+                t('standardDelivery'),
+                t('expressDelivery'),
+                t('freeShippingAbove900'),
+                t('dispatchSameDay'),
+                t('shipAllStates'),
               ],
             },
             {
               icon: <FaGlobe className="text-teal-500 text-2xl" />,
-              title: "International Shipping",
+              title: t('intlShippingTitle'),
               points: [
-                "We ship to 50+ countries worldwide",
-                "Delivery takes 10–15 business days after dispatch",
-                "Customs duties and taxes are the buyer's responsibility",
-                "Some herbal liquids may be restricted by customs regulations",
-                "For international queries, call: +91 96292 97111",
+                t('shipGlobal'),
+                t('intlDeliveryTime'),
+                t('dutyResponsibility'),
+                t('herbalRestricted'),
+                t('intlQueries'),
               ],
             },
             {
               icon: <FaBoxOpen className="text-orange-500 text-2xl" />,
-              title: "Packaging Standards",
+              title: t('pkgStandardsTitle'),
               points: [
-                "All items packed in eco-friendly, tamper-proof packaging",
-                "Liquid & glass items are individually bubble-wrapped",
-                "Invoice included inside every package",
-                "Outer box is plain — no product branding for privacy",
-                "Cold-chain packaging available for sensitive formulations",
+                t('ecoTamperPkg'),
+                t('bubbleWrapPkg'),
+                t('invoiceIncluded'),
+                t('plainBoxPkg'),
+                t('coldChainPkg'),
               ],
             },
             {
               icon: <FaExchangeAlt className="text-green-500 text-2xl" />,
-              title: "Cancellations & Address Changes",
+              title: t('cancelAddressTitle'),
               points: [
-                "Orders can be cancelled within 2 hours of placing",
-                "Address changes must be requested within 2 hours",
-                "Prepaid orders: refund within 5–7 business days",
-                "Once dispatched, cancellations are not possible",
-                "Contact us immediately via WhatsApp for urgent changes",
+                t('cancelWithin2h'),
+                t('addrWithin2h'),
+                t('prepaidRefund'),
+                t('dispatchedNoCancel'),
+                t('whatsappUrgent'),
               ],
             },
           ].map((block, i) => (
@@ -231,12 +234,12 @@ const ShippingDelivery = () => (
       {/* ── FAQ ────────────────────────────────────────────────────────────────── */}
       <section>
         <div className="text-center mb-10">
-          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">Frequently Asked Questions</h2>
-          <p className="text-slate-500 text-sm">Common shipping questions answered for you.</p>
+          <h2 className="text-2xl md:text-3xl font-black text-slate-800 mb-2">{t('faqTitle')}</h2>
+          <p className="text-slate-500 text-sm">{t('faqSub')}</p>
           <div className="w-12 h-1 bg-orange-500 mx-auto mt-3 rounded-full" />
         </div>
         <div className="flex flex-col gap-3 max-w-3xl mx-auto">
-          {FAQS.map((faq, i) => <FAQ key={i} q={faq.q} a={faq.a} />)}
+          {FAQS(t).map((faq, i) => <FAQ key={i} q={faq.q} a={faq.a} />)}
         </div>
       </section>
 
@@ -245,9 +248,9 @@ const ShippingDelivery = () => (
         <div className="absolute top-0 right-0 w-64 h-64 bg-orange-400 rounded-full mix-blend-multiply blur-3xl opacity-20 pointer-events-none" />
         <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
           <div>
-            <h2 className="text-2xl md:text-3xl font-black mb-3">Still have questions?</h2>
+            <h2 className="text-2xl md:text-3xl font-black mb-3">{t('stillHaveQuestions')}</h2>
             <p className="text-white/70 leading-relaxed max-w-md text-sm">
-              Our team is available Monday to Saturday, 10 AM – 7 PM IST. Reach us via phone, email, or WhatsApp for instant support.
+              {t('supportTeamHours')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-5 text-sm">
               <div className="flex items-center gap-2">
@@ -266,18 +269,18 @@ const ShippingDelivery = () => (
           </div>
           <div className="flex flex-col gap-3 shrink-0">
             <a
-              href="https://wa.me/919629297111"
+              href="https://wa.me/919487187384"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 bg-[#25D366] hover:bg-[#20b858] text-white font-bold px-7 py-3.5 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg text-sm"
             >
-              <FaWhatsapp className="text-lg" /> Chat on WhatsApp
+              <FaWhatsapp className="text-lg" /> {t('chatOnWhatsapp')}
             </a>
             <Link
               to="/e-consultation"
               className="flex items-center justify-center gap-2 bg-orange-500 hover:bg-orange-600 text-white font-bold px-7 py-3.5 rounded-full uppercase tracking-wider transition-all hover:-translate-y-0.5 shadow-lg text-sm"
             >
-              Book E-Consultation
+              {t('bookEConsult')}
             </Link>
           </div>
         </div>
@@ -286,5 +289,6 @@ const ShippingDelivery = () => (
     </div>
   </div>
 );
+}
 
 export default ShippingDelivery;

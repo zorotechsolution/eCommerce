@@ -47,16 +47,16 @@ const PersonalCare = () => {
   }, []);
 
   const regimens = [
-    { title: "Cleanse", subtitle: "Remove Toxins", icon: <FaTint />, desc: "Ancient blends to purify skin without stripping natural oils." },
-    { title: "Nourish", subtitle: "Deep Hydration", icon: <FaSpa />, desc: "Sacred oils and herb-infused serums for cell-level restoration." },
-    { title: "Heal", subtitle: "Targeted Care", icon: <FaLeaf />, desc: "Specific formulations for acne, pigmentation, and hair health." },
-    { title: "Protect", subtitle: "Daily Shield", icon: <FaGem />, desc: "Lightweight barriers that shield from pollution and oxidation." }
+    { title: t('pcCleanseTitle'), subtitle: t('pcCleanseSub'), icon: <FaTint />, desc: t('pcCleanseDesc') },
+    { title: t('pcNourishTitle'), subtitle: t('pcNourishSub'), icon: <FaSpa />, desc: t('pcNourishDesc') },
+    { title: t('pcHealTitle'), subtitle: t('pcHealSub'), icon: <FaLeaf />, desc: t('pcHealDesc') },
+    { title: t('pcProtectTitle'), subtitle: t('pcProtectSub'), icon: <FaGem />, desc: t('pcProtectDesc') }
   ];
 
   const pillars = [
-    { icon: <FaSun />, name: "Pitham", focus: "Brightness & Heat", desc: "Balancing Pitta addresses inflammation, sensitivity, and redness." },
-    { icon: <FaWind />, name: "Vadham", focus: "Moisture & Flow", desc: "Vata care prevents dryness, thin hair, and premature aging." },
-    { icon: <FaTint />, name: "Kabam", focus: "Firmness & Oil", desc: "Kapha balancing controls excess oil and maintains skin elasticity." }
+    { icon: <FaSun />, name: t('pcPithamTitle'), focus: t('pcPithamFocus'), desc: t('pcPithamDesc') },
+    { icon: <FaWind />, name: t('pcVadhamTitle'), focus: t('pcVadhamFocus'), desc: t('pcVadhamDesc') },
+    { icon: <FaTint />, name: t('pcKabamTitle'), focus: t('pcKabamFocus'), desc: t('pcKabamDesc') }
   ];
 
   return (
@@ -76,22 +76,22 @@ const PersonalCare = () => {
         <div className="relative z-10 text-center px-5 max-w-5xl">
           <div className="flex justify-center items-center gap-2 mb-6 animate-fade-in-down">
             <span className="w-12 h-[1px] bg-amber-400"></span>
-            <span className="text-amber-400 font-black uppercase tracking-[0.3em] text-xs">Vel Siddhar Arakkattalai</span>
+            <span className="text-amber-400 font-black uppercase tracking-[0.3em] text-xs">{t('brandVelSiddhar')} {t('brandArakkattalai')}</span>
             <span className="w-12 h-[1px] bg-amber-400"></span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-8 animate-fade-in-up">
-            TIMELESS <br/>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">SIDDHA BEAUTY</span>
+          <h1 className="text-5xl md:text-8xl font-black text-white leading-[0.9] tracking-tighter mb-8 animate-fade-in-up uppercase">
+            {t('pcHeroMain').split('\n')[0]} <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-200 to-amber-500">{t('pcHeroMain').split('\n')[1]}</span>
           </h1>
           <p className="text-white/80 text-lg md:text-2xl font-light max-w-2xl mx-auto mb-10 leading-relaxed italic animate-fade-in-up-delay">
-            "Your body is a temple; treat it with the sacred wisdom of ancient healers."
+            {t('pcHeroSub')}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center animate-fade-in-up-delay-2">
-            <a href="#regimen" className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-10 py-4 rounded-full transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.3)]">
-              BUILD YOUR REGIMEN
+            <a href="#regimen" className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black px-10 py-4 rounded-full transition-all hover:scale-105 shadow-[0_0_20px_rgba(245,158,11,0.3)] uppercase">
+              {t('pcBuildRegimen')}
             </a>
-            <Link to="/collections/Personal Care" className="backdrop-blur-md bg-white/10 border border-white/20 text-white font-black px-10 py-3.5 rounded-full hover:bg-white/20 transition-all">
-              EXPLORE ALL
+            <Link to="/collections/Personal Care" className="backdrop-blur-md bg-white/10 border border-white/20 text-white font-black px-10 py-3.5 rounded-full hover:bg-white/20 transition-all uppercase">
+              {t('pcExploreAll')}
             </Link>
           </div>
         </div>
@@ -108,8 +108,8 @@ const PersonalCare = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex flex-col md:flex-row items-end justify-between mb-16 gap-8">
             <div className="max-w-2xl">
-              <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight">THE THREE <br/>PILLARS OF RADIANCE</h2>
-              <p className="text-slate-500 text-lg">Siddha medicine views personal care as an internal and external harmony of the Three Humors (Mukkutram).</p>
+              <h2 className="text-4xl md:text-6xl font-black mb-6 leading-tight uppercase whitespace-pre-line">{t('pcPillarsHead')}</h2>
+              <p className="text-slate-500 text-lg">{t('pcPillarsSub')}</p>
             </div>
             <div className="text-right hidden md:block">
               <span className="text-8xl font-black text-slate-100 italic">01</span>
@@ -133,8 +133,8 @@ const PersonalCare = () => {
       <section id="regimen" className="py-24 bg-slate-50 relative">
         <div className="max-w-7xl mx-auto px-5">
           <div className="text-center mb-16">
-            <span className="text-amber-600 font-bold uppercase tracking-widest mb-4 block">Personalized Care</span>
-            <h2 className="text-4xl md:text-6xl font-black text-slate-800">CRAFT YOUR RITUAL</h2>
+            <span className="text-amber-600 font-bold uppercase tracking-widest mb-4 block">{t('pcPersonalizedCare')}</span>
+            <h2 className="text-4xl md:text-6xl font-black text-slate-800 uppercase">{t('pcCraftRitual')}</h2>
           </div>
 
           <div className="flex flex-wrap justify-center gap-4 mb-16">
@@ -154,10 +154,10 @@ const PersonalCare = () => {
             <div className="absolute top-0 right-0 w-80 h-80 bg-[rgb(7,81,89)]/5 rounded-full -translate-y-1/2 translate-x-1/2"></div>
             <div className="flex-1 z-10">
               <span className="text-6xl font-black text-[rgb(7,81,89)] mb-6 block opacity-20">0{activeStep + 1}</span>
-              <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">{regimens[activeStep].title}</h3>
+              <h3 className="text-4xl md:text-5xl font-black text-slate-800 mb-6 uppercase">{regimens[activeStep].title}</h3>
               <p className="text-slate-500 text-xl leading-relaxed mb-10 max-w-lg">{regimens[activeStep].desc}</p>
-              <Link to={`/collections/Personal Care`} className="inline-flex items-center gap-3 bg-amber-500 text-slate-950 font-black px-8 py-4 rounded-full hover:scale-105 transition-all group">
-                BROWSE {regimens[activeStep].title.toUpperCase()} <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
+              <Link to={`/collections/Personal Care`} className="inline-flex items-center gap-3 bg-amber-500 text-slate-950 font-black px-8 py-4 rounded-full hover:scale-105 transition-all group uppercase">
+                {t('browse')} {regimens[activeStep].title.toUpperCase()} <FaArrowRight className="group-hover:translate-x-2 transition-transform" />
               </Link>
             </div>
             <div className="flex-1 z-10 grid grid-cols-2 gap-4">
@@ -180,36 +180,36 @@ const PersonalCare = () => {
                 <div className="aspect-[4/5] bg-slate-800 rounded-[3rem] overflow-hidden shadow-2xl relative group">
                     <img src="https://images.pexels.com/photos/4041392/pexels-photo-4041392.jpeg?auto=compress&cs=tinysrgb&w=800" className="w-full h-full object-cover brightness-75 group-hover:scale-105 transition-transform duration-[3s]" alt="Ingredients" />
                     <div className="absolute bottom-10 left-10 p-10 bg-white/10 backdrop-blur-xl rounded-[2rem] border border-white/20">
-                        <h4 className="text-2xl font-black text-amber-400 mb-2">NEEM & TURMERIC</h4>
-                        <p className="text-white/70 text-sm italic">"The Golden Healers of the East"</p>
+                        <h4 className="text-2xl font-black text-amber-400 mb-2 uppercase">{t('pcNeemTurmeric')}</h4>
+                        <p className="text-white/70 text-sm italic">{t('pcGoldenHealers')}</p>
                     </div>
                 </div>
-                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-500 rounded-full flex items-center justify-center p-8 text-slate-950 font-black text-center shadow-2xl leading-tight">
-                    ESTD.<br/>1994<br/>HERITAGE
+                <div className="absolute -bottom-10 -right-10 w-48 h-48 bg-amber-500 rounded-full flex items-center justify-center p-8 text-slate-950 font-black text-center shadow-2xl leading-tight uppercase whitespace-pre-line">
+                    {t('pcHeritage')}
                 </div>
             </div>
             <div className="order-1 lg:order-2">
-                <h2 className="text-4xl md:text-6xl font-black mb-10 leading-tight">ONLY FROM <br/>THE EARTH</h2>
+                <h2 className="text-4xl md:text-6xl font-black mb-10 leading-tight uppercase whitespace-pre-line">{t('pcOnlyFromEarth')}</h2>
                 <div className="space-y-12">
                     <div className="flex gap-6">
                         <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaMagic className="text-2xl text-amber-400" /></div>
                         <div>
-                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Sacred Sourcing</h4>
-                            <p className="text-white/60 leading-relaxed">We pick herbs at the peak of their astrological potency, as prescribed in ancient Siddha manuscripts.</p>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">{t('pcSacredSourcing')}</h4>
+                            <p className="text-white/60 leading-relaxed">{t('pcSacredSourcingDesc')}</p>
                         </div>
                     </div>
                     <div className="flex gap-6">
                         <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaClock className="text-2xl text-amber-400" /></div>
                         <div>
-                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Slow Extraction</h4>
-                            <p className="text-white/60 leading-relaxed">No heat. No chemicals. Only the sun and time are used to extract the healing essence of our botanicals.</p>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">{t('pcSlowExtraction')}</h4>
+                            <p className="text-white/60 leading-relaxed">{t('pcSlowExtractionDesc')}</p>
                         </div>
                     </div>
                     <div className="flex gap-6">
                         <div className="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/20"><FaCheckCircle className="text-2xl text-amber-400" /></div>
                         <div>
-                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">Purity Certified</h4>
-                            <p className="text-white/60 leading-relaxed">Every batch is tested to be 100% free of parabens, sulphates, and synthetic fragrances.</p>
+                            <h4 className="text-xl font-black mb-2 uppercase tracking-wide">{t('pcPurityCertified')}</h4>
+                            <p className="text-white/60 leading-relaxed">{t('pcPurityCertifiedDesc')}</p>
                         </div>
                     </div>
                 </div>
@@ -222,11 +222,11 @@ const PersonalCare = () => {
         <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-end mb-16">
                 <div>
-                    <h2 className="text-4xl md:text-6xl font-black text-slate-800 mb-4 tracking-tighter">BELOVED BY <br/>THE MODERN USER</h2>
-                    <p className="text-slate-500 text-lg">Ancient solutions meeting the needs of today's urban lifestyle.</p>
+                    <h2 className="text-4xl md:text-6xl font-black text-slate-800 mb-4 tracking-tighter uppercase whitespace-pre-line">{t('pcBelovedModern')}</h2>
+                    <p className="text-slate-500 text-lg">{t('pcBelovedSub')}</p>
                 </div>
                 <Link to="/collections/Personal Care" className="text-[rgb(7,81,89)] font-black flex items-center gap-2 hover:gap-4 transition-all pb-2 border-b-2 border-slate-100 uppercase tracking-widest text-xs mb-4">
-                    VIEW ALL <FaArrowRight />
+                    {t('pcViewAll')} <FaArrowRight />
                 </Link>
             </div>
 
@@ -261,8 +261,8 @@ const PersonalCare = () => {
         <div className="max-w-7xl mx-auto">
             <div className="text-center mb-20 max-w-3xl mx-auto">
                 <FaQuoteLeft className="text-6xl text-amber-500/20 mx-auto mb-8" />
-                <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6">VOICES OF WELLNESS</h2>
-                <p className="text-slate-500">How Siddha wisdom has transformed the lives of our global community.</p>
+                <h2 className="text-4xl md:text-5xl font-black text-slate-800 mb-6 uppercase">{t('pcVoicesWellness')}</h2>
+                <p className="text-slate-500">{t('pcVoicesSub')}</p>
             </div>
 
             <div className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8">
@@ -283,7 +283,7 @@ const PersonalCare = () => {
                              <div className="w-12 h-12 bg-amber-500 rounded-full flex items-center justify-center font-black text-slate-950">{t.name.charAt(0)}</div>
                              <div>
                                  <h4 className="font-black text-slate-800 uppercase tracking-wider text-sm">{t.name}</h4>
-                                 <span className="text-[10px] text-slate-400 font-bold uppercase">Verified Purchase</span>
+                                 <span className="text-[10px] text-slate-400 font-bold uppercase">{t('pcVerifiedPurchase')}</span>
                              </div>
                         </div>
                     </div>
@@ -299,13 +299,13 @@ const PersonalCare = () => {
         </div>
         
         <div className="relative z-10">
-            <h2 className="text-5xl md:text-8xl font-black text-[rgb(7,81,89)] mb-10 tracking-tighter italic">START YOUR JOURNEY</h2>
+            <h2 className="text-5xl md:text-8xl font-black text-[rgb(7,81,89)] mb-10 tracking-tighter italic uppercase">{t('pcStartJourney')}</h2>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Link to="/e-consultation" className="bg-amber-500 text-slate-950 font-black px-12 py-5 rounded-full text-lg shadow-2xl hover:scale-105 transition-all uppercase">
-                    BOOK FREE CONSULTATION
+                    {t('pcBookFreeConsult')}
                 </Link>
                 <Link to="/collections" className="bg-[#075159] text-white font-black px-12 py-5 rounded-full text-lg hover:bg-[#064147] transition-all uppercase">
-                    BROWSE RITUALS
+                    {t('pcBrowseRituals')}
                 </Link>
             </div>
         </div>

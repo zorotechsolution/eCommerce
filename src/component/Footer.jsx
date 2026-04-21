@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaFacebookF, FaTwitter, FaPinterestP, FaInstagram, FaTumblr, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaCcPaypal, FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover } from "react-icons/fa";
+import { FaFacebookF, FaTwitter,FaWhatsapp, FaInstagram, FaYoutube, FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaCcPaypal, FaCcVisa, FaCcMastercard, FaCcAmex, FaCcDiscover } from "react-icons/fa";
 import { useLang } from "../context/LangContext";
 
 const Footer = () => {
@@ -94,19 +94,10 @@ const Footer = () => {
                 <FaFacebookF />
               </a>
               <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
-                <FaTwitter />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
-                <FaPinterestP />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
                 <FaInstagram />
               </a>
               <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
-                <FaTumblr />
-              </a>
-              <a href="#" className="w-8 h-8 rounded-full border border-gray-500 flex items-center justify-center hover:border-white hover:text-white transition-colors text-xs">
-                <FaYoutube />
+                <FaWhatsapp />
               </a>
             </div>
           </div>

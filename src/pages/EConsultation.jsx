@@ -35,20 +35,25 @@ const EConsultation = () => {
     const slotLabel = TIME_SLOTS.find(s => s.value === form.time)?.label || form.time;
 
     const message =
-`🌿 *Vel Siddhar Arakkattalai*
-📋 *New E-Consultation Booking*
+`
+Vel Siddhar Arakkattalai  
+E-Consultation Booking Request  
 ━━━━━━━━━━━━━━━━━━━━━━
-👤 *Name:*        ${form.name}
-📞 *Phone:*       ${form.phone}
-📧 *Email:*       ${form.email || "Not provided"}
-📅 *Date:*        ${form.date}
-⏰ *Time Slot:*   ${slotLabel}
-🩺 *Concern:*     ${form.concern || "Not specified"}
 
-💬 *Health Issue:*
+Name:        ${form.name}  
+Phone:       ${form.phone}  
+Email:       ${form.email || "Not Provided"}  
+
+Appointment Date:   ${form.date}  
+Time Slot:          ${slotLabel}  
+
+Concern:     ${form.concern || "Not Specified"}  
+
+Health Issue:  
 ${form.healthIssue}
-━━━━━━━━━━━━━━━━━━━━━━
-Please confirm availability.`;
+
+━━━━━━━━━━━━━━━━━━━━━━  
+Kindly confirm the availability for this consultation.`;
 
     const waURL = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
     window.open(waURL, "_blank", "noopener,noreferrer");

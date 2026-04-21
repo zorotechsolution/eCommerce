@@ -51,32 +51,32 @@ function Home() {
       id: 1,
       imgLink: "https://images.pexels.com/photos/7615621/pexels-photo-7615621.jpeg",
       alt: "Ayurvedic herbs and spices",
-      headline: "Ancient Wisdom,\nModern Wellness",
-      sub: "Authentic Siddha & Ayurvedic medicines delivered to your door",
+      headline: t('heroSlide1Head'),
+      sub: t('heroSlide1Sub'),
     },
     {
       id: 2,
       imgLink: "https://images.pexels.com/photos/4174743/pexels-photo-4174743.jpeg",
       alt: "Natural healthcare",
-      headline: "Pure. Natural.\nAuthentic.",
-      sub: "Shop India's finest Ayurvedic products from trusted brands",
+      headline: t('heroSlide2Head'),
+      sub: t('heroSlide2Sub'),
     },
     {
       id: 3,
       imgLink: "https://images.pexels.com/photos/6978215/pexels-photo-6978215.jpeg",
       alt: "Herbal wellness",
-      headline: "Heal Naturally,\nLive Fully",
-      sub: "Certified Ayurvedic medicines for every need",
+      headline: t('heroSlide3Head'),
+      sub: t('heroSlide3Sub'),
     },
   ];
 
   const categories = [
-    { name: "Siddhar", path: "/collections/Siddhar", icon: "🌿" },
-    { name: "Classical Medicines", path: "/collections/Classical Medicines", icon: "⚗️" },
-    { name: "Personal Care", path: "/collections/Personal Care", icon: "✨" },
-    { name: "Brands", path: "/collections/Brands", icon: "🏷️" },
-    { name: "Health & Nutrition", path: "/collections/Health & Nutrition", icon: "💊" },
-    { name: "General", path: "/collections/General", icon: "🌱" },
+    { name: t('catSiddhar'), path: "/collections/Siddhar", icon: "🌿" },
+    { name: t('catClassical'), path: "/collections/Classical Medicines", icon: "⚗️" },
+    { name: t('catPersonalCare'), path: "/collections/Personal Care", icon: "✨" },
+    { name: t('catBrands'), path: "/collections/Brands", icon: "🏷️" },
+    { name: t('catHealthNutrition'), path: "/collections/Health & Nutrition", icon: "💊" },
+    { name: t('catGeneral'), path: "/collections/General", icon: "🌱" },
   ];
 
   const features = [
