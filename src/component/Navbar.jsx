@@ -1,4 +1,4 @@
-import { FaHeart, FaPen, FaUser, FaSearch, FaGlobe } from "react-icons/fa";
+import { FaHeart, FaPen, FaUser, FaSearch, FaGlobe, FaMapMarkerAlt, FaEnvelope } from "react-icons/fa";
 import { RiLoginBoxLine } from "react-icons/ri";
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
@@ -21,6 +21,29 @@ const Navbar = () => {
   return (
     <>
       <nav>
+        {/* Contact Strip */}
+        <div className="bg-[rgb(7,81,89)] text-white text-[11px] md:text-sm hidden md:block">
+          <div className="flex justify-between items-center px-10 lg:px-20 py-2">
+            <div className="flex items-center gap-6 font-medium tracking-wide">
+              <span className="flex items-center gap-2 hover:text-orange-400 transition-colors">
+                <FaMapMarkerAlt className="text-orange-400" />
+                {t('addressLine1')} {t('addressLine2')} {t('addressLine3')}
+              </span>
+              <a href={`tel:${t('contactNumber')}`} className="flex items-center gap-2 hover:text-orange-400 transition-colors">
+                <IoMdCall className="text-orange-400" />
+                +91 {t('contactNumber')}
+              </a>
+              <a href={`mailto:${t('emailId')}`} className="flex items-center gap-2 hover:text-orange-400 transition-colors">
+                <FaEnvelope className="text-orange-400" />
+                {t('emailId')}
+              </a>
+            </div>
+            <div className="flex items-center gap-2 text-white/80 font-bold tracking-widest uppercase text-xs">
+              Vel Siddhar Vaithiyasala
+            </div>
+          </div>
+        </div>
+
         <div className="">
           <div className="bg-[rgb(233,237,215)] hidden md:block ">
             <div className=" flex justify-between  px-20">
@@ -137,7 +160,7 @@ const Navbar = () => {
                   <Link to="/company-profile" className="block w-full px-5 py-3">{t('companyProfileTitle')}</Link>
                 </li>
                 <li className="hover:bg-gray-100 transition-all duration-300 hover:text-[rgb(7,81,89)]">
-                  <Link to="/about" className="block w-full px-5 py-3">{t('heritageAndReviews')}</Link>
+                  <Link to="/about" className="block w-full px-5 py-3">{t('ourFounder')}</Link>
                 </li>
               </ul>
             </li>

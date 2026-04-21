@@ -36,7 +36,14 @@ const Signup = () => {
           password: formData.password
         });
         const autoGenToken = response.data.token;
-        dispatch(login({ username: formData.username, email: formData.email, token: autoGenToken }));
+        const userObj = response.data.user;
+        dispatch(login({ 
+          username: userObj.name, 
+          email: userObj.email, 
+          token: autoGenToken,
+          role: userObj.role,
+          id: userObj.id 
+        }));
         navigate("/profile");
       } catch (err) {
         setError(err.response?.data?.error || "Failed to register account.");

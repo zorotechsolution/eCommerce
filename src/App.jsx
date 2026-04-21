@@ -1,5 +1,6 @@
+import React, { useEffect } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useLocation } from "react-router-dom";
 import Navbar from "./component/Navbar";
 import Home from "./component/Home";
 import Login from "./pages/Login";
@@ -29,13 +30,24 @@ import AdminEditProduct from "./pages/AdminEditProduct";
 import AdminOrderList from "./pages/AdminOrderList";
 import AdminOrderDetails from "./pages/AdminOrderDetails";
 import OrderDetails from "./pages/OrderDetails";
+import Sitemap from "./pages/Sitemap";
+import ForgotPassword from "./pages/ForgotPassword";
 
 import { FaWhatsapp } from "react-icons/fa";
+
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+}
 
 function App() {
   return (
     <>
       <Router>
+        <ScrollToTop />
         <Navbar />
         <Routes>
           <Route path="/" element={<Home />} />
@@ -65,13 +77,15 @@ function App() {
           <Route path="/terms" element={<Terms/>} />
           <Route path="/refund-policy" element={<RefundPolicy/>} />
           <Route path="/shipping-delivery" element={<ShippingDelivery/>} />
+          <Route path="/sitemap" element={<Sitemap/>} />
+          <Route path="/forgot-password" element={<ForgotPassword/>} />
           <Route path="*" element={<NotFount404/>}/>
         </Routes>
         <Footer/>
         
         {/* Fixed WhatsApp Button */}
         <a
-          href="https://wa.me/919876543210" // Replace with actual WhatsApp number
+          href="https://wa.me/919487187384" // Replace with actual WhatsApp number
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-lg hover:bg-[#128C7E] transition-all duration-300 hover:scale-110 z-50 flex justify-center items-center"

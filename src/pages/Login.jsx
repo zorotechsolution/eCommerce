@@ -29,12 +29,13 @@ const Login = () => {
           password: formData.password,
         });
         const receivedToken = response.data.token;
-        const isAdmin = response.data.user.role === 'admin';
+        const userObj = response.data.user;
         dispatch(login({ 
-          username: formData.username, 
-          email: `${formData.username.toLowerCase()}@example.com`,
+          username: userObj.name, 
+          email: userObj.email,
           token: receivedToken,
-          role: isAdmin ? 'admin' : 'user'
+          role: userObj.role,
+          id: userObj.id
         }));
         navigate("/profile");
       } catch (err) {
@@ -67,7 +68,7 @@ const Login = () => {
             <div>
               <label className="text-xs font-bold text-slate-500 uppercase tracking-widest pl-2 mb-1 block">{t('username')}</label>
               <input
-                type="text"
+                type="email"
                 name="username"
                 value={formData.username}
                 onChange={handleInputChange}
@@ -95,7 +96,7 @@ const Login = () => {
                 <input type="checkbox" className="w-4 h-4 rounded text-[rgb(7,81,89)] focus:ring-[rgb(7,81,89)] border-slate-300 cursor-pointer" />
                 <span className="text-xs text-slate-500 font-medium group-hover:text-slate-800 transition-colors">{t('rememberMe')}</span>
               </label>
-              <Link to="#" className="text-xs font-bold text-[rgb(7,81,89)] hover:text-orange-500 transition-colors">{t('forgotPassword')}</Link>
+              <Link to="/forgot-password" className="text-xs font-bold text-[rgb(7,81,89)] hover:text-orange-500 transition-colors">{t('forgotPassword')}</Link>
             </div>
 
             <button

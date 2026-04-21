@@ -175,8 +175,8 @@ const Product = () => {
   };
 
   const pageTitle = category && category !== "All Collections"
-    ? `${category.toUpperCase()} PRODUCTS`
-    : "ALL AYURVEDIC PRODUCTS";
+    ? `${t(category.toUpperCase()) || category.toUpperCase()} ${t('PRODUCTS')}`
+    : t('ALL AYURVEDIC PRODUCTS');
 
   return (
     <div className="min-h-screen bg-[#f8f8f6] font-sans">
@@ -201,11 +201,11 @@ const Product = () => {
             onClick={() => setShowSidebar(true)}
             className="flex items-center gap-2 bg-white border border-gray-200 px-4 py-2 rounded-lg text-sm font-bold text-gray-700 shadow-sm"
           >
-            ☰ Filters {anyFilter ? `(${+!!selectedTypes.length + +!!selectedBrands.length + +!!selectedAilments.length})` : ""}
+            ☰ {t('filters')} {anyFilter ? `(${+!!selectedTypes.length + +!!selectedBrands.length + +!!selectedAilments.length})` : ""}
           </button>
           {anyFilter > 0 && (
             <button onClick={clearAll} className="flex items-center gap-1 text-xs text-rose-500 font-bold">
-              <FaTimes /> Clear
+              <FaTimes /> {t('Clear')}
             </button>
           )}
         </div>
@@ -223,7 +223,7 @@ const Product = () => {
                 selectedBrands={selectedBrands}  setSelectedBrands={setSelectedBrands}
                 selectedAilments={selectedAilments} setSelectedAilments={setSelectedAilments}
                 toggle={toggle} popularProducts={popularProducts}
-                category={category}
+                category={category} t={t}
               />
             </div>
           </div>
@@ -237,7 +237,7 @@ const Product = () => {
               selectedBrands={selectedBrands}  setSelectedBrands={setSelectedBrands}
               selectedAilments={selectedAilments} setSelectedAilments={setSelectedAilments}
               toggle={toggle} popularProducts={popularProducts}
-              category={category}
+              category={category} t={t}
             />
           </div>
         </aside>
@@ -268,27 +268,27 @@ const Product = () => {
               <span className="text-sm text-gray-500 font-medium">
                 {loading ? "Loading..." : (
                   <>
-                    Showing: <span className="font-bold text-gray-800">{filtered.length}</span> of{" "}
+                    {t('Showing:')} <span className="font-bold text-gray-800">{filtered.length}</span> {t('of')}{" "}
                     <span className="font-bold text-gray-800">{ayurvedicMedicines.length}</span>
                   </>
                 )}
               </span>
               {anyFilter > 0 && (
                 <button onClick={clearAll} className="hidden md:flex items-center gap-1 text-xs text-rose-500 font-bold hover:text-rose-700 transition-colors">
-                  <FaTimes className="text-[10px]" /> Clear filters
+                  <FaTimes className="text-[10px]" /> {t('Clear filters')}
                 </button>
               )}
             </div>
 
             {/* right: sort */}
             <div className="flex items-center gap-2">
-              <span className="text-sm font-bold text-gray-500 hidden sm:block">Sort</span>
+              <span className="text-sm font-bold text-gray-500 hidden sm:block">{t('Sort')}</span>
               <select
                 value={sortOrder}
                 onChange={e => setSortOrder(e.target.value)}
                 className="text-sm border border-gray-200 rounded-lg px-3 py-1.5 outline-none focus:border-[rgb(7,81,89)] bg-white font-medium text-gray-700 cursor-pointer"
               >
-                {SORT_OPTS.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
+                {SORT_OPTS.map(o => <option key={o.value} value={o.value}>{t(o.label)}</option>)}
               </select>
             </div>
           </div>
@@ -301,7 +301,7 @@ const Product = () => {
                 ...selectedAilments.map(v => ({v, set: setSelectedAilments, arr: selectedAilments}))
               ].map(({v, set, arr}) => (
                 <span key={v} className="flex items-center gap-1.5 bg-[rgb(7,81,89)]/10 text-[rgb(7,81,89)] text-xs font-bold px-3 py-1 rounded-full">
-                  {v}
+                  {t(v)}
                   <button onClick={() => set(arr.filter(x => x !== v))} className="hover:text-orange-500 transition-colors">
                     <FaTimes className="text-[9px]" />
                   </button>
@@ -314,10 +314,10 @@ const Product = () => {
           {filtered.length === 0 ? (
             <div className="bg-white rounded-2xl border border-gray-100 py-20 text-center shadow-sm">
               <p className="text-4xl mb-4">🌿</p>
-              <h3 className="text-lg font-bold text-gray-700 mb-2">No products found</h3>
-              <p className="text-gray-400 text-sm mb-6">Try adjusting your filters or browse all collections.</p>
+              <h3 className="text-lg font-bold text-gray-700 mb-2">{t('No products found')}</h3>
+              <p className="text-gray-400 text-sm mb-6">{t('Try adjusting your filters or browse all collections.')}</p>
               <button onClick={clearAll} className="bg-[rgb(7,81,89)] text-white px-6 py-2.5 rounded-full font-bold text-sm hover:bg-orange-500 transition-colors">
-                Clear All Filters
+                {t('Clear All Filters')}
               </button>
             </div>
           ) : gridView ? (
@@ -346,16 +346,16 @@ const SidebarContent = ({
   selectedTypes, setSelectedTypes,
   selectedBrands, setSelectedBrands,
   selectedAilments, setSelectedAilments,
-  toggle, popularProducts, category
+  toggle, popularProducts, category, t
 }) => (
   <div className="flex flex-col gap-0">
-    <AccordionSection title="BROWSE CATEGORIES">
+    <AccordionSection title={t("BROWSE CATEGORIES")}>
       <Link
         to="/collections"
         className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg transition-colors text-sm font-bold ${!category || category === "All Collections" ? "text-[rgb(7,81,89)] bg-[rgb(7,81,89)]/5" : "text-gray-500 hover:text-[rgb(7,81,89)]"}`}
       >
         <span className="w-1.5 h-1.5 rounded-full bg-current"></span>
-        All Products
+        {t('All Products')}
       </Link>
       {CATEGORIES.map(cat => (
         <Link
@@ -364,42 +364,42 @@ const SidebarContent = ({
           className={`flex items-center gap-2.5 py-1.5 px-2 rounded-lg transition-colors text-sm font-medium ${category === cat ? "text-[rgb(7,81,89)] bg-[rgb(7,81,89)]/5 font-bold" : "text-gray-500 hover:text-[rgb(7,81,89)]"}`}
         >
           <span className="w-1 h-1 rounded-full bg-gray-300"></span>
-          {cat}
+          {t(cat)}
         </Link>
       ))}
     </AccordionSection>
 
-    <AccordionSection title="FILTER BY TYPE">
-      {TYPES.map(t => (
+    <AccordionSection title={t("FILTER BY TYPE")}>
+      {TYPES.map(tOption => (
         <CheckRow
-          key={t} label={t}
-          checked={selectedTypes.includes(t)}
-          onChange={() => toggle(selectedTypes, setSelectedTypes, t)}
+          key={tOption} label={t(tOption)}
+          checked={selectedTypes.includes(tOption)}
+          onChange={() => toggle(selectedTypes, setSelectedTypes, tOption)}
         />
       ))}
     </AccordionSection>
 
-    <AccordionSection title="FILTER BY BRANDS">
+    <AccordionSection title={t("FILTER BY BRANDS")}>
       {BRANDS.map(b => (
         <CheckRow
-          key={b} label={b}
+          key={b} label={t(b)}
           checked={selectedBrands.includes(b)}
           onChange={() => toggle(selectedBrands, setSelectedBrands, b)}
         />
       ))}
     </AccordionSection>
 
-    <AccordionSection title="FILTER BY AILMENTS">
+    <AccordionSection title={t("FILTER BY AILMENTS")}>
       {AILMENTS.map(a => (
         <CheckRow
-          key={a} label={a}
+          key={a} label={t(a)}
           checked={selectedAilments.includes(a)}
           onChange={() => toggle(selectedAilments, setSelectedAilments, a)}
         />
       ))}
     </AccordionSection>
 
-    <AccordionSection title="POPULAR PRODUCTS">
+    <AccordionSection title={t("POPULAR PRODUCTS")}>
       <div className="flex flex-col divide-y divide-gray-50">
         {popularProducts.map(p => <PopularCard key={p.id} product={p} />)}
       </div>

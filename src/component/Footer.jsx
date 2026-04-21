@@ -32,7 +32,7 @@ const Footer = () => {
               <li><Link to="/collections" className="hover:text-white transition-colors">{t('search')}</Link></li>
               <li><Link to="/privacy-policy" className="hover:text-white transition-colors">{t('privacyPolicy')}</Link></li>
               <li><Link to="/terms" className="hover:text-white transition-colors">{t('termsConditions')}</Link></li>
-              <li><Link to="/" className="hover:text-white transition-colors">{t('sitemap')}</Link></li>
+              <li><Link to="/sitemap" className="hover:text-white transition-colors">{t('sitemap')}</Link></li>
             </ul>
           </div>
 
@@ -70,7 +70,11 @@ const Footer = () => {
             <ul className="text-[13px] flex flex-col gap-4 mb-8">
               <li className="flex items-start gap-3">
                 <FaMapMarkerAlt className="mt-1 shrink-0 text-gray-400" />
-                <span className="leading-relaxed whitespace-pre-wrap">{t('address').replace(/, /g, ',\n')}</span>
+                <span className="leading-relaxed">
+                  {t('addressLine1')} <br />
+                  {t('addressLine2')} <br />
+                  {t('addressLine3')}
+                </span>
               </li>
               <li className="flex items-center gap-3">
                 <FaPhoneAlt className="shrink-0 text-gray-400" />

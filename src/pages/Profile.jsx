@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useLang } from '../context/LangContext';
 import {
   FaUser, FaShoppingBag, FaHeart, FaMapMarkerAlt,
-  FaPhone, FaEnvelope, FaEdit, FaShieldAlt, FaSignOutAlt
+  FaPhone, FaEnvelope, FaEdit, FaShieldAlt, FaSignOutAlt,
+  FaBoxOpen, FaRupeeSign, FaShoppingCart, FaAngleRight, FaCheckCircle
 } from 'react-icons/fa';
 import { useSelector, useDispatch } from 'react-redux';
 import { logout, login } from '../store/authSlice';
@@ -21,12 +22,12 @@ const Profile = () => {
     state.cart.items.reduce((acc, i) => acc + i.price * i.quantity, 0)
   );
 
-  const [orders, setOrders] = React.useState([]);
-  const [loadingOrders, setLoadingOrders] = React.useState(true);
+  const [orders, setOrders] = useState([]);
+  const [loadingOrders, setLoadingOrders] = useState(true);
   
-  const [isEditing, setIsEditing] = React.useState(false);
-  const [editForm, setEditForm] = React.useState({ name: '', email: '' });
-  const [editLoading, setEditLoading] = React.useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editForm, setEditForm] = useState({ name: '', email: '' });
+  const [editLoading, setEditLoading] = useState(false);
 
   useEffect(() => {
     if (!auth.isAuthenticated) {
@@ -67,7 +68,8 @@ const Profile = () => {
         username: updatedUser.name,
         email: updatedUser.email,
         token: auth.user.token, // Preserve token
-        role: auth.user.role
+        role: updatedUser.role || auth.user.role,
+        id: updatedUser.id || auth.user.id
       }));
       
       setIsEditing(false);
@@ -79,8 +81,6 @@ const Profile = () => {
     }
   };
 
-
-
   const statusColor = {
     Delivered: 'bg-green-100 text-green-700',
     Shipped: 'bg-blue-100 text-blue-700',
@@ -91,183 +91,226 @@ const Profile = () => {
   if (!auth.isAuthenticated || !auth.user) return null;
 
   return (
-    <section className="min-h-screen bg-gray-50 py-10 px-4 md:px-10 lg:px-24">
-      <div className="flex justify-between items-center mb-8 border-b pb-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-gray-800 uppercase flex items-center gap-3">
-          <FaUser className="text-[rgb(7,81,89)]" /> {t('profile')}
-        </h1>
-        <button 
-          onClick={handleLogout}
-          className="flex items-center gap-2 text-sm font-bold text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-full transition-colors"
-        >
-          <FaSignOutAlt /> Logout
-        </button>
+    <div className="min-h-screen bg-gray-50 flex flex-col font-sans mb-10">
+      
+      {/* Top Banner */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('myProfile') || 'Account Dashboard'}</h1>
+            <p className="text-sm text-gray-500 mt-1">Manage your account preferences and track your orders.</p>
+          </div>
+          <button 
+            onClick={handleLogout}
+            className="flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-md transition-colors"
+          >
+            <FaSignOutAlt /> {t('logout') || 'Sign Out'}
+          </button>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left — User Info */}
-        <div className="flex flex-col gap-6">
-          {/* Avatar Card */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center text-center">
-            <div className="w-24 h-24 bg-gradient-to-br from-[rgb(7,81,89)] to-teal-400 rounded-full flex items-center justify-center mb-4 shadow-lg uppercase text-white text-3xl font-black">
-              {auth.user.username.charAt(0)}
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full flex-grow">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {/* Sidebar */}
+          <div className="lg:col-span-1 space-y-6">
+            
+            {/* User Profile Card */}
+            <div className="bg-white p-6 rounded-lg border border-gray-200 flex flex-col items-center text-center">
+              <div className="w-20 h-20 bg-gray-100 text-gray-400 rounded-full flex items-center justify-center text-2xl font-bold uppercase mb-4">
+                {auth.user.username.charAt(0)}
+              </div>
+              <h2 className="text-lg font-bold text-gray-900 leading-tight">{auth.user.username}</h2>
+              <div className="flex items-center justify-center gap-1 mt-1 mb-6 text-xs font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+                <FaCheckCircle /> Verified Customer
+              </div>
+              
+              <button 
+                onClick={openEditModal} 
+                className="w-full flex justify-center items-center gap-2 text-sm font-medium bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 py-2 rounded-md transition-colors"
+              >
+                <FaEdit /> Edit Profile
+              </button>
             </div>
-            <h2 className="text-xl font-bold text-gray-800">{auth.user.username}</h2>
-            <p className="text-sm text-gray-500 mt-1">Vel Siddhar Arakkattalai Member since 2024</p>
-            <div className="flex items-center gap-1 mt-2">
-              <FaShieldAlt className="text-orange-400 text-xs" />
-              <span className="text-xs text-orange-500 font-semibold">Verified Customer</span>
-            </div>
-            <button onClick={openEditModal} className="mt-4 flex items-center gap-2 text-sm text-[rgb(7,81,89)] border border-[rgb(7,81,89)] px-4 py-2 rounded-full hover:bg-[rgb(7,81,89)] hover:text-white transition-colors">
-              <FaEdit className="text-xs" /> Edit Profile
-            </button>
-          </div>
 
-          {/* Contact Info */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="font-bold text-gray-700 uppercase text-xs tracking-widest mb-4">Contact Information</h3>
-            <div className="flex flex-col gap-3 text-sm text-gray-600">
-              <div className="flex items-center gap-3">
-                <FaPhone className="text-[rgb(7,81,89)] shrink-0" />
-                <span>+91 96292 97111</span>
+            {/* Account Details */}
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+              <div className="px-5 py-4 border-b border-gray-200 bg-gray-50/50">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Account Details</h3>
               </div>
-              <div className="flex items-center gap-3">
-                <FaEnvelope className="text-[rgb(7,81,89)] shrink-0" />
-                <span>{auth.user.email}</span>
-              </div>
-              <div className="flex items-start gap-3">
-                <FaMapMarkerAlt className="text-[rgb(7,81,89)] shrink-0 mt-0.5" />
-                <span>123 Temple Street, Nagercoil, Tamil Nadu - 629001</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Stats */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="font-bold text-gray-700 uppercase text-xs tracking-widest mb-4">My Account Stats</h3>
-            <div className="grid grid-cols-2 gap-3">
-              <Link to="/addcart" className="flex flex-col items-center bg-orange-50 rounded-xl p-4 hover:shadow-md transition">
-                <FaShoppingBag className="text-orange-500 text-2xl mb-1" />
-                <span className="text-2xl font-bold text-gray-800">{cartCount}</span>
-                <span className="text-xs text-gray-500">{t('cart')}</span>
-              </Link>
-              <Link to="/wishlist" className="flex flex-col items-center bg-red-50 rounded-xl p-4 hover:shadow-md transition">
-                <FaHeart className="text-red-400 text-2xl mb-1" />
-                <span className="text-2xl font-bold text-gray-800">{wishlistCount}</span>
-                <span className="text-xs text-gray-500">{t('wishlist')}</span>
-              </Link>
-              <div className="flex flex-col items-center bg-teal-50 rounded-xl p-4">
-                <span className="text-lg font-bold text-[rgb(7,81,89)]">₹{cartTotal.toLocaleString()}</span>
-                <span className="text-xs text-gray-500">Cart Value</span>
-              </div>
-              <div className="flex flex-col items-center bg-green-50 rounded-xl p-4">
-                <span className="text-2xl font-bold text-gray-800">3</span>
-                <span className="text-xs text-gray-500">Total Orders</span>
+              <div className="p-5 flex flex-col gap-4 text-sm text-gray-600">
+                <div>
+                  <dt className="text-xs font-medium text-gray-400 mb-1">Email</dt>
+                  <dd className="font-medium text-gray-900">{auth.user.email}</dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-medium text-gray-400 mb-1">Phone</dt>
+                  <dd className="font-medium text-gray-900">+91 96292 97111</dd>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        {/* Right — Orders */}
-        <div className="lg:col-span-2 flex flex-col gap-6">
-          {/* About Siddhar Store */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="font-bold text-gray-800 text-lg mb-3">
-              Siddhar — One of the Best Online Ayurvedic Stores in India
-            </h3>
-            <p className="text-sm text-gray-600 leading-relaxed mb-3">
-              Quality{' '}
-              <Link to="/Siddhar" className="text-[rgb(7,81,89)] font-bold underline hover:text-orange-500 transition">
-                Siddhar products
-              </Link>{' '}
-              at a click! Siddhar aims to bring the world of authentic Siddha herbs and Siddha medicines
-              to your doorstep within the shortest delivery time possible.
-            </p>
-            <p className="text-sm text-gray-600 leading-relaxed">
-              Siddhar is one of the leading online platforms in India offering a wide range of traditional Siddha-based
-              products focused on natural health, wellness, and spiritual living. Inspired by the ancient knowledge of the
-              Tamil Siddhars, the store makes authentic Siddha-related products easily accessible across the country.
-            </p>
-          </div>
-
-          {/* Order History */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="font-bold text-gray-700 uppercase text-xs tracking-widest mb-4">Recent Orders</h3>
-            <div className="flex flex-col gap-3">
-              {loadingOrders ? (
-                <div className="text-center py-4 text-gray-500">Loading orders...</div>
-              ) : orders.length === 0 ? (
-                <div className="text-center py-4 text-gray-500">No orders found.</div>
-              ) : (
-                orders.map(order => (
-                  <Link to={`/order/${order._id}`} key={order._id} className="flex items-center justify-between border border-gray-100 rounded-xl p-4 hover:shadow-md hover:border-[rgb(7,81,89)]/30 transition cursor-pointer group">
-                    <div>
-                      <p className="font-bold text-sm text-gray-800 group-hover:text-[rgb(7,81,89)] transition-colors">#{order._id.slice(-8).toUpperCase()}</p>
-                      <p className="text-xs text-gray-500 mt-0.5">{new Date(order.createdAt).toLocaleDateString()} · {order.orderItems.length} items</p>
-                    </div>
-                    <div className="text-right flex flex-col items-end gap-1">
-                      <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${statusColor[order.orderStatus] || 'bg-gray-100'}`}>
-                        {order.orderStatus}
-                      </span>
-                      <span className="text-sm font-bold text-[rgb(7,81,89)]">₹{order.totalPrice}</span>
-                    </div>
-                  </Link>
-                )
-              ))}
-            </div>
-          </div>
-
-          {/* Quick Links */}
-          <div className="bg-white rounded-2xl shadow-sm p-6">
-            <h3 className="font-bold text-gray-700 uppercase text-xs tracking-widest mb-4">Quick Links</h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {[
-                { to: '/collections', label: t('collections'), bg: 'bg-orange-50 text-orange-600' },
-                { to: '/addcart', label: t('cart'), bg: 'bg-teal-50 text-teal-700' },
-                { to: '/wishlist', label: t('wishlist'), bg: 'bg-red-50 text-red-600' },
-                { to: '/Siddhar', label: t('siddhar'), bg: 'bg-green-50 text-green-700' },
-                { to: '/', label: t('home'), bg: 'bg-gray-50 text-gray-700' },
-              ].map(link => (
-                <Link
-                  key={link.to}
-                  to={link.to}
-                  className={`${link.bg} text-center text-xs font-bold py-3 px-2 rounded-xl hover:shadow-md transition-shadow`}
-                >
-                  {link.label}
+            {/* Quick Metrics */}
+            <div className="bg-white rounded-lg border border-gray-200">
+              <div className="px-5 py-4 border-b border-gray-200 bg-gray-50/50">
+                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wider">Activity</h3>
+              </div>
+              <div className="grid grid-cols-2 divide-x divide-gray-200">
+                <Link to="/addcart" className="flex flex-col items-center justify-center p-4 hover:bg-gray-50 transition-colors">
+                  <FaShoppingCart className="text-gray-400 text-lg mb-2" />
+                  <span className="text-xl font-bold text-gray-900">{cartCount}</span>
+                  <span className="text-xs text-gray-500 font-medium mt-1 uppercase tracking-wide">Cart Items</span>
                 </Link>
-              ))}
+                <Link to="/wishlist" className="flex flex-col items-center justify-center p-4 hover:bg-gray-50 transition-colors">
+                  <FaHeart className="text-gray-400 text-lg mb-2" />
+                  <span className="text-xl font-bold text-gray-900">{wishlistCount}</span>
+                  <span className="text-xs text-gray-500 font-medium mt-1 uppercase tracking-wide">Wishlist</span>
+                </Link>
+              </div>
             </div>
+
+          </div>
+
+          {/* Main Area */}
+          <div className="lg:col-span-3 space-y-8">
+            
+            {/* Orders Table */}
+            <div className="bg-white border border-gray-200 rounded-lg shadow-sm">
+              <div className="px-6 py-5 border-b border-gray-200 flex justify-between items-center">
+                <h2 className="text-lg font-bold text-gray-900">{t('orderHistory') || 'Order History'}</h2>
+                <span className="text-sm text-gray-500 font-medium">Total Orders: {orders.length}</span>
+              </div>
+              
+              <div className="overflow-x-auto">
+                {loadingOrders ? (
+                  <div className="px-6 py-12 flex justify-center text-sm font-medium text-gray-500">
+                    Loading your orders...
+                  </div>
+                ) : orders.length === 0 ? (
+                  <div className="px-6 py-12 flex flex-col items-center justify-center text-center">
+                    <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center border border-gray-200 mb-4">
+                      <FaBoxOpen className="text-2xl text-gray-300" />
+                    </div>
+                    <h3 className="text-base font-semibold text-gray-900 mb-1">{t('noOrders') || 'No orders yet'}</h3>
+                    <p className="text-sm text-gray-500 mb-4">When you place an order, it will appear here.</p>
+                    <Link to="/collections" className="text-sm font-medium text-[rgb(7,81,89)] hover:text-teal-700 bg-[rgb(7,81,89)]/10 px-4 py-2 rounded-md transition-colors">
+                      Start Shopping
+                    </Link>
+                  </div>
+                ) : (
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-gray-50/50 border-b border-gray-200">
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Order ID</th>
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Total</th>
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Items</th>
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
+                        <th className="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {orders.map((order) => (
+                        <tr key={order._id} className="hover:bg-gray-50 transition-colors group">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            #{order._id.slice(-8).toUpperCase()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            ₹{order.totalPrice.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {order.orderItems.length}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${statusColor[order.orderStatus] || 'bg-gray-100 text-gray-800'}`}>
+                              {order.orderStatus}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <Link to={`/order/${order._id}`} className="text-[rgb(7,81,89)] hover:text-teal-700 flex justify-end items-center gap-1 group-hover:underline">
+                              View <FaAngleRight className="text-xs" />
+                            </Link>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+            </div>
+
+            {/* Helper Banner */}
+            <div className="bg-[rgb(7,81,89)] rounded-lg p-6 flex flex-col md:flex-row items-center justify-between text-white shadow-sm border border-[rgb(6,70,80)]">
+               <div>
+                 <h3 className="font-bold text-lg">Need help with an order?</h3>
+                 <p className="text-sm text-white/80 mt-1 max-w-lg">Our customer support team is available during standard business hours to assist you with tracking or modifications.</p>
+               </div>
+               <Link to="/about" className="mt-4 md:mt-0 px-6 py-2 bg-white text-[rgb(7,81,89)] font-bold text-sm rounded-md hover:bg-gray-100 transition-colors">
+                  Contact Support
+               </Link>
+            </div>
+
           </div>
         </div>
       </div>
 
-      {/* Edit Profile Modal */}
+      {/* Structured Edit Modal */}
       {isEditing && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 backdrop-blur-sm">
-          <div className="bg-white rounded-3xl p-8 w-full max-w-sm shadow-2xl relative animate-fade-in">
-            <h2 className="text-2xl font-bold text-[rgb(7,81,89)] mb-6 text-center">Edit Profile</h2>
-            <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
+        <div className="fixed inset-0 bg-gray-900/50 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-fade-in-up">
+            <div className="px-6 py-4 border-b border-gray-200 flex justify-between items-center bg-gray-50/50">
+              <h2 className="text-lg font-bold text-gray-900">Edit Profile Information</h2>
+              <button onClick={() => setIsEditing(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="p-6 flex flex-col gap-5">
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 mb-1 block">Full Name</label>
-                <input required type="text" value={editForm.name} onChange={(e) => setEditForm({...editForm, name: e.target.value})} className="w-full border-2 border-gray-200 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[rgb(7,81,89)] font-medium text-gray-800" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+                <input 
+                  required 
+                  type="text" 
+                  value={editForm.name} 
+                  onChange={(e) => setEditForm({...editForm, name: e.target.value})} 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[rgb(7,81,89)] focus:border-[rgb(7,81,89)] text-gray-900" 
+                />
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-500 uppercase tracking-widest pl-1 mb-1 block">Email Address</label>
-                <input required type="email" value={editForm.email} onChange={(e) => setEditForm({...editForm, email: e.target.value})} className="w-full border-2 border-gray-200 bg-gray-50 rounded-xl px-4 py-3 outline-none focus:border-[rgb(7,81,89)] font-medium text-gray-800" />
+                <label className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+                <input 
+                  required 
+                  type="email" 
+                  value={editForm.email} 
+                  onChange={(e) => setEditForm({...editForm, email: e.target.value})} 
+                  className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[rgb(7,81,89)] focus:border-[rgb(7,81,89)] text-gray-900" 
+                />
               </div>
-              <div className="mt-4 flex gap-3">
-                <button type="button" onClick={() => setIsEditing(false)} className="flex-1 py-3 rounded-xl font-bold text-gray-500 bg-gray-100 hover:bg-gray-200 transition-colors">
+              <div className="mt-2 flex justify-end gap-3">
+                <button 
+                  type="button" 
+                  onClick={() => setIsEditing(false)} 
+                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                >
                   Cancel
                 </button>
-                <button type="submit" disabled={editLoading} className="flex-1 py-3 rounded-xl font-bold text-white bg-[rgb(7,81,89)] hover:bg-teal-700 transition-colors">
-                  {editLoading ? 'Saving...' : 'Save'}
+                <button 
+                  type="submit" 
+                  disabled={editLoading} 
+                  className="px-4 py-2 text-sm font-medium text-white bg-[rgb(7,81,89)] border border-[rgb(7,81,89)] rounded-md hover:bg-teal-800 transition-colors"
+                >
+                  {editLoading ? 'Saving...' : 'Save Changes'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
-    </section>
+    </div>
   );
 };
 
