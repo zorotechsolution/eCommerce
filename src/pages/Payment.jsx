@@ -184,52 +184,133 @@ const Payment = () => {
   };
 
   if (success) {
+    const isOnlinePayment = payMethod === 'razorpay';
+
     return (
-      <section className="min-h-screen bg-slate-50 flex items-center justify-center px-5 relative overflow-hidden">
-        {/* Confetti / blobs bg */}
-        <div className="absolute top-1/4 left-1/4 w-60 h-60 bg-green-200 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob"></div>
-        <div className="absolute top-1/3 right-1/4 w-60 h-60 bg-primary-200 rounded-full mix-blend-multiply blur-3xl opacity-50 animate-blob" style={{ animationDelay: '2s' }}></div>
-        
-        <div className="bg-white rounded-[2rem] shadow-2xl p-10 md:p-14 max-w-xl w-full text-center relative z-10 border border-slate-100 animate-zoom-in">
-          <div className="flex justify-center mb-8 relative">
-             <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-50"></div>
-             <FaCheckCircle className="text-green-500 text-8xl relative z-10 drop-shadow-md" />
+      <section className="min-h-screen bg-slate-50 py-10 px-5 relative overflow-hidden">
+        {/* Background blobs */}
+        <div className="absolute top-1/4 left-1/4 w-72 h-72 bg-green-200 rounded-full mix-blend-multiply blur-3xl opacity-40 animate-blob pointer-events-none"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-72 h-72 bg-teal-200 rounded-full mix-blend-multiply blur-3xl opacity-40 animate-blob pointer-events-none" style={{ animationDelay: '2s' }}></div>
+
+        <div className="max-w-2xl mx-auto relative z-10">
+
+          {/* Success Header */}
+          <div className="text-center mb-8">
+            <div className="flex justify-center mb-5">
+              <div className="relative">
+                <div className="absolute inset-0 bg-green-100 rounded-full animate-ping opacity-60"></div>
+                <FaCheckCircle className="text-green-500 text-7xl relative z-10 drop-shadow-md" />
+              </div>
+            </div>
+            <h1 className="text-3xl md:text-4xl font-black text-slate-800 tracking-tight mb-2">
+              {t('orderPlaced') || 'Payment Successful!'}
+            </h1>
+            <p className="text-slate-500 font-medium">
+              {t('thankYou') || 'Thank you for shopping with Vel Siddhar Arakkattalai.'}
+            </p>
           </div>
-          <h1 className="text-3xl md:text-4xl font-black text-slate-800 mb-3 tracking-tight">{t('orderPlaced') || 'Order Confirmed!'}</h1>
-          <p className="text-slate-500 mb-8 font-medium">{t('thankYou') || 'Thank you for shopping securely with us.'}</p>
-          
-          <div className="bg-slate-50 rounded-2xl p-6 mb-8 text-left border-2 border-slate-100 shadow-inner">
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{t('orderId') || 'Order ID'}</div>
-            <div className="text-2xl font-black text-primary-900 mb-4">#{orderId}</div>
-            
-            <div className="mt-4 border-t-2 border-dashed border-slate-200 pt-4">
-              <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-2">Shipping Details</div>
-              <p className="text-base text-slate-800 font-bold mb-1">
-                {shippingInfo.firstName} {shippingInfo.lastName}
-              </p>
-              <p className="text-sm text-slate-500 mb-1">{shippingInfo.address}, {shippingInfo.city}</p>
-              <p className="text-sm text-slate-500">{shippingInfo.state} - {shippingInfo.pincode}</p>
+
+          {/* Payment Summary Card */}
+          <div className="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden mb-6">
+
+            {/* Payment Method Banner */}
+            <div className={`px-8 py-4 flex items-center gap-3 ${isOnlinePayment ? 'bg-green-50 border-b border-green-100' : 'bg-orange-50 border-b border-orange-100'}`}>
+              {isOnlinePayment ? (
+                <>
+                  <FaCheckCircle className="text-green-500 text-xl" />
+                  <div>
+                    <p className="font-black text-green-700 text-sm uppercase tracking-widest">Online Payment — Success</p>
+                    <p className="text-xs text-green-600 mt-0.5">Paid securely via Razorpay · UPI / Card / NetBanking</p>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <FaTruck className="text-orange-500 text-xl" />
+                  <div>
+                    <p className="font-black text-orange-700 text-sm uppercase tracking-widest">Cash on Delivery</p>
+                    <p className="text-xs text-orange-600 mt-0.5">Pay when your order arrives at your door</p>
+                  </div>
+                </>
+              )}
             </div>
 
-            <div className="mt-4 border-t-2 border-dashed border-slate-200 pt-4 flex justify-between items-end">
-              <div className="text-[10px] text-slate-400 font-black uppercase tracking-widest mb-1">Total Paid</div>
-              <div className="text-xl font-black text-green-600">₹{grandTotal.toLocaleString()}</div>
+            <div className="p-8">
+
+              {/* Order ID */}
+              <div className="flex items-center justify-between mb-6 pb-4 border-b border-dashed border-slate-200">
+                <span className="text-xs font-black text-slate-400 uppercase tracking-widest">Order ID</span>
+                <span className="font-black text-[rgb(7,81,89)] text-lg">#{orderId}</span>
+              </div>
+
+              {/* Order Items */}
+              <div className="mb-6">
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-4">Items Ordered</p>
+                <div className="flex flex-col gap-4">
+                  {cartItems.map(item => (
+                    <div key={item.id} className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-slate-50 rounded-xl p-1.5 border border-slate-100 shrink-0">
+                        <img src={item.img} alt={item.productName} className="w-full h-full object-contain" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-slate-800 text-sm truncate">{item.productName}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">Qty: {item.quantity}</p>
+                      </div>
+                      <span className="font-black text-slate-800 shrink-0">₹{(item.price * item.quantity).toLocaleString()}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Price Breakdown */}
+              <div className="border-t-2 border-dashed border-slate-200 pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="font-bold text-slate-500">{t('subtotal') || 'Subtotal'}</span>
+                  <span className="font-bold text-slate-700">₹{subtotal.toLocaleString()}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="font-bold text-slate-500">{t('shipping') || 'Shipping'}</span>
+                  <span className={`font-black text-sm ${shipping === 0 ? 'text-green-600' : 'text-slate-700'}`}>
+                    {shipping === 0 ? 'FREE' : `₹${shipping}`}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center pt-3 border-t border-slate-200 mt-2">
+                  <span className="font-black text-slate-800 text-lg">{t('grandTotal') || 'Total'}</span>
+                  <span className={`text-2xl font-black ${isOnlinePayment ? 'text-green-600' : 'text-orange-500'}`}>
+                    ₹{grandTotal.toLocaleString()}
+                  </span>
+                </div>
+                {isOnlinePayment && (
+                  <p className="text-xs text-center text-green-600 font-bold pt-1">
+                    ✓ Amount deducted from your account
+                  </p>
+                )}
+              </div>
+
+              {/* Shipping Address */}
+              <div className="mt-6 pt-4 border-t-2 border-dashed border-slate-200">
+                <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-3">Delivering To</p>
+                <p className="font-bold text-slate-800">{shippingInfo.firstName} {shippingInfo.lastName}</p>
+                <p className="text-sm text-slate-500 mt-1">{shippingInfo.address},</p>
+                <p className="text-sm text-slate-500">{shippingInfo.city}, {shippingInfo.state} — {shippingInfo.pincode}</p>
+                {shippingInfo.phone && <p className="text-sm text-slate-500 mt-1">📞 {shippingInfo.phone}</p>}
+              </div>
             </div>
           </div>
-          
-          <div className="flex flex-col gap-4">
-             <Link
-               to="/"
-               className="block w-full bg-primary-900 hover:bg-primary-800 text-white font-black py-4 rounded-xl transition-all uppercase tracking-widest shadow-lg hover:-translate-y-1"
-             >
-               {t('backHome') || 'Back to Home'}
-             </Link>
-             <Link
-               to="/collections"
-               className="block w-full bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold py-4 rounded-xl transition-all uppercase tracking-wide border border-slate-200"
-             >
-               {t('continueShopping') || 'Continue Shopping'}
-             </Link>
+
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <Link
+              to="/"
+              className="flex-1 text-center bg-[rgb(7,81,89)] hover:bg-teal-800 text-white font-black py-4 rounded-xl transition-all uppercase tracking-widest shadow-lg hover:-translate-y-1"
+            >
+              {t('backHome') || 'Back to Home'}
+            </Link>
+            <Link
+              to="/collections"
+              className="flex-1 text-center bg-slate-100 text-slate-600 hover:bg-slate-200 font-bold py-4 rounded-xl transition-all uppercase tracking-wide border border-slate-200"
+            >
+              {t('continueShopping') || 'Continue Shopping'}
+            </Link>
           </div>
         </div>
       </section>
