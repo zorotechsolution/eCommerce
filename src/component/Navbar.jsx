@@ -171,7 +171,7 @@ const Navbar = () => {
               <Link to="/collections" className="hover:text-amber-400 transition-colors">{t('collections')}</Link>
             </li>
             <li className="relative group py-2">
-              <Link to="/personal-care" className="hover:text-amber-400 transition-colors flex items-center gap-1">
+              <Link  className="hover:text-amber-400 transition-colors flex items-center gap-1">
                 {t('personalCare')} <span className="text-[10px] opacity-70">▼</span>
               </Link>
               {/* Mega Dropdown */}
