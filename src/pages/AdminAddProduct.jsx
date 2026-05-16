@@ -148,7 +148,7 @@ const AdminAddProduct = () => {
               <div className="flex flex-col gap-6">
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 border-b border-gray-200 pb-2 mb-4">
-                    <FaInfoCircle className="text-gray-400" /> {t('basicDetails')}
+                    <FaInfoCircle className="text-gray-400" /> {t('Basic Details')}
                   </h3>
                   
                   <div className="mb-4">
