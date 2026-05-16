@@ -112,15 +112,18 @@ const AdminAddProduct = () => {
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('Add New Product')}</h1>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{t('Add new product')}</h1>
             <p className="text-sm text-gray-500 mt-1">{t('Admin Dashboard')} • {t('Inventory Management')}</p>
           </div>
           <div className="flex gap-3 flex-wrap">
              <Link to="/admin/orders" className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors shadow-sm">
-               <FaClipboardList /> {t('Products')}
+               <FaClipboardList /> {t('Orders')}
+             </Link>
+             <Link to="/admin/products" className="inline-flex items-center gap-2 bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-md font-medium text-sm hover:bg-gray-50 transition-colors shadow-sm">
+               <FaList /> {t('Products')}
              </Link>
              <Link to="/admin/add-product" className="inline-flex items-center gap-2 bg-[rgb(7,81,89)] text-white px-4 py-2 rounded-md font-medium text-sm transition-colors shadow-sm">
-               <FaPlus /> {t('Add New Product')}
+               <FaPlus /> {t('Add New')}
              </Link>
           </div>
         </div>
@@ -133,7 +136,7 @@ const AdminAddProduct = () => {
           {/* Status Message */}
           {success && (
             <div className="bg-green-50 px-6 py-4 border-b border-green-200 flex items-center gap-2 text-green-700 font-medium">
-              <FaCheckCircle className="text-green-500" /> {t('Product Added Successfully')}
+              <FaCheckCircle className="text-green-500" /> {t('Product added successfully')}
             </div>
           )}
 
@@ -149,17 +152,17 @@ const AdminAddProduct = () => {
                   </h3>
                   
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('Product Name Lab')} <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productNameLab')} <span className="text-red-500">*</span></label>
                     <input required type="text" name="productName" value={formData.productName} onChange={handleChange} placeholder="e.g. Ashwagandha Root Churnam" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('Product Description Lab')} <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productDescLab')} <span className="text-red-500">*</span></label>
                     <textarea required name="productDescription" value={formData.productDescription} onChange={handleChange} rows="4" placeholder="Detailed description of the medicine/product..." className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900 resize-none" />
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('Product Image Lab')} <span className="text-red-500">*</span></label>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">{t('productImgLab')} <span className="text-red-500">*</span></label>
                     <div className="flex flex-col gap-3">
                       {formData.imgPreview && (
                         <div className="w-full h-40 bg-gray-50 rounded-md border border-gray-300 overflow-hidden flex items-center justify-center">
@@ -178,12 +181,12 @@ const AdminAddProduct = () => {
                 {/* Classification */}
                 <div>
                   <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2 border-b border-gray-200 pb-2 mb-4">
-                    <FaTags className="text-gray-400" /> {t('Classification')}
+                    <FaTags className="text-gray-400" /> {t('classification')}
                   </h3>
                   
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('Category Lab')} <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('categoryLab')} <span className="text-red-500">*</span></label>
                       <select
                         required
                         name="category"
@@ -198,14 +201,14 @@ const AdminAddProduct = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('Brand Lab')}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('brandLab')}</label>
                       <input type="text" name="brand" value={formData.brand} onChange={handleChange} placeholder="e.g. Vel Siddhar" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4 mb-4">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('Product Form Type Lab')} <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('formTypeLab')} <span className="text-red-500">*</span></label>
                       <select
                         required
                         name="type"
@@ -220,7 +223,7 @@ const AdminAddProduct = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('Ailments Lab')}</label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('ailmentsLab')}</label>
                       <input type="text" name="ailments" value={formData.ailments} onChange={handleChange} placeholder="Comma separated..." className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900" />
                     </div>
                   </div>
@@ -234,11 +237,11 @@ const AdminAddProduct = () => {
 
                   <div className="grid grid-cols-2 gap-4">
                      <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('Current Price Lab')} <span className="text-red-500">*</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('currentPriceLab')} <span className="text-red-500">*</span></label>
                       <input required type="number" min="0" name="price" value={formData.price} onChange={handleChange} placeholder="0.00" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm font-bold text-gray-900" />
                      </div>
                      <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('MRP Lab')} <span className="text-gray-400 font-normal ml-1">{t('Optional')}</span></label>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">{t('mrpLab')} <span className="text-gray-400 font-normal ml-1">{t('optional')}</span></label>
                       <input type="number" min="0" name="originalPrice" value={formData.originalPrice} onChange={handleChange} placeholder="0.00" className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-500 line-through" />
                      </div>
                   </div>
@@ -256,7 +259,7 @@ const AdminAddProduct = () => {
                  {loading ? (
                     <><div className="w-4 h-4 border-2 border-white/50 border-t-white rounded-full animate-spin" /> {t('Saving')}</>
                  ) : (
-                    <><FaPlus className="text-xs" /> {t('Save Product')}</>
+                    <><FaPlus className="text-xs" /> {t('Save product')}</>
                  )}
                </button>
             </div>
