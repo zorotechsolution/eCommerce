@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // Create a configured Axios instance
 const API = axios.create({
-  baseURL: 'http://localhost:5000/api', // Match your Express server port
+  baseURL: 'https://ecommerce-backend-pnrg.onrender.com/api', // Match your Express server port
   headers: {
     'Content-Type': 'application/json'
   }
