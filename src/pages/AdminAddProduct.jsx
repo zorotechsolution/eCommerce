@@ -7,6 +7,7 @@ import { useLang } from '../context/LangContext';
 
 // Exact enum values from Product model
 const PRODUCT_TYPES = ['Capsules', 'Churnam', 'Leham', 'Tailam', 'General'];
+const CATEGORIES = ['Siddhar', 'Classical Medicines', 'Personal Care', 'Health & Nutrition', 'Herbal Oils', 'Brands', 'General'];
 
 const AdminAddProduct = () => {
   const { t } = useLang();
@@ -23,7 +24,6 @@ const AdminAddProduct = () => {
     ailments: ''
   });
 
-  const [categories, setCategories] = useState([]);   // fetched from backend
   const navigate = useNavigate();
   const { user, isAuthenticated } = useSelector((state) => state.auth);
 
@@ -32,13 +32,6 @@ const AdminAddProduct = () => {
       navigate('/Login'); 
     }
   }, [user, isAuthenticated, navigate]);
-
-  // Load categories from backend once
-  useEffect(() => {
-    API.get('/categories')
-      .then(res => setCategories(res.data?.data || []))
-      .catch(() => {});
-  }, []);
 
 
   const [loading, setLoading] = useState(false);
@@ -195,8 +188,8 @@ const AdminAddProduct = () => {
                         className="w-full border border-gray-300 rounded-md px-3 py-2 outline-none focus:border-[rgb(7,81,89)] focus:ring-1 focus:ring-[rgb(7,81,89)] transition-colors text-sm text-gray-900 bg-white"
                       >
                         <option value="">-- Select Category --</option>
-                        {categories.map(cat => (
-                          <option key={cat._id} value={cat.name}>{cat.name}</option>
+                        {CATEGORIES.map(cat => (
+                          <option key={cat} value={cat}>{cat}</option>
                         ))}
                       </select>
                     </div>
