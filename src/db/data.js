@@ -46,7 +46,7 @@ export let ayurvedicMedicines = [
   },
   {
     id: 4,
-    img: "https://images.pexels.com/photos/5938244/pexels-photo-5938244.jpeg?auto=compress&cs=tinysrgb&w=400",
+    img: "https://6a0a952fdbb8bba1984e5bf2.imgix.net/medicines-a-z.png?w=2121&h=1414",
     productName: "Himalaya Liv.52 DS Tablet",
     category: "Brands",
     brand: "AVN",
