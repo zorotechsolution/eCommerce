@@ -34,7 +34,7 @@ function Home() {
             ...p,
             id: p._id,
             productName: p.name,
-            img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+            img: rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`,
             category: p.category?.name || "General"
           };
         });

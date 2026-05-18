@@ -45,7 +45,7 @@ const ProductList = () => {
           id: data.data._id,
           productName: data.data.name,
           productDescription: data.data.description,
-          img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+          img: rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`,
           category: data.data.category?.name || "General",
           rating: data.data.ratings || 4,
           reviews: data.data.numOfReviews || 0
@@ -59,7 +59,7 @@ const ProductList = () => {
               ...p, 
               id: p._id, 
               productName: p.name, 
-              img: relRawImg.startsWith('http') ? relRawImg : `http://localhost:5000${relRawImg}`, 
+              img: relRawImg.startsWith('http') ? relRawImg : `https://ecommerce-backend-pnrg.onrender.com${relRawImg}`, 
               category: p.category?.name || "General", 
               price: p.price
             }

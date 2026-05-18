@@ -32,7 +32,7 @@ const PersonalCare = () => {
               id: p._id,
               productName: p.name,
               productDescription: p.description,
-              img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+              img: rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`,
               price: p.price
             };
           });

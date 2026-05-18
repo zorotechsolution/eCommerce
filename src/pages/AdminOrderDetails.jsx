@@ -129,7 +129,7 @@ const AdminOrderDetails = () => {
                  <div className="flex flex-col gap-4 divide-y divide-slate-100">
                     {order.orderItems.map((item, index) => {
                        const rawImg = item.image || item.product?.images?.[0]?.url || "";
-                       const imgUrl = rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`;
+                       const imgUrl = rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`;
                        return (
                          <div key={index} className="flex items-center gap-4 pt-4 first:pt-0">
                            <div className="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 flex items-center justify-center shrink-0 p-2 overflow-hidden">

@@ -44,7 +44,7 @@ const AdminEditProduct = () => {
       const { data } = await API.get(`/products/${id}`);
       const p = data.data;
       const rawImg = p.images?.[0]?.url || "";
-      const imgUrl = rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`;
+      const imgUrl = rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`;
       
       setFormData({
         productName: p.name || '',

@@ -107,7 +107,7 @@ const Product = () => {
             id: p._id,
             productName: p.name,
             productDescription: p.description,
-            img: rawImg.startsWith('http') ? rawImg : `http://localhost:5000${rawImg}`,
+            img: rawImg.startsWith('http') ? rawImg : `https://ecommerce-backend-pnrg.onrender.com${rawImg}`,
             category: p.category?.name || "General",
             rating: p.ratings || 4,
             reviews: p.numOfReviews || 0
